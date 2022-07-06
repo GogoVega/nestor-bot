@@ -2,15 +2,15 @@ const { MessageButton, MessageEmbed } = require("discord.js");
 
 module.exports = {
   indice: 0,
-	data: new MessageButton()
-    .setEmoji('🔽')
-    .setStyle('PRIMARY')
-    .setCustomId('download'),
-	async execute(interaction, lastFieldName) {
+  data: new MessageButton()
+    .setEmoji("🔽")
+    .setStyle("PRIMARY")
+    .setCustomId("download"),
+  async execute(interaction, lastFieldName) {
     const receivedEmbed = interaction.message.embeds[0];
     const templateEmbed = new MessageEmbed(receivedEmbed);
 
-		switch (lastFieldName) {
+    switch (lastFieldName) {
       case "Défaut":
       case "Erreur":
         return await interaction.reply({ content: "Erreur: Une erreur a été signalée !", ephemeral: true });
@@ -26,5 +26,5 @@ module.exports = {
       case "Téléchargé":
         return await interaction.reply({ content: "Erreur: Fichier déjà téléchargé !", ephemeral: true });
     }
-	},
+  },
 };

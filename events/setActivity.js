@@ -1,13 +1,13 @@
 module.exports = {
-	name: 'ready',
+	name: "ready",
 	once: true,
 	execute(client) {
 		client.user.setActivity(
 			{
-				"name": 'ephec.be',
-				"type": 'WATCHING',
+				"name": "ephec.be",
+				"type": "WATCHING",
 			}
 		);
-		console.log('Activity defined as WATCHING EPHEC.BE.');
+		console.log("Activity defined as WATCHING EPHEC.BE.");
 	},
 };

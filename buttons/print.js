@@ -2,17 +2,17 @@ const { MessageButton, MessageEmbed } = require("discord.js");
 
 module.exports = {
   indice: 1,
-	data: new MessageButton()
-    .setEmoji('🖨')
-    .setStyle('SECONDARY')
-    .setCustomId('print'),
-	async execute(interaction, lastFieldName) {
+  data: new MessageButton()
+    .setEmoji("🖨")
+    .setStyle("SECONDARY")
+    .setCustomId("print"),
+  async execute(interaction, lastFieldName) {
     const receivedEmbed = interaction.message.embeds[0];
     const templateEmbed = new MessageEmbed(receivedEmbed);
 
     templateEmbed.setColor("YELLOW");
 
-		switch (lastFieldName) {
+    switch (lastFieldName) {
       case "Délivré":
         return await interaction.reply({ content: "Erreur: Vous devez d'abord télécharger le fichier !", ephemeral: true });
       case "Défaut":
@@ -28,5 +28,5 @@ module.exports = {
       case "Fini":
         return await interaction.reply({ content: "Erreur: L'impression est finie !", ephemeral: true });
     }
-	},
+  },
 };

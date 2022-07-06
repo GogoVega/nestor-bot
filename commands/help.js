@@ -1,10 +1,19 @@
-const { SlashCommandBuilder } = require('@discordjs/builders');
+const { SlashCommandBuilder } = require("@discordjs/builders");
+const { MessageEmbed } = require("discord.js");
 
 module.exports = {
-	data: new SlashCommandBuilder()
-		.setName('help')
-		.setDescription('Replies with all available commands and their usage.'),
-	async execute(interaction) {
-		await interaction.reply("*Available Commands*\n`site-fablab` - Show you the links of the site.\n`command-fablab` - Allows you to add a description, expected printing time, time taken for printing and an image of the finished part.");
-	},
+  data: new SlashCommandBuilder()
+    .setName("help")
+    .setDescription("Replies with all available commands and their usage."),
+  async execute(interaction, client) {
+    const userAvatar = client.user.avatarURL();
+    const templateEmbed = new MessageEmbed()
+      .setColor("BLUE")
+      .setTitle("Available Commands")
+      .setTimestamp()
+      .setFooter({ text: "EPHEC - ISAT • FabLAB", iconURL: `${userAvatar}` });
+
+    client.commands.forEach((command) => templateEmbed.addField(command.data.name, command.data.description));
+    return await interaction.reply({ embeds: [templateEmbed] });
+  }
 };

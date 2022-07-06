@@ -1,16 +1,15 @@
-const { Client, Intents, Permissions } = require("discord.js");
-const { Collection, MessageActionRow } = require("discord.js");
-const { token } = require("./config.json");
+const { Client, Collection, Intents, MessageActionRow, Permissions } = require("discord.js");
+const { channelId, token, webhookId } = require("./config.json");
 const path = require("path");
 const fs = require("fs");
 
 const client = new Client({ intents: [Intents.FLAGS.GUILDS, Intents.FLAGS.GUILD_MESSAGES] });
 
-// Reading command files
+// Reading commands from files
 // @ts-ignore
 client.commands = new Collection();
-const commandsPath = path.join(__dirname, 'commands');
-const commandFiles = fs.readdirSync(commandsPath).filter(file => file.endsWith('.js'));
+const commandsPath = path.join(__dirname, "commands");
+const commandFiles = fs.readdirSync(commandsPath).filter(file => file.endsWith(".js"));
 
 for (const file of commandFiles) {
 	const filePath = path.join(commandsPath, file);
@@ -19,11 +18,11 @@ for (const file of commandFiles) {
 	client.commands.set(command.data.name, command);
 }
 
-// Reading button files
+// Reading buttons from files
 // @ts-ignore
 client.buttons = new Collection();
-const buttonsPath = path.join(__dirname, 'buttons');
-const buttonFiles = fs.readdirSync(buttonsPath).filter(file => file.endsWith('.js'));
+const buttonsPath = path.join(__dirname, "buttons");
+const buttonFiles = fs.readdirSync(buttonsPath).filter(file => file.endsWith(".js"));
 let msgActionRow = new MessageActionRow();
 let buttonsRow = [];
 
@@ -41,8 +40,8 @@ buttonsRow.sort((A, B) => A.indice - B.indice);
 buttonsRow.forEach((button) => msgActionRow.addComponents(button.data));
 
 // Events
-const eventsPath = path.join(__dirname, 'events');
-const eventFiles = fs.readdirSync(eventsPath).filter(file => file.endsWith('.js'));
+const eventsPath = path.join(__dirname, "events");
+const eventFiles = fs.readdirSync(eventsPath).filter(file => file.endsWith(".js"));
 
 for (const file of eventFiles) {
 	const filePath = path.join(eventsPath, file);
@@ -54,10 +53,11 @@ for (const file of eventFiles) {
 	}
 }
 
-// Commands
-client.on('interactionCreate', async interaction => {
+// Command interaction
+client.on("interactionCreate", async interaction => {
 	if (!interaction.isCommand()) return;
-	if (!interaction.channel.permissionsFor(client.user).has(Permissions.FLAGS.SEND_MESSAGES)) return;
+	// @ts-ignore
+	if (!interaction.channel.permissionsFor(client.user).has(Permissions.FLAGS.USE_APPLICATION_COMMANDS)) return;
 
 	// @ts-ignore
 	const command = client.commands.get(interaction.commandName);
@@ -69,14 +69,16 @@ client.on('interactionCreate', async interaction => {
 	}
 	catch (error) {
 		console.error(error);
-		await interaction.reply({ content: 'There was an error while executing this command!', ephemeral: true });
+		await interaction.reply({ content: "There was an error while executing this command!", ephemeral: true });
 	}
 });
 
-// Buttons
-client.on('interactionCreate', async interaction => {
+// Button interraction
+client.on("interactionCreate", async interaction => {
 	if (!interaction.isButton()) return;
-	if (!interaction.channel.permissionsFor(client.user).has(Permissions.FLAGS.SEND_MESSAGES)) return;
+	// @ts-ignore
+	if (!interaction.channel.permissionsFor(client.user).has(Permissions.FLAGS.ADD_REACTIONS)) return;
+	//if (!interaction.member.roles.cache.has(roleId)) return;
 
 	// @ts-ignore
 	const button = client.buttons.get(interaction.customId);
@@ -84,6 +86,7 @@ client.on('interactionCreate', async interaction => {
 	if (!button) return;
 
 	// Slash commands
+	// Fields.name of command execute command-fablab
 	const NotAllowed = ["Description", "Temps d'impression", "Temps restant d'impression"];
 	const fields = interaction.message.embeds[0].fields;
 	let fieldsFiltered = [];
@@ -98,25 +101,31 @@ client.on('interactionCreate', async interaction => {
 	}
 	catch (error) {
 		console.error(error);
-		await interaction.reply({ content: 'There was an error while executing this button!', ephemeral: true });
+		await interaction.reply({ content: "There was an error while executing this button!", ephemeral: true });
 	}
 });
 
+// Reply to a received message
+client.on("messageCreate", async message => {
+	//message.webhookId
+	if (message.author.id !== webhookId || message.channelId !== channelId || message.author.bot)
+		return;
+	//if (!message.channel.permissionsFor(client.user).has(Permissions.FLAGS.SEND_MESSAGES)) return;
+	// @ts-ignore
+	console.log(message.channel.permissionsFor(client.user).has(Permissions.FLAGS.SEND_MESSAGES));
 
-client.once('messageCreate', async message => {
-	// Button Autorisation !!!
 	const templateEmbed = {
 		color: 0x1B1B1B,
 		title: "Statut",
 		fields: [
 			{
-				name: 'Délivré',
-				value: 'Nous avons reçu votre demande\n\u200b',
+				name: "Délivré",
+				value: "Nous avons reçu votre demande\n\u200b",
 			},
 		],
 		timestamp: new Date(),
 		footer: {
-			text: 'EPHEC - ISAT • FabLAB',
+			text: "EPHEC - ISAT • FabLAB",
 			// @ts-ignore
 			icon_url: client.user.avatarURL(),
 		},

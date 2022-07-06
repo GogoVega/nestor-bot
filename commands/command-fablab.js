@@ -1,6 +1,6 @@
 const { MessageEmbed } = require("discord.js");
 const { SlashCommandBuilder } = require("@discordjs/builders");
-const { channelId } = require('../config.json');
+const { channelId } = require("../config.json");
 
 module.exports = {
 	data: new SlashCommandBuilder()
@@ -74,11 +74,11 @@ module.exports = {
 		),
 	async execute(interaction, client) {
 		const subcommandName = interaction.options.getSubcommand();
-    const msgId = interaction.options.getString("message_id");
+		const msgId = interaction.options.getString("message_id");
 
 		const description = interaction.options.getString("description");
 		const timeHours = interaction.options.getInteger("heures");
-    const timeMins = interaction.options.getInteger("minutes");
+		const timeMins = interaction.options.getInteger("minutes");
 		const date_finish = new Date();
 		//const image = interaction.options.getAttachment("image");
 
@@ -115,7 +115,7 @@ module.exports = {
 					await message.edit({ embeds: [exampleEmbed] });
 					return await interaction.reply({ content: `:white_check_mark: | Message de fin d'impression ajoutée !`, ephemeral: true });
 			}
-			console.log("Message édité avec succès.");
+			console.log("Message edited successfully.");
 		} catch (error) {
 			console.error(error);
 			return await interaction.reply({ content: ":x: | ID du message incorrect !", ephemeral: true });
