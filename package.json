@@ -1,7 +1,7 @@
 {
 	"name": "nestor-bot",
 	"displayName": "Nestor Bot",
-	"version": "1.0.0",
+	"version": "1.0.0-alpha.1",
 	"description": "A Discord bot!",
 	"main": "index.js",
 	"scripts": {
@@ -11,7 +11,7 @@
 	},
 	"repository": {
 		"type": "git",
-		"url": "https://github.com/"
+		"url": "https://github.com/GogoVega/nestor-bot"
 	},
 	"keywords": [
 		"discord",
