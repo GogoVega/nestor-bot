@@ -2,20 +2,22 @@
 	"name": "nestor-bot",
 	"displayName": "Nestor Bot",
 	"version": "1.0.0-alpha.1",
-	"description": "A Discord bot!",
+	"description": "A Discord Bot for tracking Fab Lab orders.",
 	"main": "index.js",
 	"scripts": {
-		"start": "node index.js",
+		"lint": "eslint . --ext .js",
 		"prestart": "node deploy-commands.js",
-		"lint": "eslint . --ext .js"
+		"start": "node index.js",
+		"test": "npm run lint"
 	},
 	"repository": {
 		"type": "git",
 		"url": "https://github.com/GogoVega/nestor-bot"
 	},
 	"keywords": [
-		"discord",
-		"bot"
+		"discord-bot",
+		"order-tracking",
+		"webhook"
 	],
 	"author": {
 		"name": "Gauthier Dandele",
