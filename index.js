@@ -86,7 +86,6 @@ client.on("interactionCreate", async interaction => {
 	if (!button) return;
 
 	// Slash commands
-	// Fields.name of command execute command-fablab
 	const NotAllowed = ["Description", "Temps d'impression", "Temps restant d'impression"];
 	const fields = interaction.message.embeds[0].fields;
 	let fieldsFiltered = [];
