@@ -1,6 +1,5 @@
 const { MessageEmbed } = require("discord.js");
 const { SlashCommandBuilder } = require("@discordjs/builders");
-const { channelId } = require("../config.json");
 
 module.exports = {
 	data: new SlashCommandBuilder()
@@ -76,7 +75,7 @@ module.exports = {
 		try {
 			const subcommandName = interaction.options.getSubcommand();
 			const msgId = interaction.options.getString("message_id");
-			const message = await client.channels.cache.get(channelId).messages.fetch(msgId);
+			const message = await client.channels.cache.get(interaction.channelId).messages.fetch(msgId);
 			const receivedEmbed = message.embeds[0];
 			const exampleEmbed = new MessageEmbed(receivedEmbed);
 			const fields = receivedEmbed.fields;
@@ -112,12 +111,12 @@ module.exports = {
 						if (!fields.some((field) => field.name === "Impression" || field.name === "Réimpression"))
 							return await interaction.reply({ content: `:x: | Aucune impression en cours !`, ephemeral: true });
 
-						//const image = interaction.options.getAttachment("image");
-						//const file = new MessageAttachment(image);
+						const image = interaction.options.getAttachment("image");
 
 						exampleEmbed.addField("Temps d'impression", `L'impression a été effectuée en ${timeHours}h ${timeMins}min.\n\u200b`);
 
-						//await message.edit({ embeds: [exampleEmbed], files: [file] });
+						exampleEmbed.setImage(image.url);
+
 						await message.edit({ embeds: [exampleEmbed] });
 						return await interaction.reply({ content: `:white_check_mark: | Message de fin d'impression ajoutée !`, ephemeral: true });
 					}
