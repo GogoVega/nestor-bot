@@ -1,32 +1,38 @@
-const { webhookId } = require("../config.json");
-
 // Reply to a received message
 module.exports = {
 	name: "messageCreate",
 	async execute(message, client) {
-		//message.webhookId
-		if (message.author.id !== webhookId || message.author.bot)
-			return;
+		message.guild?.fetchWebhooks()
+			.then(async (webhooks) => {
+				if (!webhooks)
+					return;
 
-		const templateEmbed = {
-			color: 0x1B1B1B,
-			title: "Statut",
-			fields: [
-				{
-					name: "Délivré",
-					value: "Nous avons reçu votre demande\n\u200b",
-				},
-			],
-			timestamp: new Date(),
-			footer: {
-				text: "EPHEC - ISAT • FabLAB",
-				icon_url: client.user.avatarURL(),
-			},
-		};
+				if (message.author.bot)
+					return;
 
-		const msgActionRow = client.messageAction.get("messageActionButton");
+				if (webhooks.every(webhook => webhook.id !== message.author.id))
+					return;
 
-		try { await message.reply({ embeds: [templateEmbed], components: [msgActionRow] }) }
-		catch (error) { console.error(error) }
+				const templateEmbed = {
+					color: 0x1B1B1B,
+					title: "Statut",
+					fields: [
+						{
+							name: "Délivré",
+							value: "Nous avons reçu votre demande\n\u200b",
+						},
+					],
+					timestamp: new Date(),
+					footer: {
+						text: "EPHEC - ISAT • FabLAB",
+						icon_url: client.user.avatarURL(),
+					},
+				};
+
+				const msgActionRow = client.messageAction.get("messageActionButton");
+
+				await message.reply({ embeds: [templateEmbed], components: [msgActionRow] })
+			})
+			.catch((error) => console.error(`Error during Embed sending!\n${error}`));
 	},
 };
