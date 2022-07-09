@@ -1,4 +1,17 @@
+### macOS ###
+# General
 .DS_Store
-.env
-config.json
+
+### Node ###
+# Dependency directories
 node_modules
+
+# dotenv environment variables file
+.env
+
+### VisualStudioCode ###
+# Folder config file
+config.json
+
+# Files containing IDs
+data/channelsId.json
