@@ -1,4 +1,4 @@
-const { MessageEmbed } = require("discord.js");
+const { MessageActionRow, MessageEmbed, Modal, TextInputComponent } = require("discord.js");
 const { SlashCommandBuilder } = require("@discordjs/builders");
 
 module.exports = {
@@ -12,11 +12,6 @@ module.exports = {
 			.addStringOption((option) => option
 				.setName("message_id")
 				.setDescription("ID du message contenant le statut.")
-				.setRequired(true)
-			)
-			.addStringOption((option) => option
-				.setName("description")
-				.setDescription("Description à insérer.")
 				.setRequired(true)
 			)
 		)
@@ -86,19 +81,37 @@ module.exports = {
 			switch (subcommandName) {
 				case "description":
 					{
-						const description = interaction.options.getString("description");
+						const modal = new Modal()
+							.setCustomId("description")
+							.setTitle("Ajout d'une description");
 
-						exampleEmbed.addField("Description", `${description}\n\u200b`);
-						await message.edit({ embeds: [exampleEmbed] });
-						return await interaction.reply({ content: `:white_check_mark: | Description ajoutée !\n\`\`\`${description}\`\`\``, ephemeral: true });
+						const messageIdInput = new TextInputComponent()
+							.setCustomId("messageIdInput")
+							.setLabel("ID du message à modifier")
+							.setStyle("SHORT")
+							.setValue(msgId)
+							.setRequired(true);
+
+						const descriptionInput = new TextInputComponent()
+							.setCustomId("descriptionInput")
+							.setLabel("Description à ajouter")
+							.setStyle("PARAGRAPH")
+							.setRequired(true);
+
+						const firstActionRow = new MessageActionRow().addComponents(messageIdInput);
+						const secondActionRow = new MessageActionRow().addComponents(descriptionInput);
+
+						modal.addComponents(firstActionRow, secondActionRow);
+
+						return await interaction.showModal(modal);
 					}
 				case "temps_impression":
 					{
 						if (!fields.some((field) => field.name === "Impression" || field.name === "Réimpression"))
-							return await interaction.reply({ content: `:x: | Aucune impression en cours !`, ephemeral: true });
+							return await interaction.reply({ content: ":x: | Aucune impression en cours !", ephemeral: true });
 
 						if (fields.some((field) => field.name === "Fini"))
-							return await interaction.reply({ content: `:x: | L'impression est terminé !`, ephemeral: true });
+							return await interaction.reply({ content: ":x: | L'impression est terminé !", ephemeral: true });
 
 						const date_finish = new Date();
 
@@ -109,7 +122,7 @@ module.exports = {
 				case "fin_impression":
 					{
 						if (!fields.some((field) => field.name === "Impression" || field.name === "Réimpression"))
-							return await interaction.reply({ content: `:x: | Aucune impression en cours !`, ephemeral: true });
+							return await interaction.reply({ content: ":x: | Aucune impression en cours !", ephemeral: true });
 
 						const image = interaction.options.getAttachment("image");
 
@@ -118,7 +131,7 @@ module.exports = {
 						exampleEmbed.setImage(image.url);
 
 						await message.edit({ embeds: [exampleEmbed] });
-						return await interaction.reply({ content: `:white_check_mark: | Message de fin d'impression ajoutée !`, ephemeral: true });
+						return await interaction.reply({ content: ":white_check_mark: | Message de fin d'impression ajoutée !", ephemeral: true });
 					}
 			}
 			console.log("Message edited unsuccessfully!");
