@@ -2,19 +2,17 @@
 module.exports = {
 	name: "messageCreate",
 	async execute(message, client) {
-		message.guild?.fetchWebhooks()
+		message.guild
+			.fetchWebhooks()
 			.then(async (webhooks) => {
-				if (!webhooks)
-					return;
+				if (!webhooks) return;
 
-				if (message.author.bot)
-					return;
+				if (message.author.bot) return;
 
-				if (webhooks.every(webhook => webhook.id !== message.author.id))
-					return;
+				if (webhooks.every((webhook) => webhook.id !== message.author.id)) return;
 
 				const templateEmbed = {
-					color: 0x1B1B1B,
+					color: 0x1b1b1b,
 					title: "Statut",
 					fields: [
 						{
@@ -31,7 +29,10 @@ module.exports = {
 
 				const msgActionRow = client.messageAction.get("messageActionButton");
 
-				await message.reply({ embeds: [templateEmbed], components: [msgActionRow] })
+				await message.reply({
+					embeds: [templateEmbed],
+					components: [msgActionRow],
+				});
 			})
 			.catch((error) => console.error(`Error during Embed sending!\n${error}`));
 	},

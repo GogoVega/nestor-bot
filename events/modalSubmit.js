@@ -20,10 +20,16 @@ module.exports = {
 			exampleEmbed.addField("Description", `${descriptionInput}\n\u200b`);
 
 			await message.edit({ embeds: [exampleEmbed] });
-			return await interaction.reply({ content: `:white_check_mark: | Description ajoutée !\n\`\`\`${descriptionInput}\`\`\``, ephemeral: true });
+			return await interaction.reply({
+				content: `:white_check_mark: | Description ajoutée !\n\`\`\`${descriptionInput}\`\`\``,
+				ephemeral: true,
+			});
 		} catch (error) {
 			console.error(`Error during Modal Submission!\n${error}`);
-			return await interaction.reply({ content: ":x: | ID du message incorrect !", ephemeral: true });
+			return await interaction.reply({
+				content: ":x: | ID du message incorrect !",
+				ephemeral: true,
+			});
 		}
 	},
 };

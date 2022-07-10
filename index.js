@@ -3,13 +3,15 @@ const { token } = require("./config.json");
 const path = require("path");
 const fs = require("fs");
 
-const client = new Client({ intents: [Intents.FLAGS.GUILDS, Intents.FLAGS.GUILD_MESSAGES] });
+const client = new Client({
+	intents: [Intents.FLAGS.GUILDS, Intents.FLAGS.GUILD_MESSAGES],
+});
 
 // Reading commands from files
 // @ts-ignore
 client.commands = new Collection();
 const commandsPath = path.join(__dirname, "commands");
-const commandFiles = fs.readdirSync(commandsPath).filter(file => file.endsWith(".js"));
+const commandFiles = fs.readdirSync(commandsPath).filter((file) => file.endsWith(".js"));
 
 for (const file of commandFiles) {
 	const filePath = path.join(commandsPath, file);
@@ -22,7 +24,7 @@ for (const file of commandFiles) {
 // @ts-ignore
 client.buttons = new Collection();
 const buttonsPath = path.join(__dirname, "buttons");
-const buttonFiles = fs.readdirSync(buttonsPath).filter(file => file.endsWith(".js"));
+const buttonFiles = fs.readdirSync(buttonsPath).filter((file) => file.endsWith(".js"));
 
 for (const file of buttonFiles) {
 	const filePath = path.join(buttonsPath, file);
@@ -46,7 +48,7 @@ client.messageAction.set("messageActionButton", msgActionRow);
 
 // Events
 const eventsPath = path.join(__dirname, "events");
-const eventFiles = fs.readdirSync(eventsPath).filter(file => file.endsWith(".js"));
+const eventFiles = fs.readdirSync(eventsPath).filter((file) => file.endsWith(".js"));
 
 for (const file of eventFiles) {
 	const filePath = path.join(eventsPath, file);
