@@ -12,7 +12,7 @@ module.exports = {
 			subcommand
 				.setName("ajouter-salon")
 				.setDescription("Ajouter un salon au Bot.")
-				.addStringOption((option) =>
+				.addChannelOption((option) =>
 					option.setName("salon_id").setDescription("ID du salon à rajouter.").setRequired(true)
 				)
 		)
@@ -20,7 +20,7 @@ module.exports = {
 			subcommand
 				.setName("supprimer-salon")
 				.setDescription("Supprimer un salon du Bot.")
-				.addStringOption((option) =>
+				.addChannelOption((option) =>
 					option.setName("salon_id").setDescription("ID du salon à supprimer.").setRequired(true)
 				)
 		)
@@ -28,7 +28,7 @@ module.exports = {
 			subcommand.setName("salons-list").setDescription("Afficher la liste complète des salons.")
 		),
 	async execute(interaction) {
-		const channelId = interaction.options.getString("salon_id");
+		const channelId = interaction.options.getChannel("salon_id").id;
 		const subcommandName = interaction.options.getSubcommand();
 
 		if (!interaction.client.user.fetchFlags(Permissions.FLAGS.MANAGE_CHANNELS))
