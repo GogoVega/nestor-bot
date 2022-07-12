@@ -128,14 +128,13 @@ module.exports = {
 							ephemeral: true,
 						});
 
-					const image = interaction.options.getAttachment("image");
-
 					exampleEmbed.addField(
 						"Temps d'impression",
 						`L'impression a été effectuée en ${timeHours}h ${timeMins}min.\n\u200b`
 					);
 
-					exampleEmbed.setImage(image.url);
+					const image = interaction.options.getAttachment("image");
+					if (image) exampleEmbed.setImage(image.url);
 
 					await message.edit({ embeds: [exampleEmbed] });
 					return await interaction.reply({
