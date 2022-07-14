@@ -18,10 +18,10 @@ module.exports = {
 		const managePermission = client.commands.get(interaction.commandName).managePermission;
 
 		if (!managePermission) {
-			const channelsIdPath = path.join(__dirname, "../data/channelsId.json");
-			const channelsIdFiles = JSON.parse(fs.readFileSync(channelsIdPath, { encoding: "utf-8" }));
+			const channelsPath = path.join(__dirname, "../data/channels.json");
+			const channelsFile = JSON.parse(fs.readFileSync(channelsPath, { encoding: "utf-8" })) || [];
 
-			if (channelsIdFiles.channelsId.every((channelId) => channelId !== interaction.channelId))
+			if (channelsFile.every((channelId) => channelId !== interaction.channelId))
 				return await interaction.reply({
 					content: "Le Bot n'a pas accès à ce salon!",
 					ephemeral: true,
@@ -35,9 +35,9 @@ module.exports = {
 		try {
 			await command.execute(interaction, client);
 		} catch (error) {
-			console.error(`Error during command interaction created!\n${error}`);
+			console.error("Error during command interaction created!", error);
 			await interaction.reply({
-				content: "There was an error while executing this command!",
+				content: "Une erreur s'est produite lors de l'exécution de cette commande !",
 				ephemeral: true,
 			});
 		}

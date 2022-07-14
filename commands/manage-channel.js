@@ -28,8 +28,8 @@ module.exports = {
 			subcommand.setName("salons-list").setDescription("Afficher la liste complète des salons.")
 		),
 	async execute(interaction) {
-		const channelId = interaction.options.getChannel("salon_id").id;
-		const subcommandName = interaction.options.getSubcommand();
+		const subCommandName = interaction.options.getSubcommand();
+		const channelId = interaction.options.getChannel("salon_id")?.id;
 
 		if (!interaction.client.user.fetchFlags(Permissions.FLAGS.MANAGE_CHANNELS))
 			return await interaction.reply({
@@ -37,33 +37,32 @@ module.exports = {
 				ephemeral: true,
 			});
 
-		if (
-			interaction.guild.channels.cache.every((channel) => channel.id !== channelId) &&
-			subcommandName !== "salons-list"
-		)
-			return await interaction.reply({
-				content: "Erreur: Vérifiez l'ID du salon!",
-				ephemeral: true,
-			});
+		const channelsPath = path.join(__dirname, "../data/channels.json");
+		const channelsFile = JSON.parse(fs.readFileSync(channelsPath, { encoding: "utf-8" })) || [];
 
-		const channelsIdPath = path.join(__dirname, "../data/channelsId.json");
-		const channelsIdFiles = JSON.parse(fs.readFileSync(channelsIdPath, { encoding: "utf-8" }));
-
-		switch (subcommandName) {
+		switch (subCommandName) {
 			case "ajouter-salon": {
-				if (channelsIdFiles.channelsId.every((channel) => channel !== channelId))
-					channelsIdFiles.channelsId.push(channelId);
+				if (channelsFile.includes(channelId))
+					return await interaction.reply({
+						content: "Erreur: Ce salon a déjà été enregistré !",
+						ephemeral: true,
+					});
+				channelsFile.push(channelId);
 				break;
 			}
 			case "supprimer-salon": {
-				if (channelsIdFiles.channelsId.some((channel) => channel === channelId))
-					channelsIdFiles.channelsId.splice(channelsIdFiles.channelsId.indexOf(channelId));
+				if (!channelsFile.includes(channelId))
+					return await interaction.reply({
+						content: "Erreur: Ce salon n'a jamais été enregistré !",
+						ephemeral: true,
+					});
+				channelsFile.splice(channelsFile.indexOf(channelId));
 				break;
 			}
 			case "salons-list": {
 				const channelsList = [];
-				channelsIdFiles.channelsId.forEach((channelId) => channelsList.push(`<#${channelId}>\n`));
-				if (channelsIdFiles.channelsId.length === 0) channelsList.push("```diff\n- Aucun salon enregistré!```");
+				channelsFile.forEach((channelId) => channelsList.push(`<#${channelId}>`));
+				if (channelsFile.length === 0) channelsList.push("```diff\n- Aucun salon enregistré!```");
 				return await interaction.reply({
 					content: `Ci-dessous la liste des salons enregistrés:\n${channelsList}`,
 					ephemeral: true,
@@ -71,20 +70,20 @@ module.exports = {
 			}
 		}
 
-		fs.writeFile(channelsIdPath, JSON.stringify(channelsIdFiles), { encoding: "utf-8", flag: "w" }, (error) => {
+		fs.writeFile(channelsPath, JSON.stringify(channelsFile), { encoding: "utf-8", flag: "w" }, (error) => {
 			if (error) {
 				if (error.code != "EEXIST") throw error;
 			} else {
 				console.log(
 					`Channel "${interaction.guild.channels.cache.get(channelId).name}" ${
-						subcommandName === "ajouter-salon" ? "added" : "removed"
+						subCommandName === "ajouter-salon" ? "added" : "removed"
 					} successfuly.`
 				);
 			}
 		});
 
 		await interaction.reply({
-			content: `Le salon <#${channelId}> a bien été ${subcommandName === "ajouter-salon" ? "ajouté" : "supprimé"}.`,
+			content: `Le salon <#${channelId}> a bien été ${subCommandName === "ajouter-salon" ? "ajouté" : "supprimé"}.`,
 			ephemeral: true,
 		});
 	},

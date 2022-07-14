@@ -14,5 +14,5 @@ node_modules
 config.json
 
 # Files containing IDs
-data/channelsId.json
+data/channels.json
 data/reactions.json
