@@ -8,13 +8,16 @@ module.exports = {
 
 		if (interaction.customId !== "description") return;
 
-		const messageId = interaction.fields.getTextInputValue("messageIdInput");
-		const descriptionInput = interaction.fields.getTextInputValue("descriptionInput");
-
-		if (!descriptionInput || !messageId) return;
-
 		try {
-			const message = await client.channels.cache.get(interaction.channelId).messages.fetch(messageId);
+			const channelId = interaction.fields.getTextInputValue("channelIdInput");
+			const messageId = interaction.fields.getTextInputValue("messageIdInput");
+			const descriptionInput = interaction.fields.getTextInputValue("descriptionInput");
+
+			if (!descriptionInput || !channelId || !messageId)
+				throw new Error("Missing message ID, channel ID or description!");
+
+			const channel = await client.channels.fetch(channelId);
+			const message = await channel.messages.fetch(messageId);
 			const exampleEmbed = new MessageEmbed(message.embeds[0]);
 
 			exampleEmbed.addField("Description", `${descriptionInput}\n\u200b`);
@@ -25,9 +28,9 @@ module.exports = {
 				ephemeral: true,
 			});
 		} catch (error) {
-			console.error(`Error during Modal Submission!\n${error}`);
+			console.error("Error during Modal Submission!", error);
 			return await interaction.reply({
-				content: ":x: | ID du message incorrect !",
+				content: ":x: | ID du message incorrect ou élément manquant!\nVeuillez réessayer SVP.",
 				ephemeral: true,
 			});
 		}

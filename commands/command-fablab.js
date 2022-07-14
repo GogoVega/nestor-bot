@@ -10,6 +10,9 @@ module.exports = {
 			subcommand
 				.setName("description")
 				.setDescription("Ajouter une description au statut de la commande.")
+				.addChannelOption((option) =>
+					option.setName("salon_id").setDescription("ID du salon contenant le message.").setRequired(true)
+				)
 				.addStringOption((option) =>
 					option.setName("message_id").setDescription("ID du message contenant le statut.").setRequired(true)
 				)
@@ -18,6 +21,9 @@ module.exports = {
 			subcommand
 				.setName("temps_impression")
 				.setDescription("Ajouter le temps restant d'impression.")
+				.addChannelOption((option) =>
+					option.setName("salon_id").setDescription("ID du salon contenant le message.").setRequired(true)
+				)
 				.addStringOption((option) =>
 					option.setName("message_id").setDescription("ID du message contenant le statut.").setRequired(true)
 				)
@@ -37,6 +43,9 @@ module.exports = {
 			subcommand
 				.setName("fin_impression")
 				.setDescription("Ajouter le temps d'impression réelle et une image (en option).")
+				.addChannelOption((option) =>
+					option.setName("salon_id").setDescription("ID du salon contenant le message.").setRequired(true)
+				)
 				.addStringOption((option) =>
 					option.setName("message_id").setDescription("ID du message contenant le statut.").setRequired(true)
 				)
@@ -61,8 +70,11 @@ module.exports = {
 	async execute(interaction, client) {
 		try {
 			const subcommandName = interaction.options.getSubcommand();
+			const channelId = interaction.options.getChannel("salon_id")?.id;
 			const msgId = interaction.options.getString("message_id");
-			const message = await client.channels.cache.get(interaction.channelId).messages.fetch(msgId);
+
+			const channel = await client.channels.fetch(channelId);
+			const message = await channel.messages.fetch(msgId);
 			const receivedEmbed = message.embeds[0];
 			const exampleEmbed = new MessageEmbed(receivedEmbed);
 			const fields = receivedEmbed.fields;
@@ -72,7 +84,16 @@ module.exports = {
 
 			switch (subcommandName) {
 				case "description": {
+					if (exampleEmbed.title !== "Statut") return;
+
 					const modal = new Modal().setCustomId("description").setTitle("Ajout d'une description");
+
+					const channelIdInput = new TextInputComponent()
+						.setCustomId("channelIdInput")
+						.setLabel("ID du salon contenant le message")
+						.setStyle("SHORT")
+						.setValue(channelId)
+						.setRequired(true);
 
 					const messageIdInput = new TextInputComponent()
 						.setCustomId("messageIdInput")
@@ -87,10 +108,11 @@ module.exports = {
 						.setStyle("PARAGRAPH")
 						.setRequired(true);
 
-					const firstActionRow = new MessageActionRow().addComponents(messageIdInput);
-					const secondActionRow = new MessageActionRow().addComponents(descriptionInput);
+					const firstActionRow = new MessageActionRow().addComponents(channelIdInput);
+					const secondActionRow = new MessageActionRow().addComponents(messageIdInput);
+					const thirdActionRow = new MessageActionRow().addComponents(descriptionInput);
 
-					modal.addComponents(firstActionRow, secondActionRow);
+					modal.addComponents(firstActionRow, secondActionRow, thirdActionRow);
 
 					return await interaction.showModal(modal);
 				}
@@ -111,9 +133,9 @@ module.exports = {
 
 					exampleEmbed.addField(
 						"Temps restant d'impression",
-						`Le temps d'impression estimé est de ${timeHours}h ${timeMins}min.\nCe qui vous donne RDV pour ${
+						`Le temps d'impression estimé est de ${timeHours}h ${timeMins}min.\nCe qui vous donne RDV pour ${date_finish.setHours(
 							date_finish.getHours() + timeHours
-						}h ${date_finish.getMinutes() + timeMins}.\n\u200b`
+						)}h ${date_finish.setMinutes(date_finish.getMinutes() + timeMins)}.\n\u200b`
 					);
 					await message.edit({ embeds: [exampleEmbed] });
 					return await interaction.reply({
@@ -145,7 +167,7 @@ module.exports = {
 			}
 			console.log("Message edited unsuccessfully!");
 		} catch (error) {
-			console.error(error);
+			console.error("Error during command-fablab command!", error);
 			return await interaction.reply({
 				content: ":x: | ID du message incorrect !",
 				ephemeral: true,
