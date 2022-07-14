@@ -4,7 +4,8 @@ const path = require("path");
 const fs = require("fs");
 
 const client = new Client({
-	intents: [Intents.FLAGS.GUILDS, Intents.FLAGS.GUILD_MESSAGES],
+	intents: [Intents.FLAGS.GUILDS, Intents.FLAGS.GUILD_MESSAGES, Intents.FLAGS.GUILD_MESSAGE_REACTIONS],
+	partials: ["MESSAGE", "CHANNEL", "REACTION"],
 });
 
 // Reading commands from files
@@ -45,6 +46,15 @@ const msgActionRow = new MessageActionRow();
 client.messageAction = new Collection();
 // @ts-ignore
 client.messageAction.set("messageActionButton", msgActionRow);
+
+// Reading reactions from file
+// @ts-ignore
+client.reactions = new Collection();
+const reactionsPath = path.join(__dirname, "./data/reactions.json");
+const reactionsFile = JSON.parse(fs.readFileSync(reactionsPath, { encoding: "utf-8" })) || {};
+
+// @ts-ignore
+Object.keys(reactionsFile).forEach((msgId) => client.reactions.set(msgId, reactionsFile[msgId]));
 
 // Events
 const eventsPath = path.join(__dirname, "events");
