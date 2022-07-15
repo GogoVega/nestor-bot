@@ -8,31 +8,20 @@ const client = new Client({
 	partials: ["MESSAGE", "CHANNEL", "REACTION"],
 });
 
-// Reading commands from files
-// @ts-ignore
-client.commands = new Collection();
-const commandsPath = path.join(__dirname, "commands");
-const commandFiles = fs.readdirSync(commandsPath).filter((file) => file.endsWith(".js"));
+const foldersName = ["commands", "buttons", "modals"];
 
-for (const file of commandFiles) {
-	const filePath = path.join(commandsPath, file);
-	const command = require(filePath);
-	// @ts-ignore
-	client.commands.set(command.data.name, command);
-}
+for (const folderName of foldersName) {
+	client[folderName] = new Collection();
+	const folderPath = path.join(__dirname, folderName);
+	const files = fs.readdirSync(folderPath).filter((file) => file.endsWith(".js"));
 
-// Reading buttons from files
-// @ts-ignore
-client.buttons = new Collection();
-const buttonsPath = path.join(__dirname, "buttons");
-const buttonFiles = fs.readdirSync(buttonsPath).filter((file) => file.endsWith(".js"));
+	for (const file of files) {
+		const filePath = path.join(folderPath, file);
+		const content = require(filePath);
 
-for (const file of buttonFiles) {
-	const filePath = path.join(buttonsPath, file);
-	const button = require(filePath);
-
-	// @ts-ignore
-	client.buttons.set(button.data.customId, button);
+		if (folderName === "commands") client[folderName].set(content.data.name, content);
+		client[folderName].set(content.data.customId, content);
+	}
 }
 
 // Sort buttons by indice

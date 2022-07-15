@@ -1,5 +1,5 @@
-const { MessageActionRow, MessageEmbed, Modal, TextInputComponent } = require("discord.js");
 const { SlashCommandBuilder } = require("@discordjs/builders");
+const { MessageEmbed } = require("discord.js");
 
 module.exports = {
 	data: new SlashCommandBuilder()
@@ -84,37 +84,19 @@ module.exports = {
 
 			switch (subcommandName) {
 				case "description": {
-					if (exampleEmbed.title !== "Statut") return;
+					if (exampleEmbed.title !== "Statut")
+						return await interaction.reply({
+							content: "Erreur: Vous ne pouvez pas modifier ce message !",
+							ephemeral: true,
+						});
 
-					const modal = new Modal().setCustomId("description").setTitle("Ajout d'une description");
+					const modal = client.modals.get("description");
 
-					const channelIdInput = new TextInputComponent()
-						.setCustomId("channelIdInput")
-						.setLabel("ID du salon contenant le message")
-						.setStyle("SHORT")
-						.setValue(channelId)
-						.setRequired(true);
+					modal.channelId = channelId;
+					modal.messageId = msgId;
 
-					const messageIdInput = new TextInputComponent()
-						.setCustomId("messageIdInput")
-						.setLabel("ID du message à modifier")
-						.setStyle("SHORT")
-						.setValue(msgId)
-						.setRequired(true);
-
-					const descriptionInput = new TextInputComponent()
-						.setCustomId("descriptionInput")
-						.setLabel("Description à ajouter")
-						.setStyle("PARAGRAPH")
-						.setRequired(true);
-
-					const firstActionRow = new MessageActionRow().addComponents(channelIdInput);
-					const secondActionRow = new MessageActionRow().addComponents(messageIdInput);
-					const thirdActionRow = new MessageActionRow().addComponents(descriptionInput);
-
-					modal.addComponents(firstActionRow, secondActionRow, thirdActionRow);
-
-					return await interaction.showModal(modal);
+					client.modals.set("description", modal);
+					return await interaction.showModal(modal.data);
 				}
 				case "temps_impression": {
 					if (!fields.some((field) => field.name === "Impression" || field.name === "Réimpression"))
