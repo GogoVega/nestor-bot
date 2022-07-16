@@ -10,7 +10,7 @@ The `channels.json` file contains:
 []
 ```
 
-## Role reaction
+## Role Reaction
 This command is used to manage messages with autoroles. These autoroles allow users to choose their role by reacting with a specific emoji.
 
 The `reactions.json` file contains:

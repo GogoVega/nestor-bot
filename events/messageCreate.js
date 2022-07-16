@@ -34,6 +34,6 @@ module.exports = {
 					components: [msgActionRow],
 				});
 			})
-			.catch((error) => console.error(`Error during Embed sending!\n${error}`));
+			.catch((error) => console.error("Error during Embed sending!", error));
 	},
 };

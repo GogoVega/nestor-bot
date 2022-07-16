@@ -40,7 +40,7 @@ client.messageAction.set("messageActionButton", msgActionRow);
 // @ts-ignore
 client.reactions = new Collection();
 const reactionsPath = path.join(__dirname, "./data/reactions.json");
-const reactionsFile = JSON.parse(fs.readFileSync(reactionsPath, { encoding: "utf-8" })) || {};
+const reactionsFile = JSON.parse(fs.readFileSync(reactionsPath, { encoding: "utf-8" }));
 
 // @ts-ignore
 Object.keys(reactionsFile).forEach((msgId) => client.reactions.set(msgId, reactionsFile[msgId]));

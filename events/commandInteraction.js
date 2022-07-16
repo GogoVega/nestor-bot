@@ -19,7 +19,7 @@ module.exports = {
 
 		if (!managePermission) {
 			const channelsPath = path.join(__dirname, "../data/channels.json");
-			const channelsFile = JSON.parse(fs.readFileSync(channelsPath, { encoding: "utf-8" })) || [];
+			const channelsFile = JSON.parse(fs.readFileSync(channelsPath, { encoding: "utf-8" }));
 
 			if (channelsFile.every((channelId) => channelId !== interaction.channelId))
 				return await interaction.reply({

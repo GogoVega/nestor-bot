@@ -25,9 +25,9 @@ module.exports = {
 		try {
 			await button.execute(interaction, lastFieldName);
 		} catch (error) {
-			console.error(`Error during button interaction created!\n${error}`);
+			console.error("Error during button interaction created!", error);
 			await interaction.reply({
-				content: "There was an error while executing this button!",
+				content: "Une erreur s'est produite lors de l'exécution de ce bouton !",
 				ephemeral: true,
 			});
 		}

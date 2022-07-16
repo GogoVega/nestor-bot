@@ -60,7 +60,7 @@ module.exports = {
 			const message = await channel.messages.fetch(msgId);
 
 			const reactionsPath = path.join(__dirname, "../data/reactions.json");
-			const reactionsFile = JSON.parse(fs.readFileSync(reactionsPath, { encoding: "utf-8" })) || {};
+			const reactionsFile = JSON.parse(fs.readFileSync(reactionsPath, { encoding: "utf-8" }));
 
 			switch (subCommandName) {
 				case "ajouter-role": {
