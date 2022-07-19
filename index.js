@@ -1,11 +1,11 @@
-const { Client, Collection, Intents, MessageActionRow } = require("discord.js");
+const { ActionRowBuilder, ButtonBuilder, Client, Collection, GatewayIntentBits, Partials } = require("discord.js");
 const { token } = require("./config.json");
 const path = require("path");
 const fs = require("fs");
 
 const client = new Client({
-	intents: [Intents.FLAGS.GUILDS, Intents.FLAGS.GUILD_MESSAGES, Intents.FLAGS.GUILD_MESSAGE_REACTIONS],
-	partials: ["MESSAGE", "CHANNEL", "REACTION"],
+	intents: [GatewayIntentBits.Guilds, GatewayIntentBits.GuildMessages, GatewayIntentBits.GuildMessageReactions],
+	partials: [Partials.Channel, Partials.Message, Partials.Reaction],
 });
 
 const foldersName = ["commands", "buttons", "modals"];
@@ -20,12 +20,14 @@ for (const folderName of foldersName) {
 		const content = require(filePath);
 
 		if (folderName === "commands") client[folderName].set(content.data.name, content);
-		client[folderName].set(content.data.customId, content);
+		// client[folderName].set(content.data.data.customId, content);
+		// TODO: Check if there is a cleaner way to find customId
+		client[folderName].set(ButtonBuilder.from(content.data).data.custom_id, content);
 	}
 }
 
 // Sort buttons by indice
-const msgActionRow = new MessageActionRow();
+const msgActionRow = new ActionRowBuilder();
 // @ts-ignore
 [...client.buttons.values()]
 	.sort((A, B) => A.indice - B.indice)

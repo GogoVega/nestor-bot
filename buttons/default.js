@@ -1,11 +1,11 @@
-const { MessageButton, MessageEmbed } = require("discord.js");
+const { Colors, ButtonBuilder, ButtonStyle, EmbedBuilder } = require("discord.js");
 
 module.exports = {
 	indice: 3,
-	data: new MessageButton().setEmoji("⚠").setStyle("DANGER").setCustomId("default"),
+	data: new ButtonBuilder().setEmoji("⚠").setStyle(ButtonStyle.Danger).setCustomId("default"),
 	async execute(interaction, lastFieldName) {
 		const receivedEmbed = interaction.message.embeds[0];
-		const templateEmbed = new MessageEmbed(receivedEmbed);
+		const templateEmbed = EmbedBuilder.from(receivedEmbed);
 
 		switch (lastFieldName) {
 			case "Défaut":
@@ -31,11 +31,14 @@ module.exports = {
 				});
 			case "Impression":
 			case "Réimpression":
-				templateEmbed.setColor("ORANGE");
-				templateEmbed.addField(
-					"Défaut",
-					"Un défaut technique est survenu! Cela peut-être un plateau gras, une coupure de courant, buse bouchée, ...\n\u200b"
-				);
+				templateEmbed.setColor(Colors.Orange);
+				templateEmbed.addFields([
+					{
+						name: "Défaut",
+						value:
+							"Un défaut technique est survenu! Cela peut-être un plateau gras, une coupure de courant, buse bouchée, ...\n\u200b",
+					},
+				]);
 				return await interaction.update({ embeds: [templateEmbed] });
 		}
 	},

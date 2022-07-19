@@ -1,4 +1,4 @@
-const { Permissions } = require("discord.js");
+const { InteractionType, PermissionsBitField } = require("discord.js");
 const path = require("path");
 const fs = require("fs");
 
@@ -6,9 +6,9 @@ const fs = require("fs");
 module.exports = {
 	name: "interactionCreate",
 	async execute(interaction, client) {
-		if (!interaction.isCommand()) return;
+		if (interaction.type !== InteractionType.ApplicationCommand) return;
 
-		if (!interaction.channel.permissionsFor(client.user).has(Permissions.FLAGS.USE_APPLICATION_COMMANDS))
+		if (!interaction.channel.permissionsFor(client.user).has(PermissionsBitField.Flags.UseApplicationCommands))
 			return await interaction.reply({
 				content: "Vous ne disposez pas des autorisations requises!",
 				ephemeral: true,

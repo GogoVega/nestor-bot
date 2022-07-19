@@ -1,5 +1,5 @@
 const { SlashCommandBuilder } = require("@discordjs/builders");
-const { MessageEmbed } = require("discord.js");
+const { EmbedBuilder } = require("discord.js");
 
 module.exports = {
 	data: new SlashCommandBuilder()
@@ -76,7 +76,7 @@ module.exports = {
 			const channel = await client.channels.fetch(channelId);
 			const message = await channel.messages.fetch(msgId);
 			const receivedEmbed = message.embeds[0];
-			const exampleEmbed = new MessageEmbed(receivedEmbed);
+			const exampleEmbed = EmbedBuilder.from(receivedEmbed);
 			const fields = receivedEmbed.fields;
 
 			const timeHours = interaction.options.getInteger("heures");
@@ -84,7 +84,7 @@ module.exports = {
 
 			switch (subcommandName) {
 				case "description": {
-					if (exampleEmbed.title !== "Statut")
+					if (exampleEmbed.data.title !== "Statut")
 						return await interaction.reply({
 							content: "Erreur: Vous ne pouvez pas modifier ce message !",
 							ephemeral: true,
@@ -113,12 +113,14 @@ module.exports = {
 
 					const date_finish = new Date();
 
-					exampleEmbed.addField(
-						"Temps restant d'impression",
-						`Le temps d'impression estimé est de ${timeHours}h ${timeMins}min.\nCe qui vous donne RDV pour ${date_finish.setHours(
-							date_finish.getHours() + timeHours
-						)}h ${date_finish.setMinutes(date_finish.getMinutes() + timeMins)}.\n\u200b`
-					);
+					exampleEmbed.addFields([
+						{
+							name: "Temps restant d'impression",
+							value: `Le temps d'impression estimé est de ${timeHours}h ${timeMins}min.\nCe qui vous donne RDV pour ${date_finish.setHours(
+								date_finish.getHours() + timeHours
+							)}h ${date_finish.setMinutes(date_finish.getMinutes() + timeMins)}.\n\u200b`,
+						},
+					]);
 					await message.edit({ embeds: [exampleEmbed] });
 					return await interaction.reply({
 						content: `:white_check_mark: | Temps restant \`${timeHours}h ${timeMins}min\` ajoutée !`,
@@ -132,10 +134,12 @@ module.exports = {
 							ephemeral: true,
 						});
 
-					exampleEmbed.addField(
-						"Temps d'impression",
-						`L'impression a été effectuée en ${timeHours}h ${timeMins}min.\n\u200b`
-					);
+					exampleEmbed.addFields([
+						{
+							name: "Temps d'impression",
+							value: `L'impression a été effectuée en ${timeHours}h ${timeMins}min.\n\u200b`,
+						},
+					]);
 
 					const image = interaction.options.getAttachment("image");
 					if (image) exampleEmbed.setImage(image.url);
