@@ -25,6 +25,10 @@
 		"url": "https://github.com/GogoVega"
 	},
 	"license": "Apache-2.0",
+	"bugs": {
+		"url": "https://github.com/GogoVega/nestor-bot/issues"
+	},
+	"homepage": "https://github.com/GogoVega/nestor-bot#readme",
 	"dependencies": {
 		"@discordjs/builders": "^0.15.0",
 		"@discordjs/rest": "^0.5.0",
