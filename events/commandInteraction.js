@@ -1,6 +1,4 @@
 const { InteractionType, PermissionsBitField } = require("discord.js");
-const path = require("path");
-const fs = require("fs");
 
 // Command interaction
 module.exports = {
@@ -18,10 +16,7 @@ module.exports = {
 		const managePermission = client.commands.get(interaction.commandName).managePermission;
 
 		if (!managePermission) {
-			const channelsPath = path.join(__dirname, "../data/channels.json");
-			const channelsFile = JSON.parse(fs.readFileSync(channelsPath, { encoding: "utf-8" }));
-
-			if (channelsFile.every((channelId) => channelId !== interaction.channelId))
+			if (client.authorizedChannels.every((channelId) => channelId !== interaction.channelId))
 				return await interaction.reply({
 					content: "Le Bot n'a pas accès à ce salon!",
 					ephemeral: true,

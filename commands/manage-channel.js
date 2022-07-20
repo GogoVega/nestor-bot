@@ -27,7 +27,7 @@ module.exports = {
 		.addSubcommand((subcommand) =>
 			subcommand.setName("salons-list").setDescription("Afficher la liste complète des salons.")
 		),
-	async execute(interaction) {
+	async execute(interaction, client) {
 		const subCommandName = interaction.options.getSubcommand();
 		const channelId = interaction.options.getChannel("salon_id")?.id;
 
@@ -70,6 +70,7 @@ module.exports = {
 			}
 		}
 
+		client.authorizedChannels = channelsFile;
 		fs.writeFile(channelsPath, JSON.stringify(channelsFile), { encoding: "utf-8", flag: "w" }, (error) => {
 			if (error) {
 				if (error.code != "EEXIST") throw error;

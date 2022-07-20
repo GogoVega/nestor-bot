@@ -57,6 +57,14 @@ const reactionsFile = JSON.parse(fs.readFileSync(reactionsPath, { encoding: "utf
 // @ts-ignore
 Object.keys(reactionsFile).forEach((msgId) => client.reactions.set(msgId, reactionsFile[msgId]));
 
+// Reading authorized channels from file
+// @ts-ignore
+client.authorizedChannels = new Collection();
+const channelsPath = path.join(__dirname, "./data/channels.json");
+const channelsFile = JSON.parse(fs.readFileSync(channelsPath, { encoding: "utf-8" }));
+// @ts-ignore
+client.authorizedChannels = channelsFile;
+
 // Events
 const eventsPath = path.join(__dirname, "events");
 const eventFiles = fs.readdirSync(eventsPath).filter((file) => file.endsWith(".js"));
