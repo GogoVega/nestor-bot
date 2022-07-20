@@ -1,4 +1,12 @@
-const { ActionRowBuilder, ButtonBuilder, Client, Collection, GatewayIntentBits, Partials } = require("discord.js");
+const {
+	ActionRowBuilder,
+	ButtonBuilder,
+	Client,
+	Collection,
+	GatewayIntentBits,
+	Partials,
+	Utils,
+} = require("discord.js");
 const { token } = require("./config.json");
 const path = require("path");
 const fs = require("fs");
@@ -19,10 +27,12 @@ for (const folderName of foldersName) {
 		const filePath = path.join(folderPath, file);
 		const content = require(filePath);
 
-		if (folderName === "commands") client[folderName].set(content.data.name, content);
-		// client[folderName].set(content.data.data.customId, content);
-		// TODO: Check if there is a cleaner way to find customId
-		client[folderName].set(ButtonBuilder.from(content.data).data.custom_id, content);
+		if (folderName === "commands") {
+			client[folderName].set(content.data.name, content);
+		} else if (!Utils.isLinkButton(content.data)) {
+			// @ts-ignore
+			client[folderName].set(ButtonBuilder.from(content.data).data.custom_id, content);
+		}
 	}
 }
 
