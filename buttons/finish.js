@@ -27,14 +27,16 @@ module.exports = {
 				});
 			case "Impression":
 			case "Réimpression":
-				templateEmbed.setColor(Colors.Green);
-				templateEmbed.addFields([
-					{
-						name: "Fini",
-						value:
-							"Pièce finie d'être imprimée !\nVenez la prendre au FabLab !\n[Horaire de présence des étudiants en stage](https://antodb.be/EPHEC/cnc.html)\n\u200b",
-					},
-				]);
+				templateEmbed
+					.setColor(Colors.Green)
+					.setTimestamp(new Date())
+					.addFields([
+						{
+							name: "Fini",
+							value:
+								"Pièce finie d'être imprimée !\nVenez la prendre au FabLab !\n[Horaire de présence des étudiants en stage](https://antodb.be/EPHEC/cnc.html)\n\u200b",
+						},
+					]);
 				return await interaction.update({ embeds: [templateEmbed] });
 		}
 	},

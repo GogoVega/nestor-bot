@@ -31,14 +31,16 @@ module.exports = {
 				});
 			case "Impression":
 			case "Réimpression":
-				templateEmbed.setColor(Colors.Orange);
-				templateEmbed.addFields([
-					{
-						name: "Défaut",
-						value:
-							"Un défaut technique est survenu! Cela peut-être un plateau gras, une coupure de courant, buse bouchée, ...\n\u200b",
-					},
-				]);
+				templateEmbed
+					.setColor(Colors.Orange)
+					.setTimestamp(new Date())
+					.addFields([
+						{
+							name: "Défaut",
+							value:
+								"Un défaut technique est survenu! Cela peut-être un plateau gras, une coupure de courant, buse bouchée, ...\n\u200b",
+						},
+					]);
 				return await interaction.update({ embeds: [templateEmbed] });
 		}
 	},

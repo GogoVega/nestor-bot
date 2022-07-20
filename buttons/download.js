@@ -20,10 +20,10 @@ module.exports = {
 					ephemeral: true,
 				});
 			case "Délivré":
-				templateEmbed.setColor(Colors.Blue);
-				templateEmbed.addFields([
-					{ name: "Téléchargé", value: `Fichier téléchargé par : <@${interaction.user.id}>\n\u200b` },
-				]);
+				templateEmbed
+					.setColor(Colors.Blue)
+					.setTimestamp(new Date())
+					.addFields([{ name: "Téléchargé", value: `Fichier téléchargé par : <@${interaction.user.id}>\n\u200b` }]);
 				return await interaction.update({ embeds: [templateEmbed] });
 			case "Impression":
 			case "Réimpression":

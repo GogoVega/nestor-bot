@@ -7,7 +7,7 @@ module.exports = {
 		const receivedEmbed = interaction.message.embeds[0];
 		const templateEmbed = EmbedBuilder.from(receivedEmbed);
 
-		templateEmbed.setColor(Colors.Yellow);
+		templateEmbed.setColor(Colors.Yellow).setTimestamp(new Date());
 
 		switch (lastFieldName) {
 			case "Délivré":
