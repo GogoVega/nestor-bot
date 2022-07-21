@@ -1,11 +1,11 @@
-const { MessageButton, MessageEmbed } = require("discord.js");
+const { Colors, ButtonBuilder, ButtonStyle, EmbedBuilder } = require("discord.js");
 
 module.exports = {
 	indice: 2,
-	data: new MessageButton().setEmoji("✔").setStyle("SUCCESS").setCustomId("finish"),
+	data: new ButtonBuilder().setEmoji("✔").setStyle(ButtonStyle.Success).setCustomId("finish"),
 	async execute(interaction, lastFieldName) {
 		const receivedEmbed = interaction.message.embeds[0];
-		const templateEmbed = new MessageEmbed(receivedEmbed);
+		const templateEmbed = EmbedBuilder.from(receivedEmbed);
 
 		switch (lastFieldName) {
 			case "Fini":
@@ -27,11 +27,16 @@ module.exports = {
 				});
 			case "Impression":
 			case "Réimpression":
-				templateEmbed.setColor("GREEN");
-				templateEmbed.addField(
-					"Fini",
-					"Pièce finie d'être imprimée !\nVenez la prendre au FabLab !\n[Horaire de présence des étudiants en stage](https://antodb.be/EPHEC/cnc.html)\n\u200b"
-				);
+				templateEmbed
+					.setColor(Colors.Green)
+					.setTimestamp(new Date())
+					.addFields([
+						{
+							name: "Fini",
+							value:
+								"Pièce finie d'être imprimée !\nVenez la prendre au FabLab !\n[Horaire de présence des étudiants en stage](https://antodb.be/EPHEC/cnc.html)\n\u200b",
+						},
+					]);
 				return await interaction.update({ embeds: [templateEmbed] });
 		}
 	},

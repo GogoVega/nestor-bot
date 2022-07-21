@@ -1,13 +1,13 @@
-const { MessageButton, MessageEmbed } = require("discord.js");
+const { Colors, ButtonBuilder, ButtonStyle, EmbedBuilder } = require("discord.js");
 
 module.exports = {
 	indice: 1,
-	data: new MessageButton().setEmoji("🖨").setStyle("SECONDARY").setCustomId("print"),
+	data: new ButtonBuilder().setEmoji("🖨").setStyle(ButtonStyle.Secondary).setCustomId("print"),
 	async execute(interaction, lastFieldName) {
 		const receivedEmbed = interaction.message.embeds[0];
-		const templateEmbed = new MessageEmbed(receivedEmbed);
+		const templateEmbed = EmbedBuilder.from(receivedEmbed);
 
-		templateEmbed.setColor("YELLOW");
+		templateEmbed.setColor(Colors.Yellow).setTimestamp(new Date());
 
 		switch (lastFieldName) {
 			case "Délivré":
@@ -17,10 +17,10 @@ module.exports = {
 				});
 			case "Défaut":
 			case "Erreur":
-				templateEmbed.addField("Réimpression", "Fichier en cours de réimpression...\n\u200b");
+				templateEmbed.addFields([{ name: "Réimpression", value: "Fichier en cours de réimpression...\n\u200b" }]);
 				return await interaction.update({ embeds: [templateEmbed] });
 			case "Téléchargé":
-				templateEmbed.addField("Impression", "Fichier en cours d'impression...\n\u200b");
+				templateEmbed.addFields([{ name: "Impression", value: "Fichier en cours d'impression...\n\u200b" }]);
 				return await interaction.update({ embeds: [templateEmbed] });
 			case "Impression":
 			case "Réimpression":

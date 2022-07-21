@@ -1,5 +1,5 @@
 const { SlashCommandBuilder } = require("@discordjs/builders");
-const { Permissions } = require("discord.js");
+const { PermissionsBitField } = require("discord.js");
 const { clientId } = require("../config.json");
 const path = require("path");
 const fs = require("fs");
@@ -44,7 +44,7 @@ module.exports = {
 				.addStringOption((option) => option.setName("message_id").setDescription("ID du message.").setRequired(true))
 		),
 	async execute(interaction, client) {
-		if (!interaction.client.user.fetchFlags(Permissions.FLAGS.MANAGE_ROLES))
+		if (!interaction.client.user.fetchFlags(PermissionsBitField.Flags.ManageRoles))
 			return await interaction.reply({
 				content: "Erreur: Vous ne disposez pas des autorisations requises!",
 				ephemeral: true,

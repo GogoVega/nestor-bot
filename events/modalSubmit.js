@@ -1,8 +1,10 @@
+const { InteractionType } = require("discord.js");
+
 // Modal Submission for commands
 module.exports = {
 	name: "interactionCreate",
 	async execute(interaction, client) {
-		if (!interaction.isModalSubmit()) return;
+		if (interaction.type !== InteractionType.ModalSubmit) return;
 
 		const modal = client.modals.get(interaction.customId);
 

@@ -1,11 +1,19 @@
-const { Client, Collection, Intents, MessageActionRow } = require("discord.js");
+const {
+	ActionRowBuilder,
+	ButtonBuilder,
+	Client,
+	Collection,
+	GatewayIntentBits,
+	Partials,
+	Utils,
+} = require("discord.js");
 const { token } = require("./config.json");
 const path = require("path");
 const fs = require("fs");
 
 const client = new Client({
-	intents: [Intents.FLAGS.GUILDS, Intents.FLAGS.GUILD_MESSAGES, Intents.FLAGS.GUILD_MESSAGE_REACTIONS],
-	partials: ["MESSAGE", "CHANNEL", "REACTION"],
+	intents: [GatewayIntentBits.Guilds, GatewayIntentBits.GuildMessages, GatewayIntentBits.GuildMessageReactions],
+	partials: [Partials.Channel, Partials.Message, Partials.Reaction],
 });
 
 const foldersName = ["commands", "buttons", "modals"];
@@ -19,13 +27,17 @@ for (const folderName of foldersName) {
 		const filePath = path.join(folderPath, file);
 		const content = require(filePath);
 
-		if (folderName === "commands") client[folderName].set(content.data.name, content);
-		client[folderName].set(content.data.customId, content);
+		if (folderName === "commands") {
+			client[folderName].set(content.data.name, content);
+		} else if (!Utils.isLinkButton(content.data)) {
+			// @ts-ignore
+			client[folderName].set(ButtonBuilder.from(content.data).data.custom_id, content);
+		}
 	}
 }
 
 // Sort buttons by indice
-const msgActionRow = new MessageActionRow();
+const msgActionRow = new ActionRowBuilder();
 // @ts-ignore
 [...client.buttons.values()]
 	.sort((A, B) => A.indice - B.indice)
@@ -44,6 +56,14 @@ const reactionsFile = JSON.parse(fs.readFileSync(reactionsPath, { encoding: "utf
 
 // @ts-ignore
 Object.keys(reactionsFile).forEach((msgId) => client.reactions.set(msgId, reactionsFile[msgId]));
+
+// Reading authorized channels from file
+// @ts-ignore
+client.authorizedChannels = new Collection();
+const channelsPath = path.join(__dirname, "./data/channels.json");
+const channelsFile = JSON.parse(fs.readFileSync(channelsPath, { encoding: "utf-8" }));
+// @ts-ignore
+client.authorizedChannels = channelsFile;
 
 // Events
 const eventsPath = path.join(__dirname, "events");

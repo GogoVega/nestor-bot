@@ -1,14 +1,12 @@
-const { Permissions } = require("discord.js");
-const path = require("path");
-const fs = require("fs");
+const { InteractionType, PermissionsBitField } = require("discord.js");
 
 // Command interaction
 module.exports = {
 	name: "interactionCreate",
 	async execute(interaction, client) {
-		if (!interaction.isCommand()) return;
+		if (interaction.type !== InteractionType.ApplicationCommand) return;
 
-		if (!interaction.channel.permissionsFor(client.user).has(Permissions.FLAGS.USE_APPLICATION_COMMANDS))
+		if (!interaction.channel.permissionsFor(client.user).has(PermissionsBitField.Flags.UseApplicationCommands))
 			return await interaction.reply({
 				content: "Vous ne disposez pas des autorisations requises!",
 				ephemeral: true,
@@ -18,10 +16,7 @@ module.exports = {
 		const managePermission = client.commands.get(interaction.commandName).managePermission;
 
 		if (!managePermission) {
-			const channelsPath = path.join(__dirname, "../data/channels.json");
-			const channelsFile = JSON.parse(fs.readFileSync(channelsPath, { encoding: "utf-8" }));
-
-			if (channelsFile.every((channelId) => channelId !== interaction.channelId))
+			if (client.authorizedChannels.every((channelId) => channelId !== interaction.channelId))
 				return await interaction.reply({
 					content: "Le Bot n'a pas accès à ce salon!",
 					ephemeral: true,

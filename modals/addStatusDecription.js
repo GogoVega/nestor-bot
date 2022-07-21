@@ -1,23 +1,22 @@
-const { MessageActionRow, MessageEmbed, Modal, TextInputComponent } = require("discord.js");
+const { ActionRowBuilder, EmbedBuilder, ModalBuilder, TextInputBuilder, TextInputStyle } = require("discord.js");
 
 // Modal Submission for command-fablab description command
 module.exports = {
 	channelId: "",
 	messageId: "",
-	data: new Modal()
+	data: new ModalBuilder()
 		.setCustomId("description")
 		.setTitle("Ajout d'une description")
-		.addComponents(
-			// @ts-ignore
-			new MessageActionRow().addComponents(
-				// @ts-ignore
-				new TextInputComponent()
+		// @ts-ignore
+		.addComponents([
+			new ActionRowBuilder().addComponents([
+				new TextInputBuilder()
 					.setCustomId("descriptionInput")
 					.setLabel("Description à ajouter")
-					.setStyle("PARAGRAPH")
-					.setRequired(true)
-			)
-		),
+					.setStyle(TextInputStyle.Paragraph)
+					.setRequired(true),
+			]),
+		]),
 	async execute(interaction, client) {
 		const descriptionInput = interaction.fields.getTextInputValue("descriptionInput");
 		const modal = client.modals.get("description");
@@ -29,9 +28,10 @@ module.exports = {
 
 		const channel = await client.channels.fetch(channelId);
 		const message = await channel.messages.fetch(messageId);
-		const exampleEmbed = new MessageEmbed(message.embeds[0]);
+		const receivedEmbed = message.embeds[0];
+		const exampleEmbed = EmbedBuilder.from(receivedEmbed);
 
-		exampleEmbed.addField("Description", `${descriptionInput}\n\u200b`);
+		exampleEmbed.addFields([{ name: "Description", value: `${descriptionInput}\n\u200b` }]);
 
 		await message.edit({ embeds: [exampleEmbed] });
 		return await interaction.reply({

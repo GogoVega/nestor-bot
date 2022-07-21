@@ -1,11 +1,11 @@
-const { MessageButton, MessageEmbed } = require("discord.js");
+const { Colors, ButtonBuilder, ButtonStyle, EmbedBuilder } = require("discord.js");
 
 module.exports = {
 	indice: 0,
-	data: new MessageButton().setEmoji("🔽").setStyle("PRIMARY").setCustomId("download"),
+	data: new ButtonBuilder().setEmoji("🔽").setStyle(ButtonStyle.Primary).setCustomId("download"),
 	async execute(interaction, lastFieldName) {
 		const receivedEmbed = interaction.message.embeds[0];
-		const templateEmbed = new MessageEmbed(receivedEmbed);
+		const templateEmbed = EmbedBuilder.from(receivedEmbed);
 
 		switch (lastFieldName) {
 			case "Défaut":
@@ -20,8 +20,10 @@ module.exports = {
 					ephemeral: true,
 				});
 			case "Délivré":
-				templateEmbed.setColor("BLUE");
-				templateEmbed.addField("Téléchargé", `Fichier téléchargé par : <@${interaction.user.id}>\n\u200b`);
+				templateEmbed
+					.setColor(Colors.Blue)
+					.setTimestamp(new Date())
+					.addFields([{ name: "Téléchargé", value: `Fichier téléchargé par : <@${interaction.user.id}>\n\u200b` }]);
 				return await interaction.update({ embeds: [templateEmbed] });
 			case "Impression":
 			case "Réimpression":

@@ -1,5 +1,5 @@
 const { SlashCommandBuilder } = require("@discordjs/builders");
-const { Permissions } = require("discord.js");
+const { PermissionsBitField } = require("discord.js");
 const path = require("path");
 const fs = require("fs");
 
@@ -27,11 +27,11 @@ module.exports = {
 		.addSubcommand((subcommand) =>
 			subcommand.setName("salons-list").setDescription("Afficher la liste complète des salons.")
 		),
-	async execute(interaction) {
+	async execute(interaction, client) {
 		const subCommandName = interaction.options.getSubcommand();
 		const channelId = interaction.options.getChannel("salon_id")?.id;
 
-		if (!interaction.client.user.fetchFlags(Permissions.FLAGS.MANAGE_CHANNELS))
+		if (!interaction.client.user.fetchFlags(PermissionsBitField.Flags.ManageChannels))
 			return await interaction.reply({
 				content: "Erreur: Vous ne disposez pas des autorisations requises!",
 				ephemeral: true,
@@ -70,6 +70,7 @@ module.exports = {
 			}
 		}
 
+		client.authorizedChannels = channelsFile;
 		fs.writeFile(channelsPath, JSON.stringify(channelsFile), { encoding: "utf-8", flag: "w" }, (error) => {
 			if (error) {
 				if (error.code != "EEXIST") throw error;

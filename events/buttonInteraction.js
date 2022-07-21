@@ -1,4 +1,4 @@
-const { Permissions } = require("discord.js");
+const { PermissionsBitField } = require("discord.js");
 
 // Button interaction
 module.exports = {
@@ -6,7 +6,7 @@ module.exports = {
 	async execute(interaction, client) {
 		if (!interaction.isButton()) return;
 
-		if (!interaction.channel.permissionsFor(client.user).has(Permissions.FLAGS.USE_APPLICATION_COMMANDS))
+		if (!interaction.channel.permissionsFor(client.user).has(PermissionsBitField.Flags.UseApplicationCommands))
 			return await interaction.reply({
 				content: "Vous ne disposez pas des autorisations requises!",
 				ephemeral: true,
