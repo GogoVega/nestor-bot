@@ -9,9 +9,11 @@ module.exports = {
 
 				if (webhooks.every((webhook) => webhook.id !== message.author.id)) return;
 
+				if (client.authorizedChannels.every((channelId) => channelId !== message.channelId)) return;
+
 				const templateEmbed = {
 					color: 0x1b1b1b,
-					title: "Statut",
+					title: "Statut de votre commande",
 					fields: [
 						{
 							name: "Délivré",

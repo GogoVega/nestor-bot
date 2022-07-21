@@ -84,7 +84,7 @@ module.exports = {
 
 			switch (subcommandName) {
 				case "description": {
-					if (exampleEmbed.data.title !== "Statut")
+					if (exampleEmbed.data.title !== "Statut de votre commande")
 						return await interaction.reply({
 							content: "Erreur: Vous ne pouvez pas modifier ce message !",
 							ephemeral: true,
