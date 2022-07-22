@@ -2,11 +2,11 @@
 // https://github.com/renzbobz/DiscordWebhook-PHP
 require("DiscordWebhook.php");
 
-$webhookurl = "YOUR_WEBHOOK_URL";
+$webhookurl = getenv("WEBHOOK_URL");
 
 $timestamp = time();
-$formatter = new IntlDateFormatter('fr_BE', IntlDateFormatter::FULL, IntlDateFormatter::SHORT);
-$timestampFormatted = $formatter->format(time());
+$formatter = new IntlDateFormatter('fr_BE', IntlDateFormatter::FULL, IntlDateFormatter::SHORT, "Europe/Berlin");
+$timestampFormatted = $formatter->format($timestamp);
 
 $firstname = $_POST["firstname"] ?? "";
 $lastname = $_POST["lastname"] ?? "";
@@ -50,7 +50,7 @@ $icon = "https://cdn.prusa3d.com/content/images/product/default/3325.jpg";
 $dw->setUsername("FabLAB");
 
 $msg = $dw->newMessage()
-->setContent("Et une nouvelle commande <@474326204808298506>")
+->setContent("Et une nouvelle commande <@&994150523404030052>")
 ->setTitle("Résumé de votre commande")
 ->setDescription("Commande passée le $timestampFormatted")
 ->setColor("1B1B1B")
@@ -68,12 +68,13 @@ $msg = $dw->newMessage()
 
 $response = $msg->send(["wait_message" => true]);
 
-if ($response->success) {
-  ?>
-    <script type="text/javascript">
-      window.location = "https://gogovega.github.io/nestor-bot/passed_order.html";
-    </script>
-  <?php
-}
+if (!$response->success)
+  return bannerError("Une erreur s'est produite pendant l'envoie de votre commande !");
+
+?>
+  <script type="text/javascript">
+    window.location = "./passed_order.html";
+  </script>
+<?php
 
 ?>
