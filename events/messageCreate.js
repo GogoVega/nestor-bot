@@ -1,39 +1,34 @@
+const { Colors, EmbedBuilder } = require("discord.js");
+
 // Reply to a received message
 module.exports = {
 	name: "messageCreate",
 	async execute(message, client) {
-		message.guild
-			.fetchWebhooks()
-			.then(async (webhooks) => {
-				if (!webhooks) return;
+		try {
+			if (!message.webhookId) return;
 
-				if (webhooks.every((webhook) => webhook.id !== message.author.id)) return;
+			const channel = await client.channels.fetch(message.channelId);
+			const webhookId = await channel.fetchWebhooks()?.id;
 
-				if (client.authorizedChannels.every((channelId) => channelId !== message.channelId)) return;
+			if (webhookId !== message.author.id) return;
 
-				const templateEmbed = {
-					color: 0x1b1b1b,
-					title: "Statut de votre commande",
-					fields: [
-						{
-							name: "Délivré",
-							value: "Nous avons reçu votre demande\n\u200b",
-						},
-					],
-					timestamp: new Date(),
-					footer: {
-						text: "EPHEC - ISAT • FabLAB",
-						icon_url: client.user.avatarURL(),
-					},
-				};
+			if (client.authorizedChannels.every((channelId) => channelId !== message.channelId)) return;
 
-				const msgActionRow = client.messageAction.get("messageActionButton");
+			const templateEmbed = new EmbedBuilder()
+				.setColor(Colors.DarkGrey)
+				.setTitle("Statut de votre commande")
+				.addFields([{ name: "Délivré", value: "Nous avons reçu votre demande\n\u200b" }])
+				.setTimestamp(new Date())
+				.setFooter({ text: "EPHEC - ISAT • FabLAB", iconURL: client.user.avatarURL() });
 
-				await message.reply({
-					embeds: [templateEmbed],
-					components: [msgActionRow],
-				});
-			})
-			.catch((error) => console.error("Error during Embed sending!", error));
+			const msgActionRow = client.messageAction.get("messageActionButton");
+
+			await message.reply({
+				embeds: [templateEmbed],
+				components: [msgActionRow],
+			});
+		} catch (error) {
+			console.error("Error during Embed sending!", error);
+		}
 	},
 };
