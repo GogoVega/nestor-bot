@@ -75,7 +75,7 @@ This command sends a message containing all the commands and their usefulness.
   - `roles-list`
   This command displays all possible reactions (emoji and role) of a message.
 - `create-embed-message`
-  This command allows you to create a personalized message in Embed format. (coming soon)
+  This command allows you to create a customizable message in Embed format.
 
 ## Getting Started Link
 
