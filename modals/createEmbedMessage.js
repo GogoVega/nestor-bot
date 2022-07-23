@@ -95,7 +95,7 @@ module.exports = {
 		// Not yet supported by discord.js
 		// https://github.com/discordjs/discord.js/issues/8035
 		// const color = this.color.split("#").pop() || Colors[interaction.getSelectMenuValues("color") || "White"];
-		const color = this.color.split("#").pop() || Colors["White"];
+		const color = this.color?.split("#").pop() || Colors["White"];
 		const iconURL = this.iconURL || this.iconImage?.url || client.user.avatarURL();
 
 		if (!this.channelId || !description || !title) throw new Error("Missing channel ID, description or title!");

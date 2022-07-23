@@ -7,6 +7,10 @@ module.exports = {
 		try {
 			if (!message.webhookId) return;
 
+			const webhooks = await message.channel.fetchWebhooks();
+
+			if (webhooks.every((webhook) => webhook.id !== message.author.id)) return;
+
 			if (client.authorizedChannels.every((channelId) => channelId !== message.channelId)) return;
 
 			const templateEmbed = new EmbedBuilder()

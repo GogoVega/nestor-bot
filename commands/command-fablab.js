@@ -112,13 +112,13 @@ module.exports = {
 						});
 
 					const date_finish = new Date();
+					date_finish.setHours(date_finish.getHours() + timeHours);
+					date_finish.setMinutes(date_finish.getMinutes() + timeMins);
 
 					exampleEmbed.addFields([
 						{
 							name: "Temps restant d'impression",
-							value: `Le temps d'impression estimé est de ${timeHours}h ${timeMins}min.\nCe qui vous donne RDV pour ${date_finish.setHours(
-								date_finish.getHours() + timeHours
-							)}h ${date_finish.setMinutes(date_finish.getMinutes() + timeMins)}.\n\u200b`,
+							value: `Le temps d'impression estimé est de ${timeHours}h ${timeMins}min.\nCe qui vous donne RDV pour ${date_finish.getHours()}h ${date_finish.getMinutes()}.\n\u200b`,
 						},
 					]);
 					await message.edit({ embeds: [exampleEmbed] });
