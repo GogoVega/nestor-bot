@@ -14,7 +14,7 @@ module.exports = {
 				.setName("ajouter-role")
 				.setDescription("Ajouter un rôle à un message.")
 				.addChannelOption((option) =>
-					option.setName("salon_id").setDescription("ID du salon contenant le message.").setRequired(true)
+					option.setName("salon_id").setDescription("Choisissez le salon contenant le message.").setRequired(true)
 				)
 				.addStringOption((option) => option.setName("message_id").setDescription("ID du message.").setRequired(true))
 				.addRoleOption((option) =>
@@ -27,7 +27,7 @@ module.exports = {
 				.setName("supprimer-role")
 				.setDescription("Supprimer un rôle à un message.")
 				.addChannelOption((option) =>
-					option.setName("salon_id").setDescription("ID du salon contenant le message.").setRequired(true)
+					option.setName("salon_id").setDescription("Choisissez le salon contenant le message.").setRequired(true)
 				)
 				.addStringOption((option) => option.setName("message_id").setDescription("ID du message.").setRequired(true))
 				.addRoleOption((option) =>
@@ -37,11 +37,8 @@ module.exports = {
 		.addSubcommand((subcommand) =>
 			subcommand
 				.setName("roles-list")
-				.setDescription("Afficher la liste complète des rôles pour ce message.")
-				.addChannelOption((option) =>
-					option.setName("salon_id").setDescription("ID du salon contenant le message.").setRequired(true)
-				)
-				.addStringOption((option) => option.setName("message_id").setDescription("ID du message.").setRequired(true))
+				.setDescription("Afficher la liste complète des rôles par message ou pour un message.")
+				.addStringOption((option) => option.setName("message_id").setDescription("ID du message."))
 		),
 	async execute(interaction, client) {
 		if (!interaction.client.user.fetchFlags(PermissionsBitField.Flags.ManageRoles))
@@ -56,11 +53,29 @@ module.exports = {
 			const roleId = interaction.options.getRole("role")?.id;
 			const subCommandName = interaction.options.getSubcommand();
 
-			const channel = await client.channels.fetch(channelId);
-			const message = await channel.messages.fetch(msgId);
-
 			const reactionsPath = path.join(__dirname, "../data/reactions.json");
 			const reactionsFile = JSON.parse(fs.readFileSync(reactionsPath, { encoding: "utf-8" }));
+
+			if (!msgId && subCommandName === "roles-list") {
+				const messageIdList = Object.keys(reactionsFile);
+				const rolesList = [];
+				if (!messageIdList.length) {
+					rolesList.push("\n```diff\n- Aucun rôle enregistré !```");
+				} else {
+					messageIdList.forEach((messageId) => {
+						rolesList.push(`\n**ID du message** : \`${messageId}\``);
+						reactionsFile[messageId].forEach((role) =>
+							rolesList.push(`\n${role.emoji} - <@&${role.roleId}>`));
+					});
+				}
+				return await interaction.reply({
+					content: `Ci-dessous la liste des rôles enregistrés par message :\n${rolesList}`,
+					ephemeral: true,
+				});
+			}
+
+			const channel = await client.channels.fetch(channelId);
+			const message = await channel.messages.fetch(msgId);
 
 			switch (subCommandName) {
 				case "ajouter-role": {
