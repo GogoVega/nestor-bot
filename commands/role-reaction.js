@@ -109,7 +109,7 @@ module.exports = {
 					if (!reactionsFile[msgId] || reactionsFile[msgId]?.length === 0) {
 						rolesList.push("```diff\n- Aucun rôle enregistré !```");
 					} else {
-						reactionsFile[msgId].forEach((role) => rolesList.push(`${role.emoji} - <@&${role.roleId}>\n`));
+						reactionsFile[msgId].forEach((role) => rolesList.push(`${reactionsFile[msgId].indexOf(role) ? "\n" : ""}${role.emoji} - <@&${role.roleId}>`));
 					}
 					return await interaction.reply({
 						content: `Ci-dessous la liste des rôles enregistrés pour ce message :\n${rolesList}`,
