@@ -99,7 +99,7 @@ module.exports = {
 						break;
 					}
 					reactionsFile[msgId].forEach((reaction) => {
-						if (reaction["roleId"] === roleId) reactionsFile[msgId].splice(reactionsFile[msgId].indexOf(reaction));
+						if (reaction["roleId"] === roleId) reactionsFile[msgId].splice(reactionsFile[msgId].indexOf(reaction), 1);
 					});
 					client.reactions.set(msgId, reactionsFile[msgId]);
 					break;
