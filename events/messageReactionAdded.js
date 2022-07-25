@@ -11,7 +11,7 @@ module.exports = {
 
 			if (!reactionsArray) return;
 
-			const [reactionObject] = reactionsArray.filter((data) => data.emoji === reaction.emoji.name);
+			const [reactionObject] = reactionsArray.value.filter((data) => data.emoji === reaction.emoji.name);
 
 			if (!reactionObject) return;
 
