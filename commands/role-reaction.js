@@ -58,6 +58,13 @@ module.exports = {
 
 			switch (subCommandName) {
 				case "ajouter-role": {
+					const bot = await interaction.guild?.members.fetch(client.user.id);
+					if (bot?.roles.highest.comparePositionTo(roleId) < 0)
+						return await interaction.reply({
+							content: "Erreur: Vous ne pouvez pas utiliser un rôle supérieur au Bot !",
+							ephemeral: true,
+						});
+
 					const channel = await client.channels.fetch(channelId);
 					const message = await channel.messages.fetch(msgId);
 					const emoji = interaction.options.getString("emoji");
