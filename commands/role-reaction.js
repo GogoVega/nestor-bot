@@ -140,7 +140,7 @@ module.exports = {
 								rolesList.push(
 									`\n**ID du message** : ${hyperlink(
 										messageId,
-										`https://discord.com/channels/${interaction.guildId}/${reactionsFile[messageId].channel}/${messageId}`
+										`<https://discord.com/channels/${interaction.guildId}/${reactionsFile[messageId].channel}/${messageId}>`
 									)}`
 								);
 								reactionsFile[messageId].value.forEach((role) =>
