@@ -100,7 +100,7 @@ module.exports = {
 
 					if (reactionsFile[msgId].value.length === 1) {
 						delete reactionsFile[msgId];
-						client.reactions.set(msgId, reactionsFile[msgId]);
+						client.reactions.delete(msgId);
 						break;
 					}
 					reactionsFile[msgId].value.forEach((reaction) => {
