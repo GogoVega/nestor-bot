@@ -159,7 +159,7 @@ module.exports = {
 					console.log(
 						`Role "${interaction.options.getRole("role").name}" ${
 							subCommandName === "ajouter-role" ? "added" : "removed"
-						} successfuly.`
+						} successfully.`
 					);
 				}
 			});
