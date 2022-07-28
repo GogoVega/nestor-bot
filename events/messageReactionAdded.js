@@ -7,11 +7,11 @@ module.exports = {
 		try {
 			await reaction.fetch();
 
-			const reactionsArray = client.reactions.get(reaction.message.id);
+			const reactionsObject = client.reactions.get(reaction.message.id);
 
-			if (!reactionsArray) return;
+			if (!reactionsObject) return;
 
-			const [reactionObject] = reactionsArray.filter((data) => data.emoji === reaction.emoji.name);
+			const [reactionObject] = reactionsObject.value.filter((data) => data.emoji === reaction.emoji.name);
 
 			if (!reactionObject) return;
 
@@ -21,6 +21,7 @@ module.exports = {
 			await member?.roles.add(reactionObject.roleId);
 		} catch (error) {
 			console.error("Error when adding a reaction to a message:", error);
+			await user.send({ content: "Une erreur s'est produite en tentant de vous ajouter le rôle !" });
 		}
 	},
 };

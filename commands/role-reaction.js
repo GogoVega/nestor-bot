@@ -1,5 +1,5 @@
 const { SlashCommandBuilder } = require("@discordjs/builders");
-const { PermissionsBitField } = require("discord.js");
+const { hyperlink, PermissionsBitField } = require("discord.js");
 const { clientId } = require("../config.json");
 const path = require("path");
 const fs = require("fs");
@@ -14,7 +14,7 @@ module.exports = {
 				.setName("ajouter-role")
 				.setDescription("Ajouter un rôle à un message.")
 				.addChannelOption((option) =>
-					option.setName("salon_id").setDescription("ID du salon contenant le message.").setRequired(true)
+					option.setName("salon_id").setDescription("Choisissez le salon contenant le message.").setRequired(true)
 				)
 				.addStringOption((option) => option.setName("message_id").setDescription("ID du message.").setRequired(true))
 				.addRoleOption((option) =>
@@ -27,7 +27,7 @@ module.exports = {
 				.setName("supprimer-role")
 				.setDescription("Supprimer un rôle à un message.")
 				.addChannelOption((option) =>
-					option.setName("salon_id").setDescription("ID du salon contenant le message.").setRequired(true)
+					option.setName("salon_id").setDescription("Choisissez le salon contenant le message.").setRequired(true)
 				)
 				.addStringOption((option) => option.setName("message_id").setDescription("ID du message.").setRequired(true))
 				.addRoleOption((option) =>
@@ -37,11 +37,8 @@ module.exports = {
 		.addSubcommand((subcommand) =>
 			subcommand
 				.setName("roles-list")
-				.setDescription("Afficher la liste complète des rôles pour ce message.")
-				.addChannelOption((option) =>
-					option.setName("salon_id").setDescription("ID du salon contenant le message.").setRequired(true)
-				)
-				.addStringOption((option) => option.setName("message_id").setDescription("ID du message.").setRequired(true))
+				.setDescription("Afficher la liste complète des rôles par message ou pour un message.")
+				.addStringOption((option) => option.setName("message_id").setDescription("ID du message."))
 		),
 	async execute(interaction, client) {
 		if (!interaction.client.user.fetchFlags(PermissionsBitField.Flags.ManageRoles))
@@ -56,63 +53,107 @@ module.exports = {
 			const roleId = interaction.options.getRole("role")?.id;
 			const subCommandName = interaction.options.getSubcommand();
 
-			const channel = await client.channels.fetch(channelId);
-			const message = await channel.messages.fetch(msgId);
-
 			const reactionsPath = path.join(__dirname, "../data/reactions.json");
 			const reactionsFile = JSON.parse(fs.readFileSync(reactionsPath, { encoding: "utf-8" }));
 
 			switch (subCommandName) {
 				case "ajouter-role": {
+					const bot = await interaction.guild?.members.fetch(client.user.id);
+					if (bot?.roles.highest.comparePositionTo(roleId) < 0)
+						return await interaction.reply({
+							content: "Erreur: Vous ne pouvez pas utiliser un rôle supérieur au Bot !",
+							ephemeral: true,
+						});
+
+					const channel = await client.channels.fetch(channelId);
+					const message = await channel.messages.fetch(msgId);
 					const emoji = interaction.options.getString("emoji");
 
-					if (!reactionsFile[msgId]) reactionsFile[msgId] = [];
-					if (reactionsFile[msgId].some((reaction) => reaction["emoji"] === emoji || reaction["roleId"] === roleId))
+					if (!reactionsFile[msgId]) {
+						reactionsFile[msgId] = {};
+						reactionsFile[msgId].channel = channelId;
+						reactionsFile[msgId].value = [];
+					}
+					if (
+						reactionsFile[msgId].value.some((reaction) => reaction["emoji"] === emoji || reaction["roleId"] === roleId)
+					)
 						return await interaction.reply({
 							content: "Erreur: Emoji ou rôle déjà utilisé !",
 							ephemeral: true,
 						});
 
-					reactionsFile[msgId].push({ emoji: emoji, roleId: roleId });
+					reactionsFile[msgId].value.push({ emoji: emoji, roleId: roleId });
 					client.reactions.set(msgId, reactionsFile[msgId]);
 					await message.react(emoji);
 					break;
 				}
 				case "supprimer-role": {
+					const channel = await client.channels.fetch(channelId);
+					const message = await channel.messages.fetch(msgId);
+
 					if (!reactionsFile[msgId])
 						return await interaction.reply({
 							content: "Erreur: Aucun emoji utilisé pour ce message !\nVérifiez l'ID du message !",
 							ephemeral: true,
 						});
-					if (reactionsFile[msgId].every((reaction) => reaction["roleId"] !== roleId))
+					if (reactionsFile[msgId].value.every((reaction) => reaction["roleId"] !== roleId))
 						return await interaction.reply({
 							content: "Erreur: Aucun rôle ne correspond à votre requête !",
 							ephemeral: true,
 						});
 
-					const [reaction] = reactionsFile[msgId].filter((reaction) => reaction.roleId === roleId);
+					const [reaction] = reactionsFile[msgId].value.filter((reaction) => reaction.roleId === roleId);
 					await message?.reactions.resolve(reaction.emoji)?.users.remove(clientId);
 
-					if (reactionsFile[msgId].length === 1) {
+					if (reactionsFile[msgId].value.length === 1) {
 						delete reactionsFile[msgId];
-						client.reactions.set(msgId, reactionsFile[msgId]);
+						client.reactions.delete(msgId);
 						break;
 					}
-					reactionsFile[msgId].forEach((reaction) => {
-						if (reaction["roleId"] === roleId) reactionsFile[msgId].splice(reactionsFile[msgId].indexOf(reaction));
+					reactionsFile[msgId].value.forEach((reaction) => {
+						if (reaction["roleId"] === roleId)
+							reactionsFile[msgId].value.splice(reactionsFile[msgId].value.indexOf(reaction), 1);
 					});
 					client.reactions.set(msgId, reactionsFile[msgId]);
 					break;
 				}
 				case "roles-list": {
 					const rolesList = [];
-					if (!reactionsFile[msgId] || reactionsFile[msgId]?.length === 0) {
-						rolesList.push("```diff\n- Aucun rôle enregistré !```");
+
+					if (msgId) {
+						if (!reactionsFile[msgId] || !reactionsFile[msgId]?.value.length) {
+							rolesList.push("```diff\n- Aucun rôle enregistré !```");
+						} else {
+							reactionsFile[msgId].value.forEach((role) =>
+								rolesList.push(
+									`${reactionsFile[msgId].value.indexOf(role) ? "\n" : ""}${role.emoji} - <@&${role.roleId}>`
+								)
+							);
+						}
 					} else {
-						reactionsFile[msgId].forEach((role) => rolesList.push(`${role.emoji} - <@&${role.roleId}>\n`));
+						const messageIdList = Object.keys(reactionsFile);
+
+						if (!messageIdList.length) {
+							rolesList.push("```diff\n- Aucun rôle enregistré !```");
+						} else {
+							messageIdList.forEach((messageId) => {
+								rolesList.push(
+									`\n**ID du message** : ${hyperlink(
+										messageId,
+										`<https://discord.com/channels/${interaction.guildId}/${reactionsFile[messageId].channel}/${messageId}>`
+									)}`
+								);
+								reactionsFile[messageId].value.forEach((role) =>
+									rolesList.push(`\n${role.emoji} - <@&${role.roleId}>`)
+								);
+							});
+						}
 					}
+
 					return await interaction.reply({
-						content: `Ci-dessous la liste des rôles enregistrés pour ce message :\n${rolesList}`,
+						content: `Ci-dessous la liste des rôles enregistrés pour ${
+							msgId ? "ce" : "chaque"
+						} message :\n${rolesList}`,
 						ephemeral: true,
 					});
 				}
@@ -125,7 +166,7 @@ module.exports = {
 					console.log(
 						`Role "${interaction.options.getRole("role").name}" ${
 							subCommandName === "ajouter-role" ? "added" : "removed"
-						} successfuly.`
+						} successfully.`
 					);
 				}
 			});

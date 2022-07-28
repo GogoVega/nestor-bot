@@ -56,7 +56,7 @@ module.exports = {
 						content: "Erreur: Ce salon n'a jamais été enregistré !",
 						ephemeral: true,
 					});
-				channelsFile.splice(channelsFile.indexOf(channelId));
+				channelsFile.splice(channelsFile.indexOf(channelId), 1);
 				break;
 			}
 			case "salons-list": {
