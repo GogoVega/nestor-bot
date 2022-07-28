@@ -52,9 +52,15 @@ Object.keys(reactionsFile).forEach((msgId) => client.reactions.set(msgId, reacti
 // @ts-ignore
 client.authorizedChannels = new Collection();
 const channelsPath = path.join(__dirname, "./data/channels.json");
-const channelsFile = JSON.parse(fs.readFileSync(channelsPath, { encoding: "utf-8" }));
 // @ts-ignore
-client.authorizedChannels = channelsFile;
+client.authorizedChannels = JSON.parse(fs.readFileSync(channelsPath, { encoding: "utf-8" }));
+
+// Reading logs configuration parameters from file
+// @ts-ignore
+client.logsConfiguration = new Collection();
+const logsConfigurationPath = path.join(__dirname, "./data/logsConfiguration.json");
+// @ts-ignore
+client.logsConfiguration = JSON.parse(fs.readFileSync(logsConfigurationPath, { encoding: "utf-8" }));
 
 // Events
 const eventsPath = path.join(__dirname, "events");

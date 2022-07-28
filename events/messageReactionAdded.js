@@ -1,3 +1,5 @@
+const { sendLog } = require("../utils/sendLog.js");
+
 // Message Reaction Added
 module.exports = {
 	name: "messageReactionAdd",
@@ -19,6 +21,11 @@ module.exports = {
 			const member = await guild?.members.fetch(user.id);
 
 			await member?.roles.add(reactionObject.roleId);
+			await sendLog(
+				{ emoji: reactionObject.emoji, roleId: reactionObject.roleId, isAdded: true, reactionUser: user },
+				null,
+				client
+			);
 		} catch (error) {
 			console.error("Error when adding a reaction to a message:", error);
 			await user.send({ content: "Une erreur s'est produite en tentant de vous ajouter le rôle !" });

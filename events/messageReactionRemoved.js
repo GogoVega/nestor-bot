@@ -1,3 +1,5 @@
+const { sendLog } = require("../utils/sendLog.js");
+
 // Message Reaction Removed
 module.exports = {
 	name: "messageReactionRemove",
@@ -19,6 +21,11 @@ module.exports = {
 			const member = await guild?.members.fetch(user.id);
 
 			await member?.roles.remove(reactionObject.roleId);
+			await sendLog(
+				{ emoji: reactionObject.emoji, roleId: reactionObject.roleId, isAdded: false, reactionUser: user },
+				null,
+				client
+			);
 		} catch (error) {
 			console.error("Error when removing a reaction to a message:", error);
 			await user.send({ content: "Une erreur s'est produite en tentant de vous retirer le rôle !" });
