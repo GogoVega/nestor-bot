@@ -11,7 +11,7 @@ module.exports = {
 
 			if (webhooks.every((webhook) => webhook.id !== message.author.id)) return;
 
-			if (client.authorizedChannels.every((channelId) => channelId !== message.channelId)) return;
+			if (!client.authorizedChannels.get(message.guildId)?.some((channelId) => channelId === message.channelId)) return;
 
 			const templateEmbed = new EmbedBuilder()
 				.setColor(Colors.DarkGrey)

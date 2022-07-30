@@ -38,7 +38,11 @@ module.exports = {
 			});
 
 		const channelsPath = path.join(__dirname, "../data/channels.json");
-		const channelsFile = JSON.parse(fs.readFileSync(channelsPath, { encoding: "utf-8" }));
+		const channelsObjectFile = JSON.parse(fs.readFileSync(channelsPath, { encoding: "utf-8" }));
+
+		if (!channelsObjectFile[interaction.guildId]) channelsObjectFile[interaction.guildId] = [];
+
+		const channelsFile = channelsObjectFile[interaction.guildId];
 
 		switch (subCommandName) {
 			case "ajouter-salon": {
@@ -70,13 +74,13 @@ module.exports = {
 			}
 		}
 
-		client.authorizedChannels = channelsFile;
-		fs.writeFile(channelsPath, JSON.stringify(channelsFile), { encoding: "utf-8", flag: "w" }, (error) => {
+		client.authorizedChannels.set(interaction.guildId, channelsFile);
+		fs.writeFile(channelsPath, JSON.stringify(channelsObjectFile), { encoding: "utf-8", flag: "w" }, (error) => {
 			if (error) {
 				if (error.code != "EEXIST") throw error;
 			} else {
 				console.log(
-					`Channel "${interaction.guild.channels.cache.get(channelId).name}" ${
+					`Server "${interaction.guild.name}": Channel "${interaction.guild.channels.cache.get(channelId).name}" ${
 						subCommandName === "ajouter-salon" ? "added" : "removed"
 					} successfuly.`
 				);

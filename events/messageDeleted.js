@@ -6,15 +6,19 @@ module.exports = {
 	name: "messageDelete",
 	async execute(message, client) {
 		try {
-			const reactionsObject = client.reactions.get(message.id);
+			const reactionsRaw = client.reactions.get(message.guildId);
 
-			if (!reactionsObject) return;
+			if (!reactionsRaw) return;
+
+			const reactionsMessage = reactionsRaw[message.id];
+
+			if (!reactionsMessage) return;
 
 			const reactionsPath = path.join(__dirname, "../data/reactions.json");
 			const reactionsFile = JSON.parse(fs.readFileSync(reactionsPath, { encoding: "utf-8" }));
 
-			delete reactionsFile[message.id];
-			client.reactions.delete(message.id);
+			delete reactionsFile[message.guildId][message.id];
+			client.reactions.set(message.guildId, reactionsFile);
 
 			fs.writeFile(reactionsPath, JSON.stringify(reactionsFile), { encoding: "utf-8", flag: "w" }, (error) => {
 				if (error) {

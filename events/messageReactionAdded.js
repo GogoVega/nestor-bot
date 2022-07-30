@@ -9,11 +9,15 @@ module.exports = {
 		try {
 			await reaction.fetch();
 
-			const reactionsObject = client.reactions.get(reaction.message.id);
+			const reactionsRaw = client.reactions.get(reaction.message.guildId);
 
-			if (!reactionsObject) return;
+			if (!reactionsRaw) return;
 
-			const [reactionObject] = reactionsObject.value.filter((data) => data.emoji === reaction.emoji.name);
+			const reactionsMessage = reactionsRaw[reaction.message.id];
+
+			if (!reactionsMessage) return;
+
+			const [reactionObject] = reactionsMessage.values.filter((data) => data.emoji === reaction.emoji.name);
 
 			if (!reactionObject) return;
 

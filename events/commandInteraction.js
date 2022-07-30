@@ -16,7 +16,7 @@ module.exports = {
 		const managePermission = client.commands.get(interaction.commandName).managePermission;
 
 		if (!managePermission) {
-			if (client.authorizedChannels.every((channelId) => channelId !== interaction.channelId))
+			if (!client.authorizedChannels.get(interaction.guildId)?.some((channelId) => channelId === interaction.channelId))
 				return await interaction.reply({
 					content: "Le Bot n'a pas accès à ce salon!",
 					ephemeral: true,
