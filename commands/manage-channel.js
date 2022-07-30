@@ -46,6 +46,14 @@ module.exports = {
 
 		switch (subCommandName) {
 			case "ajouter-salon": {
+				const channel = await client.channels.fetch(channelId);
+
+				if (!channel.parent) {
+					return await interaction.reply({
+						content: "Erreur: Ce n'est pas un salon mais une catégorie !",
+						ephemeral: true,
+					});
+				}
 				if (channelsFile.includes(channelId))
 					return await interaction.reply({
 						content: "Erreur: Ce salon a déjà été enregistré !",
