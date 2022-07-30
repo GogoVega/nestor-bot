@@ -17,3 +17,11 @@ The `reactions.json` file contains:
 ```js
 {}
 ```
+
+## Logs Configuration Parameters
+This command is used to manage logs settings. You can choose the channel as well as the interactions that can send log messages.
+
+The `logsConfiguration.json` file contains:
+```js
+{}
+```

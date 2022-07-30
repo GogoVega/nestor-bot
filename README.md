@@ -73,9 +73,14 @@ This command sends a message containing all the commands and their usefulness.
   - `supprimer-role`
   This command removes the self-role from a message.
   - `roles-list`
-  This command displays all possible reactions (emoji and role) of a message.
+  This command displays all possible reactions (emoji and role) of one or all saved messages.
 - `create-embed-message`
   This command allows you to create a customizable message in Embed format.
+- `parametres-logs`
+  - `modifier-parametres`
+  This command allows you to modify the configuration parameters of the logs (channel ID, button, command and reaction).
+  - `afficher-parametres`
+  This command displays all the configuration parameters of the logs.
 
 ## Getting Started Link
 
