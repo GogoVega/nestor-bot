@@ -61,14 +61,15 @@ module.exports = {
 				const getState = function getState(parameter) {
 					return parameter ? "Activé" : "Désactivé";
 				};
-				if (Object.keys(logsConfigurationFile).length === 0)
+				if (Object.keys(logsConfigurationFile).length === 0) {
 					parameters.push("```diff\n- Aucun paramètre enregistré!```");
-
-				parameters.push(
-					`\n• **Salon utilisé** : <#${channelId}>\n• **Log des boutons** : ${getState(
-						button
-					)}\n• **Log des commandes** : ${getState(command)}\n• **Log des réactions** : ${getState(reaction)}\n`
-				);
+				} else {
+					parameters.push(
+						`\n• **Salon utilisé** : <#${channelId}>\n• **Log des boutons** : ${getState(
+							button
+						)}\n• **Log des commandes** : ${getState(command)}\n• **Log des réactions** : ${getState(reaction)}\n`
+					);
+				}
 				return await interaction.reply({
 					content: `Ci-dessous la liste des paramètres enregistrés:\n${parameters}`,
 					ephemeral: true,
