@@ -36,10 +36,10 @@ if (strlen($message) > 1000)
   return bannerError("Message trop long !");
 
 if (empty($fileBaseName))
-  return bannerError("Pas de fichiers téléversé !");
+  return bannerError("Pas de fichier téléversé !");
 
-if ($fileExtension != "STL")
-  return bannerError("Désolé mais nous n'acceptons que les fichiers STL.");
+if ($fileExtension !== "STL")
+  return bannerError("Désolé mais nous n\'acceptons que les fichiers STL !");
 
 if (empty($message)) $message = "Aucun message.";
 

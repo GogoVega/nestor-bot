@@ -327,7 +327,7 @@
 					<div class="field-body">
 						<div class="field">
 							<p class="control is-expanded has-icons-left">
-								<input class="input is-danger" id= "firstname-input" type="text" placeholder="Prénom" autocomplete="on" name="firstname" onchange="isNameValid('firstname-input')" required>
+								<input class="input is-normal" style="border-width: 2px;" id= "firstname-input" type="text" placeholder="Prénom" autocomplete="on" name="firstname" onchange="isNameValid('firstname-input')" required>
 								<span class="icon is-small is-left">
 									<i class="fas fa-user"></i>
 								</span>
@@ -335,7 +335,7 @@
 						</div>
 						<div class="field">
 							<p class="control is-expanded has-icons-left">
-								<input class="input is-danger" id="lastname-input" type="text" placeholder="Nom" autocomplete="on" name="lastname" onchange="isNameValid('lastname-input')" required>
+								<input class="input is-normal" style="border-width: 2px;" id="lastname-input" type="text" placeholder="Nom" autocomplete="on" name="lastname" onchange="isNameValid('lastname-input')" required>
 								<span class="icon is-small is-left">
 									<i class="fas fa-user"></i>
 								</span>
@@ -351,7 +351,7 @@
 					<div class="field-body">
 						<div class="field">
 							<div class="select is-fullwidth is-success">
-								<select name="class">
+								<select name="class" style="border-width: 2px;">
 									<option value="Prof">Professeur</option>
 									<option value="1AU">1 AU</option>
 									<option value="2AU" selected>2 AU</option>
@@ -375,7 +375,7 @@
 								<label class="file-label">
 									<input type="hidden" name="MAX_FILE_SIZE" value="8388608" /><!--8MiB-->
 									<input class="file-input" id="file-input" type="file" name="userfile" onchange="isFileValid()" accept=".stl" required>
-									<span class="file-cta" id="file-cta" style="border-color: #f14668; border-width: 2px;">
+									<span class="file-cta" id="file-cta" style="border-width: 2px;">
 										<span class="file-icon">
 											<i class="fas fa-upload"></i>
 										</span>
@@ -497,7 +497,7 @@
 					<div class="field-body">
 						<div class="field">
 							<div class="control has-text-centered response">
-								<button class="button has-background-grey-dark has-text-white" type="submit" class="submit" id="submit">
+								<button class="button has-background-grey-dark has-text-white" type="submit" class="submit" onclick="isFormValid()" id="submit">
 									Envoyer
 								</button>
 							</div>
@@ -526,32 +526,37 @@
 	<script src="https://code.jquery.com/jquery-1.12.4.min.js"></script>
 	<script>
 		$('#sites input:radio').addClass('input_hidden');
-		$('#sites label').click(function() {
-			$(this).addClass('selected').siblings().removeClass('selected');
-		});
+		$('#sites label').click(function() { $(this).addClass('selected').siblings().removeClass('selected') });
+		let onLoaded = false;
 
-		function isFileValid()
+		function isFileValid(onLoad)
 		{
-			const path = document.getElementById("file-input")?.value;
-			const size = document.getElementById("file-input")?.files[0].size;
-			const fileName = path.split("\\").pop();
-			const regex = /[.]/;
+			const files = document.getElementById("file-input").files;
 
-			if (!fileName) {
+			if (onLoad && files.length === 0) return;
+
+			if (files.length === 0) {
 				document.getElementById("help-file").innerHTML = "Pas de fichier sélectionné";
+				document.getElementById("file-cta").style.borderColor = "RED";
 				return;
 			}
 
-			// 8Mo
-			if (size > 8192000) {
-				document.getElementById("help-file").innerHTML = "Fichier trop volumineux !";
-				return;
-			}
+			const fileName = files[0].name.split("\\").pop();
+			const fileSize = files[0].size;
+			const regex = /[.]/;
 
 			document.getElementById("file-name").innerHTML = fileName;
 
+			// 8Mo
+			if (fileSize > 8192000) {
+				document.getElementById("help-file").innerHTML = "Fichier trop volumineux !";
+				document.getElementById("file-cta").style.borderColor = "RED";
+				return;
+			}
+
 			if (fileName.search(regex) < 0) {
 				document.getElementById("help-file").innerHTML = "Le fichier contient aucune extension !";
+				document.getElementById("file-cta").style.borderColor = "RED";
 				return;
 			}
 
@@ -559,6 +564,7 @@
 
 			if (fileExtension !== "STL") {
 				document.getElementById("help-file").innerHTML = "Le fichier doit être au format STL !";
+				document.getElementById("file-cta").style.borderColor = "RED";
 				return;
 			}
 
@@ -566,34 +572,61 @@
 			document.getElementById("file-cta").style.borderColor = "GREEN";
 		}
 
-		function isNameValid(inputID) {
-			const firstname = document.getElementById(inputID)?.value;
+		function isNameValid(inputID, onLoad) {
+			const name = document.getElementById(inputID)?.value;
 			let className = "input is-danger";
 			let customValidity = "";
 
-			if (firstname.length >= 1 && firstname.length <= 25)
+			if (onLoad && name.length === 0) return;
+
+			if (name.length >= 1 && name.length <= 25)
 				className = "input is-success";
 
-			if (firstname.length > 25)
-				customValidity = `${firstname.length}/25 caractères autorisés !`;
+			if (name.length > 25)
+				customValidity = `${name.length}/25 caractères autorisés !`;
 
 			document.getElementById(inputID).className = className;
 			document.getElementById(inputID).setCustomValidity(customValidity);
 		}
 
+		function isFormValid() {
+			isNameValid("firstname-input");
+			isNameValid("lastname-input");
+			isFileValid();
+		}
+
+		function isButtonSelected() {
+			const radioButtons = document.querySelectorAll('input[name="filament"]');
+			const isSelected = false;
+
+			for (const button of radioButtons) {
+				if (button.checked) {
+					button.parentElement.classList.add("selected");
+					isSelected = true;
+					return;
+				}
+			}
+
+			if (!isSelected) {
+				document.getElementById("default_filament").getElementsByTagName('input')[0].checked = true;
+				document.getElementById("default_filament").classList.add("selected");
+			}
+		}
+
+		window.onchange = (() => {
+			if (!onLoaded) return;
+			sessionStorage.setItem("isChanged", true);
+		});
+
 		window.onload = (() => {
+			const isChanged = sessionStorage.getItem("isChanged") || false;
+
 			setTimeout(() => {
-				const radioButtons = document.querySelectorAll('input[name="filament"]');
-
-				radioButtons.forEach((button) => {
-					if (button.checked) {
-						button.parentElement.classList.add("selected");
-						return;
-					}
-
-					document.getElementById("default_filament").getElementsByTagName('input')[0].checked = true;
-					document.getElementById("default_filament").classList.add("selected");
-				});
+				isNameValid("firstname-input", !isChanged);
+				isNameValid("lastname-input", !isChanged);
+				isFileValid(!isChanged);
+				isButtonSelected();
+				onLoaded = true;
 			}, 50);
 		});
 	</script>
