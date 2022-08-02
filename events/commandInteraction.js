@@ -6,7 +6,7 @@ module.exports = {
 	async execute(interaction, client) {
 		if (interaction.type !== InteractionType.ApplicationCommand) return;
 
-		if (!interaction.channel.permissionsFor(client.user).has(PermissionsBitField.Flags.UseApplicationCommands))
+		if (!interaction.channel.permissionsFor(interaction.user).has(PermissionsBitField.Flags.UseApplicationCommands))
 			return await interaction.reply({
 				content: "Vous ne disposez pas des autorisations requises!",
 				ephemeral: true,
@@ -16,7 +16,7 @@ module.exports = {
 		const managePermission = client.commands.get(interaction.commandName).managePermission;
 
 		if (!managePermission) {
-			if (client.authorizedChannels.every((channelId) => channelId !== interaction.channelId))
+			if (!client.authorizedChannels.get(interaction.guildId)?.some((channelId) => channelId === interaction.channelId))
 				return await interaction.reply({
 					content: "Le Bot n'a pas accès à ce salon!",
 					ephemeral: true,

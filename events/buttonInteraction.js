@@ -6,7 +6,7 @@ module.exports = {
 	async execute(interaction, client) {
 		if (!interaction.isButton()) return;
 
-		if (!interaction.channel.permissionsFor(client.user).has(PermissionsBitField.Flags.UseApplicationCommands))
+		if (!interaction.channel.permissionsFor(interaction.user).has(PermissionsBitField.Flags.UseApplicationCommands))
 			return await interaction.reply({
 				content: "Vous ne disposez pas des autorisations requises!",
 				ephemeral: true,

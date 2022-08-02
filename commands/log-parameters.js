@@ -29,14 +29,18 @@ module.exports = {
 		const subCommandName = interaction.options.getSubcommand();
 		const getChannelId = interaction.options.getChannel("salon_id")?.id;
 
-		if (!interaction.client.user.fetchFlags(PermissionsBitField.Flags.ManageChannels))
+		if (!interaction.channel.permissionsFor(interaction.user).has(PermissionsBitField.Flags.ManageChannels))
 			return await interaction.reply({
 				content: "Erreur: Vous ne disposez pas des autorisations requises!",
 				ephemeral: true,
 			});
 
 		const logsConfigurationPath = path.join(__dirname, "../data/logsConfiguration.json");
-		const logsConfigurationFile = JSON.parse(fs.readFileSync(logsConfigurationPath, { encoding: "utf-8" }));
+		const logsConfigurationObjectFile = JSON.parse(fs.readFileSync(logsConfigurationPath, { encoding: "utf-8" }));
+
+		if (!logsConfigurationObjectFile[interaction.guildId]) logsConfigurationObjectFile[interaction.guildId] = {};
+
+		const logsConfigurationFile = logsConfigurationObjectFile[interaction.guildId];
 
 		switch (subCommandName) {
 			case "modifier-parametres": {
@@ -77,16 +81,18 @@ module.exports = {
 			}
 		}
 
-		client.logsConfiguration = logsConfigurationFile;
+		client.logsConfiguration.set(interaction.guildId, logsConfigurationFile);
 		fs.writeFile(
 			logsConfigurationPath,
-			JSON.stringify(logsConfigurationFile),
+			JSON.stringify(logsConfigurationObjectFile),
 			{ encoding: "utf-8", flag: "w" },
 			(error) => {
 				if (error) {
 					if (error.code != "EEXIST") throw error;
 				} else {
-					console.log("The configuration parameters of the logs have been updated!");
+					console.log(
+						`Server "${interaction.guild.name}": The configuration parameters of the logs have been updated!`
+					);
 				}
 			}
 		);

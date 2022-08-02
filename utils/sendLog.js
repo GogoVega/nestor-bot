@@ -3,7 +3,9 @@ const { Colors, EmbedBuilder } = require("discord.js");
 // Send logs message
 module.exports = {
 	async sendLog({ emoji = "", roleId = "", isAdded = false, reactionUser = null }, interaction, client) {
-		const logParameters = client.logsConfiguration;
+		const logParameters = client.logsConfiguration.get(interaction?.guildId || reactionUser?.guildId);
+
+		if (!logParameters) return;
 
 		const user = interaction?.user || reactionUser;
 		const templateEmbed = new EmbedBuilder()
