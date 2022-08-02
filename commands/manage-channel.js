@@ -31,7 +31,7 @@ module.exports = {
 		const subCommandName = interaction.options.getSubcommand();
 		const channelId = interaction.options.getChannel("salon_id")?.id;
 
-		if (!interaction.client.user.fetchFlags(PermissionsBitField.Flags.ManageChannels))
+		if (!interaction.channel.permissionsFor(interaction.user).has(PermissionsBitField.Flags.ManageChannels))
 			return await interaction.reply({
 				content: "Erreur: Vous ne disposez pas des autorisations requises!",
 				ephemeral: true,

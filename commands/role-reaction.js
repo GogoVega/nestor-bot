@@ -40,7 +40,7 @@ module.exports = {
 				.addStringOption((option) => option.setName("message_id").setDescription("ID du message."))
 		),
 	async execute(interaction, client) {
-		if (!interaction.client.user.fetchFlags(PermissionsBitField.Flags.ManageRoles))
+		if (!interaction.channel.permissionsFor(interaction.user).has(PermissionsBitField.Flags.ManageRoles))
 			return await interaction.reply({
 				content: "Erreur: Vous ne disposez pas des autorisations requises!",
 				ephemeral: true,
