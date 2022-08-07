@@ -31,17 +31,29 @@ module.exports = {
 		const subCommandName = interaction.options.getSubcommand();
 		const channelId = interaction.options.getChannel("salon_id")?.id;
 
-		if (!interaction.client.user.fetchFlags(PermissionsBitField.Flags.ManageChannels))
+		if (!interaction.channel.permissionsFor(interaction.user).has(PermissionsBitField.Flags.ManageChannels))
 			return await interaction.reply({
 				content: "Erreur: Vous ne disposez pas des autorisations requises!",
 				ephemeral: true,
 			});
 
 		const channelsPath = path.join(__dirname, "../data/channels.json");
-		const channelsFile = JSON.parse(fs.readFileSync(channelsPath, { encoding: "utf-8" }));
+		const channelsObjectFile = JSON.parse(fs.readFileSync(channelsPath, { encoding: "utf-8" }));
+
+		if (!channelsObjectFile[interaction.guildId]) channelsObjectFile[interaction.guildId] = [];
+
+		const channelsFile = channelsObjectFile[interaction.guildId];
 
 		switch (subCommandName) {
 			case "ajouter-salon": {
+				const channel = await client.channels.fetch(channelId);
+
+				if (!channel.parent) {
+					return await interaction.reply({
+						content: "Erreur: Ce n'est pas un salon mais une catégorie !",
+						ephemeral: true,
+					});
+				}
 				if (channelsFile.includes(channelId))
 					return await interaction.reply({
 						content: "Erreur: Ce salon a déjà été enregistré !",
@@ -70,13 +82,13 @@ module.exports = {
 			}
 		}
 
-		client.authorizedChannels = channelsFile;
-		fs.writeFile(channelsPath, JSON.stringify(channelsFile), { encoding: "utf-8", flag: "w" }, (error) => {
+		client.authorizedChannels.set(interaction.guildId, channelsFile);
+		fs.writeFile(channelsPath, JSON.stringify(channelsObjectFile), { encoding: "utf-8", flag: "w" }, (error) => {
 			if (error) {
 				if (error.code != "EEXIST") throw error;
 			} else {
 				console.log(
-					`Channel "${interaction.guild.channels.cache.get(channelId).name}" ${
+					`Server "${interaction.guild.name}": Channel "${interaction.guild.channels.cache.get(channelId).name}" ${
 						subCommandName === "ajouter-salon" ? "added" : "removed"
 					} successfuly.`
 				);

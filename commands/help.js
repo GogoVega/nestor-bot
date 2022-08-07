@@ -6,12 +6,11 @@ module.exports = {
 		.setName("help")
 		.setDescription("Replies with all available commands and their usage."),
 	async execute(interaction, client) {
-		const userAvatar = client.user.avatarURL();
 		const templateEmbed = new EmbedBuilder()
 			.setColor(Colors.Blue)
 			.setTitle("Available Commands")
 			.setTimestamp()
-			.setFooter({ text: "EPHEC - ISAT • FabLAB", iconURL: `${userAvatar}` });
+			.setFooter({ text: `${client.user.username} • FabLAB`, iconURL: client.user.avatarURL() });
 
 		client.commands.forEach((command) =>
 			templateEmbed.addFields([{ name: command.data.name, value: command.data.description }])
