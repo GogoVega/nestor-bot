@@ -24,10 +24,10 @@ module.exports = {
 				)
 				.setColor(isAdded ? Colors.Orange : Colors.Purple);
 		} else if (interaction) {
-			if (interaction.type !== 2 && interaction.type !== 3) return;
-			if (!logParameters[interaction.type === 2 ? "command" : "button"]) return;
+			if (!interaction.isCommand() && !interaction.isButton()) return;
+			if (!logParameters[interaction.isCommand() ? "command" : "button"]) return;
 
-			const isCommand = interaction.type === 2;
+			const isCommand = interaction.isCommand();
 			const interactionName = interaction.commandName || interaction.customId;
 			const subCommandName = interaction.options?._subcommand;
 
