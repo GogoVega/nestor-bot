@@ -1,10 +1,10 @@
-const { InteractionType, PermissionsBitField } = require("discord.js");
+const { PermissionsBitField } = require("discord.js");
 
 // Command interaction
 module.exports = {
 	name: "interactionCreate",
 	async execute(interaction, client) {
-		if (interaction.type !== InteractionType.ApplicationCommand) return;
+		if (!interaction.isCommand()) return;
 
 		if (!interaction.channel.permissionsFor(interaction.user).has(PermissionsBitField.Flags.UseApplicationCommands))
 			return await interaction.reply({
