@@ -21,12 +21,14 @@ module.exports = {
 
 			if (!reactionObject) return;
 
-			const guild = await client.guilds.fetch(reaction.message.guildId);
+			const { guildId } = reaction.message;
+			const { emoji, roleId } = reactionObject;
+			const guild = await client.guilds.fetch(guildId);
 			const member = await guild?.members.fetch(user.id);
 
 			await member?.roles.remove(reactionObject.roleId);
 			await sendLog(
-				{ emoji: reactionObject.emoji, roleId: reactionObject.roleId, isAdded: false, reactionUser: user },
+				{ emoji: emoji, guildId: guildId, roleId: roleId, isAdded: false, reactionUser: user },
 				null,
 				client
 			);
