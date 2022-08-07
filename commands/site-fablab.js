@@ -9,10 +9,13 @@ module.exports = {
 				new ButtonBuilder()
 					.setLabel("Imprimante 3D")
 					.setStyle(ButtonStyle.Link)
-					.setURL("https://antodb.be/EPHEC/3D_printers.html")
+					.setURL("https://nestor-pages.herokuapp.com/3D_printers.html")
 			)
 			.addComponents(
-				new ButtonBuilder().setLabel("CNC").setStyle(ButtonStyle.Link).setURL("https://antodb.be/EPHEC/cnc.html")
+				new ButtonBuilder()
+					.setLabel("CNC")
+					.setStyle(ButtonStyle.Link)
+					.setURL("https://nestor-pages.herokuapp.com/cnc.html")
 			);
 		await interaction.reply({
 			content: "Site pour la gestion du fabLAB",

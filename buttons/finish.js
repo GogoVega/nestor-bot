@@ -34,7 +34,7 @@ module.exports = {
 						{
 							name: "Fini",
 							value:
-								"Pièce finie d'être imprimée !\nVenez la prendre au FabLab !\n[Horaire de présence des étudiants en stage](https://antodb.be/EPHEC/cnc.html)\n\u200b",
+								"Pièce finie d'être imprimée !\nVenez la prendre au FabLab !\n[Horaire de présence des étudiants en stage](https://nestor-pages.herokuapp.com/cnc.html)\n\u200b",
 						},
 					]);
 				return await interaction.update({ embeds: [templateEmbed] });
