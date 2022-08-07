@@ -23,3 +23,12 @@ Each file contains two elements:
 
 - **data**: Contains the command elements (name, description, subcommand...).
 - **execute()**: Is the function executed if this command is called.
+
+## Server Integrations Page
+
+Discord has added a page to manage roles and channels of slash commands.
+Therefore if you are using this page, you can disable the `manage-channel` command.
+
+This page can be found in the server settings => Integrations => Nestor.
+
+Read more about [Integrations Page](https://support.discord.com/hc/fr/articles/360045093012).

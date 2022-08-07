@@ -87,6 +87,7 @@ This command sends a message containing all the commands and their usefulness.
 - [Change Log](./CHANGELOG.md): whats changed?
 - [Create data files](./data/README.md): How to create data files?
 - [Our order site](https://nestor-pages.herokuapp.com): Where is our order site?
+- [Server Integrations Page](./commands/README.md#server-integrations-page): How to manage Bot settings?
 
 ## License
 
