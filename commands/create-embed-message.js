@@ -40,6 +40,12 @@ module.exports = {
 		modal.iconImage = interaction.options.getAttachment("icon-image");
 		modal.thumbnail = interaction.options.getAttachment("miniature");
 
+		if (!modal.iconURL.startsWith("http://") && !modal.iconURL.startsWith("https://"))
+			return await interaction.reply({
+				content: "Erreur: Veuillez vérifier l'URL de votre icon !",
+				ephemeral: true,
+			});
+
 		client.modals.set("createEmbedMessage", modal);
 		return await interaction.showModal(modal.data);
 	},
