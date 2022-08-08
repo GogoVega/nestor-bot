@@ -40,7 +40,9 @@ module.exports = {
 		modal.iconImage = interaction.options.getAttachment("icon-image");
 		modal.thumbnail = interaction.options.getAttachment("miniature");
 
-		if (!modal.iconURL.startsWith("http://") && !modal.iconURL.startsWith("https://"))
+		const regex =
+			/^https?:\/\/(?:www\.)?[-a-zA-Z0-9@:%._+~#=]{1,256}\.[a-zA-Z0-9()]{1,6}\b(?:[-a-zA-Z0-9()@:%_+.~#?&/=]*)$/;
+		if (!modal.iconURL.match(regex))
 			return await interaction.reply({
 				content: "Erreur: Veuillez vérifier l'URL de votre icon !",
 				ephemeral: true,
