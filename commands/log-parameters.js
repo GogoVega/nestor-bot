@@ -54,9 +54,10 @@ module.exports = {
 				}
 
 				logsConfigurationFile.channelId = getChannelId;
-				logsConfigurationFile.button = interaction.options.getBoolean("button") || false;
-				logsConfigurationFile.command = interaction.options.getBoolean("command") || false;
-				logsConfigurationFile.reaction = interaction.options.getBoolean("reaction") || false;
+				for (const type of ["button", "command", "reaction"]) {
+					const state = logsConfigurationFile[type];
+					logsConfigurationFile[type] = interaction.options.getBoolean(type) || state || false;
+				}
 				break;
 			}
 			case "afficher-parametres": {
