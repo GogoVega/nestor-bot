@@ -40,6 +40,14 @@ module.exports = {
 		modal.iconImage = interaction.options.getAttachment("icon-image");
 		modal.thumbnail = interaction.options.getAttachment("miniature");
 
+		const regex =
+			/^https?:\/\/(?:www\.)?[-a-zA-Z0-9@:%._+~#=]{1,256}\.[a-zA-Z0-9()]{1,6}\b(?:[-a-zA-Z0-9()@:%_+.~#?&/=]*)$/;
+		if (!modal.iconURL.match(regex))
+			return await interaction.reply({
+				content: "Erreur: Veuillez vérifier l'URL de votre icône !",
+				ephemeral: true,
+			});
+
 		client.modals.set("createEmbedMessage", modal);
 		return await interaction.showModal(modal.data);
 	},
