@@ -76,7 +76,7 @@ module.exports = {
 			const channel = await client.channels.fetch(channelId);
 			const message = await channel.messages.fetch(msgId);
 			const receivedEmbed = message.embeds[0];
-			const exampleEmbed = EmbedBuilder.from(receivedEmbed);
+			const exampleEmbed = EmbedBuilder.from(receivedEmbed).setTimestamp(new Date());
 			const fields = receivedEmbed.fields;
 
 			const timeHours = interaction.options.getInteger("heures");
