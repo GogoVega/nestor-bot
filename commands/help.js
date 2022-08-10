@@ -10,7 +10,7 @@ module.exports = {
 			.setColor(Colors.Blue)
 			.setTitle("Available Commands")
 			.setTimestamp()
-			.setFooter({ text: `${client.user.username} • FabLAB`, iconURL: client.user.avatarURL() });
+			.setFooter({ text: `${interaction.guild.members.me.nickname} • FabLAB`, iconURL: client.user.avatarURL() });
 
 		client.commands.forEach((command) =>
 			templateEmbed.addFields([{ name: command.data.name, value: command.data.description }])
