@@ -42,7 +42,7 @@ module.exports = {
 
 		const regex =
 			/^https?:\/\/(?:www\.)?[-a-zA-Z0-9@:%._+~#=]{1,256}\.[a-zA-Z0-9()]{1,6}\b(?:[-a-zA-Z0-9()@:%_+.~#?&/=]*)$/;
-		if (!modal.iconURL.match(regex))
+		if (modal.iconURL?.match(regex) === null)
 			return await interaction.reply({
 				content: "Erreur: Veuillez vérifier l'URL de votre icône !",
 				ephemeral: true,
