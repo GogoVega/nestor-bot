@@ -107,7 +107,7 @@ module.exports = {
 			.setDescription(description)
 			.setColor(color)
 			.setTimestamp(this.timestamp ? new Date() : null)
-			.setFooter({ text: this.author || `${client.user.username} • FabLAB`, iconURL: iconURL })
+			.setFooter({ text: this.author || `${interaction.guild.members.me.nickname} • FabLAB`, iconURL: iconURL })
 			.setImage(this.image?.url)
 			.setThumbnail(this.thumbnail?.url);
 

@@ -18,7 +18,7 @@ module.exports = {
 				.setTitle("Statut de votre commande")
 				.addFields([{ name: "Délivré", value: "Nous avons reçu votre demande\n\u200b" }])
 				.setTimestamp(new Date())
-				.setFooter({ text: `${client.user.username} • FabLAB`, iconURL: client.user.avatarURL() });
+				.setFooter({ text: `${message.guild.members.me.nickname} • FabLAB`, iconURL: client.user.avatarURL() });
 
 			const msgActionRow = client.messageAction.get("messageActionButton");
 
