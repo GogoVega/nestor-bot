@@ -29,9 +29,9 @@ module.exports = {
 		const channel = await client.channels.fetch(channelId);
 		const message = await channel.messages.fetch(messageId);
 		const receivedEmbed = message.embeds[0];
-		const exampleEmbed = EmbedBuilder.from(receivedEmbed);
-
-		exampleEmbed.addFields([{ name: "Description", value: `${descriptionInput}\n\u200b` }]);
+		const exampleEmbed = EmbedBuilder.from(receivedEmbed)
+			.setTimestamp(new Date())
+			.addFields([{ name: "Description", value: `${descriptionInput}\n\u200b` }]);
 
 		await message.edit({ embeds: [exampleEmbed] });
 		return await interaction.reply({
