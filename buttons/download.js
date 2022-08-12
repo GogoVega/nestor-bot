@@ -5,7 +5,10 @@ module.exports = {
 	data: new ButtonBuilder().setEmoji("🔽").setStyle(ButtonStyle.Primary).setCustomId("download"),
 	async execute(interaction, lastFieldName) {
 		const receivedEmbed = interaction.message.embeds[0];
-		const templateEmbed = EmbedBuilder.from(receivedEmbed);
+		const templateEmbed = EmbedBuilder.from(receivedEmbed)
+			.setColor(Colors.Blue)
+			.setTimestamp(new Date())
+			.addFields([{ name: "Téléchargé", value: `Fichier téléchargé par : <@${interaction.user.id}>\n\u200b` }]);
 
 		switch (lastFieldName) {
 			case "Défaut":
@@ -20,10 +23,6 @@ module.exports = {
 					ephemeral: true,
 				});
 			case "Délivré":
-				templateEmbed
-					.setColor(Colors.Blue)
-					.setTimestamp(new Date())
-					.addFields([{ name: "Téléchargé", value: `Fichier téléchargé par : <@${interaction.user.id}>\n\u200b` }]);
 				return await interaction.update({ embeds: [templateEmbed] });
 			case "Impression":
 			case "Réimpression":

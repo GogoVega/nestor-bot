@@ -5,9 +5,7 @@ module.exports = {
 	data: new ButtonBuilder().setEmoji("✖").setStyle(ButtonStyle.Danger).setCustomId("error"),
 	async execute(interaction, lastFieldName) {
 		const receivedEmbed = interaction.message.embeds[0];
-		const templateEmbed = EmbedBuilder.from(receivedEmbed);
-
-		templateEmbed.setColor(Colors.Red).setTimestamp(new Date());
+		const templateEmbed = EmbedBuilder.from(receivedEmbed).setColor(Colors.Red).setTimestamp(new Date());
 
 		switch (lastFieldName) {
 			case "Délivré":

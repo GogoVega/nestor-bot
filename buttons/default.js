@@ -5,7 +5,16 @@ module.exports = {
 	data: new ButtonBuilder().setEmoji("⚠").setStyle(ButtonStyle.Danger).setCustomId("default"),
 	async execute(interaction, lastFieldName) {
 		const receivedEmbed = interaction.message.embeds[0];
-		const templateEmbed = EmbedBuilder.from(receivedEmbed);
+		const templateEmbed = EmbedBuilder.from(receivedEmbed)
+			.setColor(Colors.Orange)
+			.setTimestamp(new Date())
+			.addFields([
+				{
+					name: "Défaut",
+					value:
+						"Un défaut technique est survenu! Cela peut-être un plateau gras, une coupure de courant, buse bouchée, ...\n\u200b",
+				},
+			]);
 
 		switch (lastFieldName) {
 			case "Défaut":
@@ -31,16 +40,6 @@ module.exports = {
 				});
 			case "Impression":
 			case "Réimpression":
-				templateEmbed
-					.setColor(Colors.Orange)
-					.setTimestamp(new Date())
-					.addFields([
-						{
-							name: "Défaut",
-							value:
-								"Un défaut technique est survenu! Cela peut-être un plateau gras, une coupure de courant, buse bouchée, ...\n\u200b",
-						},
-					]);
 				return await interaction.update({ embeds: [templateEmbed] });
 		}
 	},

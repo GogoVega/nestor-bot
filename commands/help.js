@@ -9,12 +9,10 @@ module.exports = {
 		const templateEmbed = new EmbedBuilder()
 			.setColor(Colors.Blue)
 			.setTitle("Available Commands")
+			.addFields(client.commands.map((cmd) => ({ name: cmd.data.name, value: cmd.data.description })))
 			.setTimestamp()
 			.setFooter({ text: `${interaction.guild.members.me.nickname} • FabLAB`, iconURL: client.user.avatarURL() });
 
-		client.commands.forEach((command) =>
-			templateEmbed.addFields([{ name: command.data.name, value: command.data.description }])
-		);
 		return await interaction.reply({ embeds: [templateEmbed], ephemeral: true });
 	},
 };

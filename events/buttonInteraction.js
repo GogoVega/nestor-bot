@@ -16,7 +16,7 @@ module.exports = {
 
 		if (!button) return;
 
-		// Slash commands
+		// Get last status by removing statuses linked to slash commands
 		const NotAllowed = ["Description", "Temps d'impression", "Temps restant d'impression"];
 		const fields = interaction.message.embeds[0].fields;
 		const fieldsFiltered = fields.filter((field) => !NotAllowed.includes(field.name));

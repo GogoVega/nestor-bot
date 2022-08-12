@@ -5,7 +5,16 @@ module.exports = {
 	data: new ButtonBuilder().setEmoji("✔").setStyle(ButtonStyle.Success).setCustomId("finish"),
 	async execute(interaction, lastFieldName) {
 		const receivedEmbed = interaction.message.embeds[0];
-		const templateEmbed = EmbedBuilder.from(receivedEmbed);
+		const templateEmbed = EmbedBuilder.from(receivedEmbed)
+			.setColor(Colors.Green)
+			.setTimestamp(new Date())
+			.addFields([
+				{
+					name: "Fini",
+					value:
+						"Pièce finie d'être imprimée !\nVenez la prendre au FabLab !\n[Horaire de présence des étudiants en stage](https://nestor-pages.herokuapp.com/cnc.html)\n\u200b",
+				},
+			]);
 
 		switch (lastFieldName) {
 			case "Fini":
@@ -27,16 +36,6 @@ module.exports = {
 				});
 			case "Impression":
 			case "Réimpression":
-				templateEmbed
-					.setColor(Colors.Green)
-					.setTimestamp(new Date())
-					.addFields([
-						{
-							name: "Fini",
-							value:
-								"Pièce finie d'être imprimée !\nVenez la prendre au FabLab !\n[Horaire de présence des étudiants en stage](https://nestor-pages.herokuapp.com/cnc.html)\n\u200b",
-						},
-					]);
 				return await interaction.update({ embeds: [templateEmbed] });
 		}
 	},
