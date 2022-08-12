@@ -4,8 +4,7 @@ const { EmbedBuilder } = require("discord.js");
 module.exports = {
 	data: new SlashCommandBuilder()
 		.setName("commande-fablab")
-		.setDescription("Ajouter une description ainsi que le temps d'impression.")
-
+		.setDescription("Ajouter une description ou le temps (restant) d'impression.")
 		.addSubcommand((subcommand) =>
 			subcommand
 				.setName("description")
@@ -72,15 +71,14 @@ module.exports = {
 			const subcommandName = interaction.options.getSubcommand();
 			const channelId = interaction.options.getChannel("salon_id")?.id;
 			const msgId = interaction.options.getString("message_id");
+			const timeHours = interaction.options.getInteger("heures");
+			const timeMins = interaction.options.getInteger("minutes");
 
 			const channel = await client.channels.fetch(channelId);
 			const message = await channel.messages.fetch(msgId);
 			const receivedEmbed = message.embeds[0];
 			const exampleEmbed = EmbedBuilder.from(receivedEmbed).setTimestamp(new Date());
 			const fields = receivedEmbed.fields;
-
-			const timeHours = interaction.options.getInteger("heures");
-			const timeMins = interaction.options.getInteger("minutes");
 
 			switch (subcommandName) {
 				case "description": {
@@ -134,15 +132,14 @@ module.exports = {
 							ephemeral: true,
 						});
 
-					exampleEmbed.addFields([
-						{
-							name: "Temps d'impression",
-							value: `L'impression a été effectuée en ${timeHours}h ${timeMins}min.\n\u200b`,
-						},
-					]);
-
-					const image = interaction.options.getAttachment("image");
-					if (image) exampleEmbed.setImage(image.url);
+					exampleEmbed
+						.addFields([
+							{
+								name: "Temps d'impression",
+								value: `L'impression a été effectuée en ${timeHours}h ${timeMins}min.\n\u200b`,
+							},
+						])
+						.setImage(interaction.options.getAttachment("image")?.url);
 
 					await message.edit({ embeds: [exampleEmbed] });
 					return await interaction.reply({
