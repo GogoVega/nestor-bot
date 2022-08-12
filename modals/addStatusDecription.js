@@ -19,15 +19,12 @@ module.exports = {
 		]),
 	async execute(interaction, client) {
 		const descriptionInput = interaction.fields.getTextInputValue("descriptionInput");
-		const modal = client.modals.get("description");
-		const channelId = modal?.channelId;
-		const messageId = modal?.messageId;
 
-		if (!channelId || !descriptionInput || !messageId)
+		if (!this.channelId || !descriptionInput || !this.messageId)
 			throw new Error("Missing message ID, channel ID or description!");
 
-		const channel = await client.channels.fetch(channelId);
-		const message = await channel.messages.fetch(messageId);
+		const channel = await client.channels.fetch(this.channelId);
+		const message = await channel.messages.fetch(this.messageId);
 		const receivedEmbed = message.embeds[0];
 		const exampleEmbed = EmbedBuilder.from(receivedEmbed)
 			.setTimestamp(new Date())
