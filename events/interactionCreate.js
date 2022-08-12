@@ -5,8 +5,12 @@ module.exports = {
 	async execute(interaction, client) {
 		await sendLog({}, interaction, client);
 		console.log(
-			`${interaction.user.tag} in #${interaction.channel.name} triggered an interaction named "${
-				interaction.isCommand() ? interaction.commandName : interaction.customId
+			`Server "${interaction.guild.name}": ${interaction.user.tag} in #${
+				interaction.channel.name
+			} triggered an interaction named "${
+				interaction.isCommand()
+					? interaction.commandName.concat(" ", interaction.options.getSubcommand() || "")
+					: interaction.customId
 			}".`
 		);
 	},
