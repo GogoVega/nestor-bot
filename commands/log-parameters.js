@@ -56,7 +56,7 @@ module.exports = {
 				logsConfigurationFile.channelId = getChannelId;
 				for (const type of ["button", "command", "reaction"]) {
 					const state = logsConfigurationFile[type];
-					logsConfigurationFile[type] = interaction.options.getBoolean(type) || state || false;
+					logsConfigurationFile[type] = interaction.options.getBoolean(type) ?? state ?? false;
 				}
 				break;
 			}

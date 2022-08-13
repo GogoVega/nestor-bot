@@ -9,7 +9,7 @@ module.exports = {
 				interaction.channel.name
 			} triggered an interaction named "${
 				interaction.isCommand()
-					? interaction.commandName.concat(" ", interaction.options.getSubcommand() || "")
+					? interaction.commandName.concat(" ", interaction.options.getSubcommand() ?? "")
 					: interaction.customId
 			}".`
 		);

@@ -94,9 +94,9 @@ module.exports = {
 		const fieldDescription = interaction.fields.getTextInputValue("fieldDescriptionInput");
 		// Not yet supported by discord.js
 		// https://github.com/discordjs/discord.js/issues/8035
-		// const color = this.color.split("#").pop() || Colors[interaction.getSelectMenuValues("color") || "White"];
-		const color = this.color?.split("#").pop() || Colors["White"];
-		const iconURL = this.iconURL || this.iconImage?.url || client.user.avatarURL();
+		// const color = this.color.split("#").pop() ?? Colors[interaction.getSelectMenuValues("color") ?? "White"];
+		const color = this.color?.split("#").pop() ?? Colors["White"];
+		const iconURL = this.iconURL ?? this.iconImage?.url ?? client.user.avatarURL();
 
 		if (!this.channelId || !description || !title) throw new Error("Missing channel ID, description or title!");
 
@@ -107,15 +107,15 @@ module.exports = {
 			.setDescription(description)
 			.setColor(color)
 			.setTimestamp(this.timestamp ? new Date() : null)
-			.setFooter({ text: this.author || `${interaction.guild.members.me.nickname} • FabLAB`, iconURL: iconURL })
+			.setFooter({ text: this.author ?? `${interaction.guild.members.me.nickname} • FabLAB`, iconURL: iconURL })
 			.setImage(this.image?.url)
 			.setThumbnail(this.thumbnail?.url);
 
 		if (fieldTitle || fieldDescription)
 			templateEmbed.addFields([
 				{
-					name: fieldTitle || "Aucun Sous-Titre",
-					value: fieldDescription || "Aucune description",
+					name: fieldTitle ?? "Aucun Sous-Titre",
+					value: fieldDescription ?? "Aucune description",
 				},
 			]);
 

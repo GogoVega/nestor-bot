@@ -3,11 +3,11 @@ const { Colors, EmbedBuilder } = require("discord.js");
 // Send logs message
 module.exports = {
 	async sendLog({ emoji = "", guildId = "", roleId = "", isAdded = false, reactionUser = null }, interaction, client) {
-		const logParameters = client.logsConfiguration.get(interaction?.guildId || guildId);
+		const logParameters = client.logsConfiguration.get(interaction?.guildId ?? guildId);
 
 		if (!logParameters) return;
 
-		const user = interaction?.user || reactionUser;
+		const user = interaction?.user ?? reactionUser;
 		const templateEmbed = new EmbedBuilder()
 			.setTimestamp(new Date())
 			.setFooter({ text: user.tag, iconURL: user.avatarURL() });
@@ -28,7 +28,7 @@ module.exports = {
 			if (!logParameters[interaction.isCommand() ? "command" : "button"]) return;
 
 			const isCommand = interaction.isCommand();
-			const interactionName = interaction.commandName || interaction.customId;
+			const interactionName = interaction.commandName ?? interaction.customId;
 			const subCommandName = interaction.options.getSubcommand();
 
 			templateEmbed
