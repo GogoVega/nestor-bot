@@ -29,7 +29,7 @@ module.exports = {
 
 			const isCommand = interaction.isCommand();
 			const interactionName = interaction.commandName ?? interaction.customId;
-			const subCommandName = interaction.options.getSubcommand();
+			const subCommandName = interaction.options?.getSubcommand(false);
 
 			templateEmbed
 				.setTitle(isCommand ? "Une commande vient d'être utilisée !" : "Un bouton vient d'être appuyé !")
