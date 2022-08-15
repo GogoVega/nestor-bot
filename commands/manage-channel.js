@@ -1,7 +1,6 @@
 const { SlashCommandBuilder } = require("@discordjs/builders");
 const { PermissionsBitField } = require("discord.js");
-const path = require("path");
-const fs = require("fs");
+const { readFile, writeFile } = require("../utils/readWriteFile.js");
 
 module.exports = {
 	managePermission: true,
@@ -37,8 +36,8 @@ module.exports = {
 				ephemeral: true,
 			});
 
-		const channelsPath = path.join(__dirname, "../data/channels.json");
-		const channelsObjectFile = JSON.parse(fs.readFileSync(channelsPath, { encoding: "utf-8" }));
+		const channelsPath = "../data/channels.json";
+		const channelsObjectFile = await readFile(channelsPath);
 
 		if (!channelsObjectFile[interaction.guildId]) channelsObjectFile[interaction.guildId] = [];
 
@@ -83,17 +82,13 @@ module.exports = {
 		}
 
 		client.authorizedChannels.set(interaction.guildId, channelsFile);
-		fs.writeFile(channelsPath, JSON.stringify(channelsObjectFile), { encoding: "utf-8", flag: "w" }, (error) => {
-			if (error) {
-				if (error.code != "EEXIST") throw error;
-			} else {
-				console.log(
-					`Server "${interaction.guild.name}": Channel "${interaction.guild.channels.cache.get(channelId).name}" ${
-						subCommandName === "ajouter-salon" ? "added" : "removed"
-					} successfuly.`
-				);
-			}
-		});
+		await writeFile(channelsPath, channelsObjectFile);
+
+		console.log(
+			`Server "${interaction.guild.name}": Channel "${interaction.guild.channels.cache.get(channelId).name}" ${
+				subCommandName === "ajouter-salon" ? "added" : "removed"
+			} successfuly.`
+		);
 
 		await interaction.reply({
 			content: `Le salon <#${channelId}> a bien été ${subCommandName === "ajouter-salon" ? "ajouté" : "supprimé"}.`,

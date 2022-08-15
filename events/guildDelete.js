@@ -1,10 +1,9 @@
-const path = require("path");
-const fs = require("fs");
+const { readFile, writeFile } = require("../utils/readWriteFile.js");
 
 // Delete Guild Data from Files
 module.exports = {
 	name: "guildDelete",
-	execute(guild, client) {
+	async execute(guild, client) {
 		const dataPaths = {
 			reactions: "reactions.json",
 			authorizedChannels: "channels.json",
@@ -13,17 +12,13 @@ module.exports = {
 
 		try {
 			for (const dataPath of Object.keys(dataPaths)) {
-				const contentPath = path.join(__dirname, `../data/${dataPaths[dataPath]}`);
-				const contentFile = JSON.parse(fs.readFileSync(contentPath, { encoding: "utf-8" }));
+				const contentPath = `../data/${dataPaths[dataPath]}`;
+				const contentFile = await readFile(contentPath);
 
 				client[dataPath].delete(guild.id);
 				delete contentFile[guild.id];
 
-				fs.writeFile(contentPath, JSON.stringify(contentFile), { encoding: "utf-8", flag: "w" }, (error) => {
-					if (error) {
-						if (error.code != "EEXIST") throw error;
-					}
-				});
+				await writeFile(contentPath, contentFile);
 			}
 
 			console.log(`Server "${guild.name}": Successfully deleted guild data!`);

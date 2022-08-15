@@ -1,5 +1,4 @@
-const path = require("path");
-const fs = require("fs");
+const { readFile, writeFile } = require("../utils/readWriteFile.js");
 
 // Remove reactions from data file associated with deleted message.
 module.exports = {
@@ -14,19 +13,15 @@ module.exports = {
 
 			if (!reactionsMessage) return;
 
-			const reactionsPath = path.join(__dirname, "../data/reactions.json");
-			const reactionsFile = JSON.parse(fs.readFileSync(reactionsPath, { encoding: "utf-8" }));
+			const reactionsPath = "../data/reactions.json";
+			const reactionsFile = await readFile(reactionsPath);
 
 			delete reactionsFile[message.guildId][message.id];
 			client.reactions.set(message.guildId, reactionsFile);
 
-			fs.writeFile(reactionsPath, JSON.stringify(reactionsFile), { encoding: "utf-8", flag: "w" }, (error) => {
-				if (error) {
-					if (error.code != "EEXIST") throw error;
-				} else {
-					console.log(`Reactions associated with message "${message.id}" has been deleted successfully.`);
-				}
-			});
+			await writeFile(reactionsPath, reactionsFile);
+
+			console.log(`Reactions associated with message "${message.id}" has been deleted successfully.`);
 		} catch (error) {
 			console.error("Error while deleting reactions associated with the message:", error);
 		}

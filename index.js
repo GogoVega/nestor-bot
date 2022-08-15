@@ -9,7 +9,7 @@ const client = new Client({
 });
 
 // Create Collections for Buttons, Commands and Modals.
-const { createInteractionCollections } = require("./utils/createInteractionCollections.js");
+const { createInteractionCollections } = require("./utils/createCollections.js");
 createInteractionCollections(client);
 
 // Create Message Action (Buttons) for messageCreate interaction
@@ -17,7 +17,7 @@ const { createMessageAction } = require("./utils/createMessageAction.js");
 createMessageAction(client);
 
 // Create Collections for data folder.
-const { createDataCollections } = require("./utils/createDataCollections.js");
+const { createDataCollections } = require("./utils/createCollections.js");
 createDataCollections(client);
 
 // Events

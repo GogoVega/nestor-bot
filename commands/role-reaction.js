@@ -1,7 +1,6 @@
 const { SlashCommandBuilder } = require("@discordjs/builders");
 const { hyperlink, PermissionsBitField } = require("discord.js");
-const path = require("path");
-const fs = require("fs");
+const { readFile, writeFile } = require("../utils/readWriteFile.js");
 
 module.exports = {
 	managePermission: true,
@@ -52,8 +51,8 @@ module.exports = {
 			const roleId = interaction.options.getRole("role")?.id;
 			const subCommandName = interaction.options.getSubcommand();
 
-			const reactionsPath = path.join(__dirname, "../data/reactions.json");
-			const reactionsObjectFile = JSON.parse(fs.readFileSync(reactionsPath, { encoding: "utf-8" }));
+			const reactionsPath = "../data/reactions.json";
+			const reactionsObjectFile = await readFile(reactionsPath);
 
 			if (!reactionsObjectFile[interaction.guildId]) reactionsObjectFile[interaction.guildId] = {};
 
@@ -160,17 +159,13 @@ module.exports = {
 			}
 
 			client.reactions.set(interaction.guildId, reactionsFile);
-			fs.writeFile(reactionsPath, JSON.stringify(reactionsObjectFile), { encoding: "utf-8", flag: "w" }, (error) => {
-				if (error) {
-					if (error.code != "EEXIST") throw error;
-				} else {
-					console.log(
-						`Server "${interaction.guild.name}": Role "${interaction.options.getRole("role").name}" ${
-							subCommandName === "ajouter-role" ? "added" : "removed"
-						} successfully.`
-					);
-				}
-			});
+			await writeFile(reactionsPath, reactionsObjectFile);
+
+			console.log(
+				`Server "${interaction.guild.name}": Role "${interaction.options.getRole("role").name}" ${
+					subCommandName === "ajouter-role" ? "added" : "removed"
+				} successfully.`
+			);
 
 			await interaction.reply({
 				content: `Le role <@&${roleId}> a bien été ${subCommandName === "ajouter-role" ? "ajouté" : "supprimé"}.`,

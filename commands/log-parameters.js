@@ -1,7 +1,6 @@
 const { SlashCommandBuilder } = require("@discordjs/builders");
 const { PermissionsBitField } = require("discord.js");
-const path = require("path");
-const fs = require("fs");
+const { readFile, writeFile } = require("../utils/readWriteFile.js");
 
 module.exports = {
 	data: new SlashCommandBuilder()
@@ -35,8 +34,8 @@ module.exports = {
 				ephemeral: true,
 			});
 
-		const logsConfigurationPath = path.join(__dirname, "../data/logsConfiguration.json");
-		const logsConfigurationObjectFile = JSON.parse(fs.readFileSync(logsConfigurationPath, { encoding: "utf-8" }));
+		const logsConfigurationPath = "../data/logsConfiguration.json";
+		const logsConfigurationObjectFile = await readFile(logsConfigurationPath);
 
 		if (!logsConfigurationObjectFile[interaction.guildId]) logsConfigurationObjectFile[interaction.guildId] = {};
 
@@ -83,20 +82,9 @@ module.exports = {
 		}
 
 		client.logsConfiguration.set(interaction.guildId, logsConfigurationFile);
-		fs.writeFile(
-			logsConfigurationPath,
-			JSON.stringify(logsConfigurationObjectFile),
-			{ encoding: "utf-8", flag: "w" },
-			(error) => {
-				if (error) {
-					if (error.code != "EEXIST") throw error;
-				} else {
-					console.log(
-						`Server "${interaction.guild.name}": The configuration parameters of the logs have been updated!`
-					);
-				}
-			}
-		);
+		await writeFile(logsConfigurationPath, logsConfigurationObjectFile);
+
+		console.log(`Server "${interaction.guild.name}": The configuration parameters of the logs have been updated!`);
 
 		await interaction.reply({
 			content: "Les paramètres de configuration des logs ont bien été mis à jour !",
