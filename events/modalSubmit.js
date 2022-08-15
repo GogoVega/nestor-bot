@@ -1,3 +1,5 @@
+const logger = require("../utils/logger.js");
+
 // Modal Submission for commands
 module.exports = {
 	name: "interactionCreate",
@@ -11,7 +13,7 @@ module.exports = {
 		try {
 			await modal.execute(interaction, client);
 		} catch (error) {
-			console.error("Error during Modal Submission!", error);
+			logger.error("Error during Modal Submission!", error);
 			await interaction.reply({
 				content: ":x: | ID du message incorrect ou élément manquant!\nVeuillez réessayer SVP.",
 				ephemeral: true,

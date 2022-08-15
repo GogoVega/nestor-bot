@@ -1,5 +1,6 @@
 const { SlashCommandBuilder } = require("@discordjs/builders");
 const { PermissionsBitField } = require("discord.js");
+const logger = require("../utils/logger.js");
 const { readFile, writeFile } = require("../utils/readWriteFile.js");
 
 module.exports = {
@@ -84,7 +85,7 @@ module.exports = {
 		client.authorizedChannels.set(interaction.guildId, channelsFile);
 		await writeFile(channelsPath, channelsObjectFile);
 
-		console.log(
+		logger.info(
 			`Server "${interaction.guild.name}": Channel "${interaction.guild.channels.cache.get(channelId).name}" ${
 				subCommandName === "ajouter-salon" ? "added" : "removed"
 			} successfuly.`

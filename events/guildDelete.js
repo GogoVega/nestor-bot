@@ -1,3 +1,4 @@
+const logger = require("../utils/logger.js");
 const { readFile, writeFile } = require("../utils/readWriteFile.js");
 
 // Delete Guild Data from Files
@@ -21,9 +22,9 @@ module.exports = {
 				await writeFile(contentPath, contentFile);
 			}
 
-			console.log(`Server "${guild.name}": Successfully deleted guild data!`);
+			logger.info(`Server "${guild.name}": Successfully deleted guild data!`);
 		} catch (error) {
-			console.error("Error when deleting guild data!", error);
+			logger.error("Error when deleting guild data!", error);
 		}
 	},
 };

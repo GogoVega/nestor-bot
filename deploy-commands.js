@@ -1,6 +1,7 @@
 const { REST } = require("@discordjs/rest");
 const { Routes } = require("discord.js");
 const { clientId, token } = require("./config.json");
+const logger = require("./utils/logger");
 const path = require("path");
 const fs = require("fs");
 
@@ -18,5 +19,5 @@ const rest = new REST({ version: "10" }).setToken(token);
 
 rest
 	.put(Routes.applicationCommands(clientId), { body: commands })
-	.then(() => console.log("Successfully registered application commands."))
-	.catch((error) => console.error(error));
+	.then(() => logger.info("Successfully registered application commands."))
+	.catch((error) => logger.error(error));

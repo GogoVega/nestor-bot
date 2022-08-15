@@ -1,6 +1,8 @@
+const logger = require("../utils/logger.js");
+
 module.exports = {
 	name: "guildCreate",
 	execute(guild) {
-		console.log(`Server "${guild.name}" registered successfully`);
+		logger.info(`Server "${guild.name}" registered successfully`);
 	},
 };

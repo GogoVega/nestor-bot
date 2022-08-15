@@ -13,7 +13,5 @@ node_modules
 # Folder config file
 config.json
 
-# Files containing IDs
-data/channels.json
-data/reactions.json
-data/logsConfiguration.json
+# DATA Files
+data/*

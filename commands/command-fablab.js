@@ -1,5 +1,6 @@
 const { SlashCommandBuilder } = require("@discordjs/builders");
 const { EmbedBuilder } = require("discord.js");
+const logger = require("../utils/logger");
 
 module.exports = {
 	data: new SlashCommandBuilder()
@@ -148,9 +149,9 @@ module.exports = {
 					});
 				}
 			}
-			console.log("Message edited unsuccessfully!");
+			logger.warning("Message edited unsuccessfully!");
 		} catch (error) {
-			console.error("Error during command-fablab command!", error);
+			logger.error("Error during command-fablab command!", error);
 			return await interaction.reply({
 				content: ":x: | ID du message incorrect !",
 				ephemeral: true,

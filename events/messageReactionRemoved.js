@@ -1,3 +1,4 @@
+const logger = require("../utils/logger.js");
 const { sendLog } = require("../utils/sendLog.js");
 
 // Message Reaction Removed
@@ -33,7 +34,7 @@ module.exports = {
 				client
 			);
 		} catch (error) {
-			console.error("Error when removing a reaction to a message:", error);
+			logger.error("Error when removing a reaction to a message:", error);
 			await user.send({ content: "Une erreur s'est produite en tentant de vous retirer le rôle !" });
 		}
 	},

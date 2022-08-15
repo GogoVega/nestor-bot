@@ -1,4 +1,5 @@
 const { PermissionsBitField } = require("discord.js");
+const logger = require("../utils/logger");
 
 // Button interaction
 module.exports = {
@@ -25,7 +26,7 @@ module.exports = {
 		try {
 			await button.execute(interaction, lastFieldName);
 		} catch (error) {
-			console.error("Error during button interaction created!", error);
+			logger.error("Error during button interaction created!", error);
 			await interaction.reply({
 				content: "Une erreur s'est produite lors de l'exécution de ce bouton !",
 				ephemeral: true,

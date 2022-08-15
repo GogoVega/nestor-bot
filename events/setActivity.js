@@ -1,4 +1,5 @@
 const { ActivityType } = require("discord.js");
+const logger = require("../utils/logger");
 
 module.exports = {
 	name: "ready",
@@ -8,6 +9,6 @@ module.exports = {
 			status: "online",
 			activities: [{ name: "ephec.be", type: ActivityType.Watching }],
 		});
-		console.log("Activity defined as WATCHING EPHEC.BE.");
+		logger.info("Activity defined as WATCHING EPHEC.BE.");
 	},
 };

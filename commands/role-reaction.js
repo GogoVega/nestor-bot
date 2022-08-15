@@ -1,5 +1,6 @@
 const { SlashCommandBuilder } = require("@discordjs/builders");
 const { hyperlink, PermissionsBitField } = require("discord.js");
+const logger = require("../utils/logger.js");
 const { readFile, writeFile } = require("../utils/readWriteFile.js");
 
 module.exports = {
@@ -161,7 +162,7 @@ module.exports = {
 			client.reactions.set(interaction.guildId, reactionsFile);
 			await writeFile(reactionsPath, reactionsObjectFile);
 
-			console.log(
+			logger.info(
 				`Server "${interaction.guild.name}": Role "${interaction.options.getRole("role").name}" ${
 					subCommandName === "ajouter-role" ? "added" : "removed"
 				} successfully.`
@@ -172,7 +173,7 @@ module.exports = {
 				ephemeral: true,
 			});
 		} catch (error) {
-			console.error("Error during role-reaction command:", error);
+			logger.error("Error during role-reaction command:", error);
 			return await interaction.reply({
 				content: "Erreur: Vérifiez l'ID du message ou du salon contenant le message !",
 				ephemeral: true,

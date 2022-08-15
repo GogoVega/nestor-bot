@@ -1,5 +1,6 @@
 const { SlashCommandBuilder } = require("@discordjs/builders");
 const { PermissionsBitField } = require("discord.js");
+const logger = require("../utils/logger.js");
 const { readFile, writeFile } = require("../utils/readWriteFile.js");
 
 module.exports = {
@@ -84,7 +85,7 @@ module.exports = {
 		client.logsConfiguration.set(interaction.guildId, logsConfigurationFile);
 		await writeFile(logsConfigurationPath, logsConfigurationObjectFile);
 
-		console.log(`Server "${interaction.guild.name}": The configuration parameters of the logs have been updated!`);
+		logger.info(`Server "${interaction.guild.name}": The configuration parameters of the logs have been updated!`);
 
 		await interaction.reply({
 			content: "Les paramètres de configuration des logs ont bien été mis à jour !",

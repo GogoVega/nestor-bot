@@ -1,3 +1,4 @@
+const logger = require("../utils/logger.js");
 const { readFile, writeFile } = require("../utils/readWriteFile.js");
 
 // Remove reactions from data file associated with deleted message.
@@ -21,9 +22,9 @@ module.exports = {
 
 			await writeFile(reactionsPath, reactionsFile);
 
-			console.log(`Reactions associated with message "${message.id}" has been deleted successfully.`);
+			logger.info(`Reactions associated with message "${message.id}" has been deleted successfully.`);
 		} catch (error) {
-			console.error("Error while deleting reactions associated with the message:", error);
+			logger.error("Error while deleting reactions associated with the message:", error);
 		}
 	},
 };

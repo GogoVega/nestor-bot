@@ -1,4 +1,5 @@
 const { Colors, EmbedBuilder } = require("discord.js");
+const logger = require("../utils/logger");
 
 // Reply to a received message
 module.exports = {
@@ -27,7 +28,7 @@ module.exports = {
 				components: [msgActionRow],
 			});
 		} catch (error) {
-			console.error("Error during Embed sending!", error);
+			logger.error("Error during Embed sending!", error);
 		}
 	},
 };

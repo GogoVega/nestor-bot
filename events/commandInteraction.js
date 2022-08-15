@@ -1,4 +1,5 @@
 const { PermissionsBitField } = require("discord.js");
+const logger = require("../utils/logger.js");
 
 // Command interaction
 module.exports = {
@@ -30,7 +31,7 @@ module.exports = {
 		try {
 			await command.execute(interaction, client);
 		} catch (error) {
-			console.error("Error during command interaction created!", error);
+			logger.error("Error during command interaction created!", error);
 			await interaction.reply({
 				content: "Une erreur s'est produite lors de l'exécution de cette commande !",
 				ephemeral: true,
