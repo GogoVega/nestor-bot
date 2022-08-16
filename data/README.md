@@ -1,6 +1,6 @@
 # Data folder
 
-The `data` folder contains two files that are managed by the `manage-channel` and `role-reactions` commands.
+The `data` folder contains several files:
 
 ## Manage Channel
 This command allows you to manage the bot's access to a channel in order to avoid using commands in unauthorized channels.
@@ -25,3 +25,6 @@ The `logsConfiguration.json` file contains:
 ```js
 {}
 ```
+
+## Logs file
+The file containing the logs.

@@ -12,11 +12,10 @@ Our school has a FabLAB containing 3D printers and this Bot will allow students 
   ```json
   {
     "clientId": "YOUR_CLIENT_ID",
-    "guildId": "YOUR_SERVER_ID",
     "token": "YOUR_TOKEN"
   }
   ```
-  - The `channels.json` and `reactions.json` files in `/data` folder. Follow the instructions [here](./data/README.md).
+  - The `channels.json`, `reactions.json` ang `logsConfiguration.json` files in `/data` folder. Follow the instructions [here](./data/README.md).
 
 4. `npm start` to launch your server.
 
@@ -47,7 +46,7 @@ This message contains five buttons of which here is a table showing the usefulne
 
 ### Add Info Using the Slash Command
 
-The Bot contains several commands to manage the command and permissions of the Bot:
+The Bot contains several commands to manage orders, permissions Bot and more:
 
 - `command-fablab`
   - `description`
@@ -81,6 +80,12 @@ This command sends a message containing all the commands and their usefulness.
   This command allows you to modify the configuration parameters of the logs (channel ID, button, command and reaction).
   - `afficher-parametres`
   This command displays all the configuration parameters of the logs.
+
+## Logger
+
+The logger has two transports:
+- Console: Show all logs in the console.
+- File: A log file named `nestor-bot.log` will be created in the `/data` folder.
 
 ## Getting Started Link
 
