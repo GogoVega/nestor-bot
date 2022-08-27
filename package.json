@@ -1,15 +1,15 @@
 {
 	"name": "nestor-bot",
 	"displayName": "Nestor Bot",
-	"version": "1.0.0-alpha.1",
+	"version": "1.0.0-alpha.2",
 	"description": "A Discord Bot for tracking Fab Lab orders.",
-	"main": "index.js",
+	"main": "index.ts",
 	"scripts": {
-		"lint": "eslint . --ext .js",
-		"prestart": "node deploy-commands.js",
-		"prettier": "prettier --write \"**/*.js\"",
-		"start": "node index.js",
-		"test": "npm run lint"
+		"lint": "npx eslint .",
+		"prestart": "ts-node src/deploy-commands.ts",
+		"prettier": "prettier --write \"**/*.ts\"",
+		"start": "ts-node src/index.ts",
+		"test": "npm run start --ignore-scripts"
 	},
 	"repository": {
 		"type": "git",
@@ -36,7 +36,10 @@
 		"winston": "^3.8.1"
 	},
 	"devDependencies": {
-		"eslint": "^8.20.0",
-		"prettier": "2.7.1"
+		"@typescript-eslint/eslint-plugin": "^5.35.1",
+		"@typescript-eslint/parser": "^5.35.1",
+		"eslint": "^8.23.0",
+		"prettier": "2.7.1",
+		"typescript": "^4.8.2"
 	}
 }
