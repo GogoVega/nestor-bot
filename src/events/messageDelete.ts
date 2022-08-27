@@ -1,6 +1,9 @@
+import { AuditLogEvent, EmbedBuilder } from "discord.js";
 import { MessageDeleteEvent, ReactionsFile } from "../types/collection";
 import logger from "../utils/logs/logger";
 import { readFile, writeFile } from "../utils/readWriteFile";
+import { sendMessage } from "../utils/sendMessage";
+import { checkContentMessage } from "../utils/sendMessage";
 
 // Remove reactions from data file associated with deleted message.
 export const messageDelete: MessageDeleteEvent = {
@@ -28,6 +31,37 @@ export const messageDelete: MessageDeleteEvent = {
 				logger.info(`Reactions associated with message "${message.id}" has been deleted successfully.`);
 			} catch (error) {
 				logger.error("Error while deleting reactions associated with the message:", error);
+			} finally {
+				if (message.author?.bot || !message.guild) return;
+
+				const messageObject = client.configurations.get(guildId)?.message;
+
+				if (!messageObject?.delete || !message.author) return;
+				if (!messageObject.channelsId.includes(message.channelId)) return;
+
+				const executorId = await message.guild
+					?.fetchAuditLogs({ type: AuditLogEvent.MessageDelete, limit: 1 })
+					.then((log) => {
+						const entry = log.entries.first();
+
+						if (entry && entry.target.id === message.author?.id && entry.createdTimestamp > Date.now() - 5000)
+							return entry.executor?.id;
+
+						return message.author?.id;
+					});
+
+				const { defaultAvatarURL, id, tag } = message.author;
+				const templateEmbed = new EmbedBuilder()
+					.setTitle("Un message vient d'être supprimé !")
+					.setDescription(
+						`• **Autheur du message**: <@${id}>\n• **Message supprimé par**: <@${executorId}>\n• **Message supprimé dans le salon**: <#${
+							message.channelId
+						}>\n• **Contenu du message**:\n\n> ${checkContentMessage(message.content)} `
+					) //**Contenu du message**:\n\`\`\`\n${checkContentMessage(message.content)} \`\`\``
+					.setTimestamp(new Date())
+					.setFooter({ text: tag, iconURL: message.author.avatarURL() ?? defaultAvatarURL });
+
+				await sendMessage(messageObject.channelId, templateEmbed, client);
 			}
 		} catch (error) {
 			logger.error("An error occurred while deleting a message:", error);
