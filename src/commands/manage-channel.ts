@@ -1,9 +1,10 @@
-import { ChannelType, PermissionsBitField, SlashCommandBuilder } from "discord.js";
+import { PermissionsBitField, SlashCommandBuilder } from "discord.js";
 import { Command } from "../types/collection";
 import logger from "../utils/logs/logger";
 import { readConfigurationsFile, writeConfigurationsFile } from "../utils/readWriteFile";
 
 export const manageChannel: Command = {
+	basePermission: PermissionsBitField.Flags.ManageChannels,
 	managePermission: true,
 	data: new SlashCommandBuilder()
 		.setName("gestion-salon")
@@ -32,29 +33,11 @@ export const manageChannel: Command = {
 		const channelId = interaction.options.getChannel("salon_id")?.id ?? "";
 		const guildId = interaction.guildId ?? "";
 
-		if (!interaction.inGuild()) return;
-		if (!interaction.channel?.permissionsFor(interaction.user)?.has(PermissionsBitField.Flags.ManageChannels))
-			return await interaction.reply({
-				content: "Erreur: Vous ne disposez pas des autorisations requises!",
-				ephemeral: true,
-			});
-
 		const configurationsFile = await readConfigurationsFile(guildId);
 		const channelArray = configurationsFile[guildId].channels;
 
 		switch (subCommandName) {
 			case "ajouter-salon": {
-				const channel = await client.channels.fetch(channelId);
-
-				if (channel?.type === ChannelType.DM) return;
-				if (channel?.type === ChannelType.GroupDM) return;
-
-				if (!channel?.parent) {
-					return await interaction.reply({
-						content: "Erreur: Ce n'est pas un salon mais une catégorie !",
-						ephemeral: true,
-					});
-				}
 				if (channelArray.includes(channelId))
 					return await interaction.reply({
 						content: "Erreur: Ce salon a déjà été enregistré !",

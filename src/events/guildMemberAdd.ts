@@ -1,7 +1,7 @@
 import { Colors, EmbedBuilder } from "discord.js";
 import { MemberAddEvent } from "../types/collection";
+import { sendMessage } from "../utils/channel";
 import logger from "../utils/logs/logger";
-import { sendMessage } from "../utils/sendMessage";
 
 export const guildMemberAdd: MemberAddEvent = {
 	name: "guildMemberAdd",

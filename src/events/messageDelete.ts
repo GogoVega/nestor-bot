@@ -1,9 +1,8 @@
 import { AuditLogEvent, Colors, EmbedBuilder } from "discord.js";
 import { MessageDeleteEvent, ReactionsFile } from "../types/collection";
+import { checkContentMessage, sendMessage } from "../utils/channel";
 import logger from "../utils/logs/logger";
 import { readFile, writeFile } from "../utils/readWriteFile";
-import { sendMessage } from "../utils/sendMessage";
-import { checkContentMessage } from "../utils/sendMessage";
 
 // Remove reactions from data file associated with deleted message.
 export const messageDelete: MessageDeleteEvent = {

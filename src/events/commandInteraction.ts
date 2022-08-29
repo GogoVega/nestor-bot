@@ -1,5 +1,6 @@
 import { PermissionsBitField } from "discord.js";
 import { InteractionEvent } from "../types/collection";
+import { isCategory } from "../utils/channel";
 import logger from "../utils/logs/logger";
 
 // Command interaction
@@ -19,14 +20,33 @@ export const commandInteraction: InteractionEvent = {
 		if (!command) return;
 
 		// Bypass channel check for command with "managePermission"
-		const managePermission = command?.managePermission;
-
-		if (!managePermission) {
+		if (!command.managePermission) {
 			if (!client.configurations.get(interaction.guildId)?.channels?.some((id) => id === interaction.channelId))
 				return await interaction.reply({
 					content: "Le Bot n'a pas accès à ce salon!",
 					ephemeral: true,
 				});
+		}
+
+		if (command.basePermission) {
+			if (!interaction.channel?.permissionsFor(interaction.user)?.has(command.basePermission))
+				return await interaction.reply({
+					content: "Erreur: Vous ne disposez pas des autorisations requises!",
+					ephemeral: true,
+				});
+		}
+
+		const channelId = interaction.options.getChannel("salon_id", false)?.id;
+
+		if (channelId) {
+			const channel = await client.channels.fetch(channelId);
+
+			if (isCategory(channel)) {
+				return await interaction.reply({
+					content: `Erreur: Le salon <#${channelId}> reçu est une catégorie !`,
+					ephemeral: true,
+				});
+			}
 		}
 
 		try {

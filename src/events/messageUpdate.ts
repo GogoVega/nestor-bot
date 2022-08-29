@@ -1,7 +1,7 @@
 import { Colors, EmbedBuilder } from "discord.js";
 import { MessageUpdateEvent } from "../types/collection";
+import { checkContentMessage, sendMessage } from "../utils/channel";
 import logger from "../utils/logs/logger";
-import { checkContentMessage, sendMessage } from "../utils/sendMessage";
 
 export const messageUpdate: MessageUpdateEvent = {
 	name: "messageUpdate",

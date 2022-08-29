@@ -6,6 +6,8 @@ import {
 	ChatInputCommandInteraction,
 	Guild,
 	GuildMember,
+	Interaction,
+	InteractionResponse,
 	Message,
 	MessageReaction,
 	ModalBuilder,
@@ -14,8 +16,7 @@ import {
 	PartialMessage,
 	PartialMessageReaction,
 	PartialUser,
-	Interaction,
-	InteractionResponse,
+	PermissionResolvable,
 	SlashCommandBuilder,
 	SlashCommandSubcommandsOnlyBuilder,
 	User,
@@ -55,6 +56,7 @@ export interface Button {
 }
 
 export interface Command {
+	basePermission?: PermissionResolvable;
 	data: SlashCommandSubcommandsOnlyBuilder | Omit<SlashCommandBuilder, "addSubcommand" | "addSubcommandGroup">;
 	managePermission?: boolean;
 	execute(
@@ -63,35 +65,35 @@ export interface Command {
 	): Promise<void | InteractionResponse<boolean> | undefined>;
 }
 
-export interface InteractionConfiguration {
+type InteractionConfiguration = {
 	channelId: string;
 	button: boolean;
 	command: boolean;
 	reaction: boolean;
-}
+};
 
-interface MemberConfiguration {
+type MemberConfiguration = {
 	channelId: string;
 	add: boolean;
 	remove: boolean;
-}
+};
 
-interface MessageConfiguration {
+type MessageConfiguration = {
 	channelId: string;
 	channelsId: string[];
 	delete: boolean;
 	update: boolean;
-}
+};
 
-export interface Configurations {
+export type Configurations = {
 	channels: string[];
 	interaction: InteractionConfiguration;
 	member: MemberConfiguration;
 	message: MessageConfiguration;
-}
+};
 
 export type ConfigurationsFile = Record<string, Configurations>;
-export type ConfigurationsProperty = InteractionConfiguration | MemberConfiguration | MessageConfiguration;
+export type ConfigurationsProperty = InteractionConfiguration & MemberConfiguration & MessageConfiguration;
 
 export interface Modals {
 	channelId?: string;
@@ -168,4 +170,36 @@ export interface ReactionEvent extends BaseEvent {
 
 export interface UserEvent extends BaseEvent {
 	execute(user: User, client: MyClient): Promise<void>;
+}
+
+type TupleEntry<T extends readonly unknown[], I extends unknown[] = [], R = never> = T extends readonly [
+	infer Head,
+	...infer Tail
+]
+	? TupleEntry<Tail, [...I, unknown], R | [`${I["length"]}`, Head]>
+	: R;
+
+// eslint-disable-next-line @typescript-eslint/ban-types
+type ObjectEntry<T extends {}> =
+	// eslint-disable-next-line @typescript-eslint/ban-types
+	T extends object
+		? { [K in keyof T]: [K, Required<T>[K]] }[keyof T] extends infer E
+			? E extends [infer K, infer V]
+				? K extends string | number
+					? [`${K}`, V]
+					: never
+				: never
+			: never
+		: never;
+
+// eslint-disable-next-line @typescript-eslint/ban-types
+export type Entry<T extends {}> = T extends readonly [unknown, ...unknown[]]
+	? TupleEntry<T>
+	: T extends ReadonlyArray<infer U>
+	? [`${number}`, U]
+	: ObjectEntry<T>;
+
+// eslint-disable-next-line @typescript-eslint/ban-types
+export function typedEntries<T extends {}>(object: T): ReadonlyArray<Entry<T>> {
+	return Object.entries(object) as unknown as ReadonlyArray<Entry<T>>;
 }

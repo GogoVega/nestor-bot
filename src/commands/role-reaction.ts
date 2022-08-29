@@ -4,6 +4,7 @@ import logger from "../utils/logs/logger";
 import { readFile, writeFile } from "../utils/readWriteFile";
 
 export const roleReaction: Command = {
+	basePermission: PermissionsBitField.Flags.ManageRoles,
 	managePermission: true,
 	data: new SlashCommandBuilder()
 		.setName("role-reaction")
@@ -41,11 +42,6 @@ export const roleReaction: Command = {
 		),
 	async execute(interaction, client) {
 		if (!interaction.inGuild()) return;
-		if (!interaction.channel?.permissionsFor(interaction.user)?.has(PermissionsBitField.Flags.ManageRoles))
-			return await interaction.reply({
-				content: "Erreur: Vous ne disposez pas des autorisations requises!",
-				ephemeral: true,
-			});
 
 		try {
 			const channelId = interaction.options.getChannel("salon_id")?.id ?? "";
