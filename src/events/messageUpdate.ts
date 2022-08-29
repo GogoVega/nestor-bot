@@ -1,4 +1,4 @@
-import { EmbedBuilder } from "discord.js";
+import { Colors, EmbedBuilder } from "discord.js";
 import { MessageUpdateEvent } from "../types/collection";
 import logger from "../utils/logs/logger";
 import { checkContentMessage, sendMessage } from "../utils/sendMessage";
@@ -25,6 +25,7 @@ export const messageUpdate: MessageUpdateEvent = {
 						oldMessage.content
 					)}\n\n• **Nouveau Message**:\n\n> ${checkContentMessage(newMessage.content)} `
 				)
+				.setColor(Colors.Yellow)
 				.setTimestamp(new Date())
 				.setFooter({ text: tag, iconURL: newMessage.author.avatarURL() ?? defaultAvatarURL });
 

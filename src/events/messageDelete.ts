@@ -1,4 +1,4 @@
-import { AuditLogEvent, EmbedBuilder } from "discord.js";
+import { AuditLogEvent, Colors, EmbedBuilder } from "discord.js";
 import { MessageDeleteEvent, ReactionsFile } from "../types/collection";
 import logger from "../utils/logs/logger";
 import { readFile, writeFile } from "../utils/readWriteFile";
@@ -57,7 +57,8 @@ export const messageDelete: MessageDeleteEvent = {
 						`• **Autheur du message**: <@${id}>\n• **Message supprimé par**: <@${executorId}>\n• **Message supprimé dans le salon**: <#${
 							message.channelId
 						}>\n• **Contenu du message**:\n\n> ${checkContentMessage(message.content)} `
-					) //**Contenu du message**:\n\`\`\`\n${checkContentMessage(message.content)} \`\`\``
+					)
+					.setColor(Colors.Red)
 					.setTimestamp(new Date())
 					.setFooter({ text: tag, iconURL: message.author.avatarURL() ?? defaultAvatarURL });
 
