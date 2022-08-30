@@ -1,36 +1,82 @@
 import { Interaction, Colors, EmbedBuilder, User, PartialUser } from "discord.js";
+import { sendMessage } from "../channel";
 import { MyClient } from "../../types/client";
+import { Configurations } from "../../types/collection";
+
+enum logMessageContent {
+	add = "**Log des nouveaux membres** :",
+	button = "**Log des boutons** :",
+	channelId = "**Salon utilisé** :",
+	channelsId = "**Salons autorisés** :",
+	command = "**Log des commandes** :",
+	delete = "**Log des messages supprimés** :",
+	reaction = "**Log des réactions** :",
+	remove = "**Log des membres sortants** :",
+	update = "**Log des messages édités** :",
+}
 
 type ReactionLog = {
 	emoji: string;
 	guildId: string | null;
-	roleId: string;
+	roleId: string[];
 	isAdded: boolean;
 	reactionUser: User | PartialUser;
 };
 
+function createLogsMessage(args: Omit<Configurations, "channels">): string {
+	const logsMessage: string[] = [];
+
+	for (const [key, value] of Object.entries(args)) {
+		if (key === "channels") continue;
+
+		logsMessage.push(`\n\n• **${key.toUpperCase()}**`);
+
+		if (value.channelId === "") {
+			logsMessage.push("\n```diff\n- Aucun paramètre enregistré!```");
+			continue;
+		}
+
+		for (const [name, log] of Object.entries(value)) {
+			logsMessage.push(`\n  • ${logMessageContent[name as keyof typeof logMessageContent]} ${getLogState(log)}`);
+		}
+	}
+
+	return logsMessage.toString().replace(/,/gm, "");
+}
+
+function getLogState(parameter: boolean | string | string[]) {
+	if (typeof parameter === "string") {
+		return `<#${parameter}>`;
+	} else if (typeof parameter === "object") {
+		if (parameter.length === 0) return "Aucun salon enregistré";
+		return parameter.map((channelId) => `<#${channelId}> `);
+	}
+
+	return parameter ? "Activé" : "Désactivé";
+}
+
 // Send logs message
-export async function sendLog(reaction: ReactionLog | null, interaction: Interaction | null, client: MyClient) {
-	if (!reaction) return;
-	const { emoji, guildId, roleId, isAdded, reactionUser } = reaction;
-	const logParameters = client.configurations.get(interaction?.guildId ?? guildId ?? "")?.interaction;
+async function sendLog(reaction: ReactionLog | null, interaction: Interaction | null, client: MyClient) {
+	const logParameters = client.configurations.get(interaction?.guildId ?? reaction?.guildId ?? "")?.interaction;
 
 	if (!logParameters) return;
 
-	const user = interaction?.user || reactionUser;
+	const user = interaction?.user || reaction?.reactionUser;
 	const templateEmbed = new EmbedBuilder()
 		.setTimestamp(new Date())
 		.setFooter({ text: user?.tag ?? "", iconURL: user?.avatarURL() ?? "" });
 
-	if (reactionUser) {
+	if (reaction) {
 		if (!logParameters.reaction) return;
+
+		const { emoji, roleId, isAdded } = reaction;
 
 		templateEmbed
 			.setTitle(`Un rôle vient d'être ${isAdded ? "attribué" : "retiré"} !`)
 			.setDescription(
 				`<@${user?.id}> vient de réagir avec l'émoji ${emoji} pour ${
 					isAdded ? "obtenir" : "quitter"
-				} le rôle <@&${roleId}>.\n`
+				} le rôle ${roleId.map((id) => `<@&${id}>`)}.\n`
 			)
 			.setColor(isAdded ? Colors.Orange : Colors.Purple);
 	} else if (interaction) {
@@ -57,9 +103,7 @@ export async function sendLog(reaction: ReactionLog | null, interaction: Interac
 			.setColor(isCommand ? Colors.Yellow : Colors.Blue);
 	}
 
-	const channel = await client.channels.fetch(logParameters.channelId);
-
-	if (!channel || !channel.isTextBased()) return;
-
-	await channel?.send({ embeds: [templateEmbed] });
+	await sendMessage(logParameters.channelId, templateEmbed, client);
 }
+
+export { createLogsMessage, getLogState, sendLog };

@@ -28,9 +28,7 @@ export const messageReactionRemoved: ReactionEvent = {
 			const guild = await client.guilds.fetch(guildId);
 			const member = await guild?.members.fetch(user.id);
 
-			reactionObject.roleId.forEach(async (roleId) => {
-				await member?.roles.remove(roleId, "Role remove by autorole");
-			});
+			reactionObject.roleId.forEach(async (roleId) => await member?.roles.remove(roleId, "Role remove by autorole"));
 
 			await sendLog(
 				{ emoji: emoji, guildId: guildId, roleId: roleId, isAdded: false, reactionUser: user },

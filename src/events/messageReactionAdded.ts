@@ -28,9 +28,7 @@ export const messageReactionAdded: ReactionEvent = {
 			const guild = await client.guilds.fetch(guildId);
 			const member = await guild?.members.fetch(user.id);
 
-			reactionObject.roleId.forEach(async (roleId) => {
-				await member?.roles.add(roleId, "Role add by autorole");
-			});
+			reactionObject.roleId.forEach(async (roleId) => await member?.roles.add(roleId, "Role add by autorole"));
 
 			await sendLog(
 				{ emoji: emoji, guildId: guildId, roleId: roleId, isAdded: true, reactionUser: user },
