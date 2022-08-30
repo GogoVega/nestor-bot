@@ -33,6 +33,7 @@ export const roleReaction: Command = {
 				.addRoleOption((option) =>
 					option.setName("role").setDescription("Choisissez le rôle à à supprimer.").setRequired(true)
 				)
+				.addStringOption((option) => option.setName("emoji").setDescription("Emoji pour ce rôle.").setRequired(true))
 		)
 		.addSubcommand((subcommand) =>
 			subcommand
@@ -74,20 +75,28 @@ export const roleReaction: Command = {
 					const message = await channel.messages.fetch(msgId);
 					const emoji = interaction.options.getString("emoji", true);
 
-					if (!reactionsFile[msgId]) {
-						reactionsFile[msgId] = { channel: "", values: [] };
-						reactionsFile[msgId].channel = channelId;
-						reactionsFile[msgId].values = [];
-					}
-					if (
-						reactionsFile[msgId].values.some((reaction) => reaction["emoji"] === emoji || reaction["roleId"] === roleId)
-					)
-						return await interaction.reply({
-							content: "Erreur: Emoji ou rôle déjà utilisé !",
-							ephemeral: true,
-						});
+					if (!reactionsFile[msgId]) reactionsFile[msgId] = { channel: channelId, values: [] };
 
-					reactionsFile[msgId].values.push({ emoji: emoji, roleId: roleId });
+					for (const reaction of reactionsFile[msgId].values) {
+						if (reaction["emoji"] !== emoji) continue;
+						if (reaction["roleId"].length >= 5)
+							return await interaction.reply({
+								content: "Erreur: Vous avez atteint la limite de 5 rôles par réaction !",
+								ephemeral: true,
+							});
+						if (reaction["roleId"].includes(roleId))
+							return await interaction.reply({
+								content: "Erreur: Rôle déjà utilisé pour cet émoji !",
+								ephemeral: true,
+							});
+
+						reaction["roleId"].push(roleId);
+						break;
+					}
+
+					if (reactionsFile[msgId].values.every((reaction) => reaction["emoji"] !== emoji))
+						reactionsFile[msgId].values.push({ emoji: emoji, roleId: [roleId] });
+
 					await message.react(emoji);
 					break;
 				}
@@ -96,30 +105,35 @@ export const roleReaction: Command = {
 
 					if (!channel?.isTextBased()) return;
 
-					const message = await channel.messages.fetch(msgId);
-
 					if (!reactionsFile[msgId])
 						return await interaction.reply({
 							content: "Erreur: Aucun emoji utilisé pour ce message !\nVérifiez l'ID du message !",
 							ephemeral: true,
 						});
-					if (reactionsFile[msgId].values.every((reaction) => reaction["roleId"] !== roleId))
-						return await interaction.reply({
-							content: "Erreur: Aucun rôle ne correspond à votre requête !",
-							ephemeral: true,
-						});
 
-					const [reaction] = reactionsFile[msgId].values.filter((reaction) => reaction.roleId === roleId);
-					await message?.reactions.resolve(reaction.emoji)?.users.remove(client.user?.id);
+					const message = await channel.messages.fetch(msgId);
+					const emoji = interaction.options.getString("emoji", true);
 
-					if (reactionsFile[msgId].values.length === 1) {
-						delete reactionsFile[msgId];
+					for (const reaction of reactionsFile[msgId].values) {
+						if (reaction["emoji"] !== emoji) continue;
+						if (!reaction["roleId"].includes(roleId))
+							return await interaction.reply({
+								content: "Erreur: Aucun rôle ne correspond à votre requête !",
+								ephemeral: true,
+							});
+
+						reaction["roleId"].splice(reaction["roleId"].indexOf(roleId), 1);
+
+						if (reaction["roleId"].length === 0) {
+							reactionsFile[msgId].values.splice(reactionsFile[msgId].values.indexOf(reaction), 1);
+							await message?.reactions.resolve(reaction.emoji)?.users.remove(client.user?.id);
+						}
+
+						if (reactionsFile[msgId].values.length === 0) delete reactionsFile[msgId];
+
 						break;
 					}
-					reactionsFile[msgId].values.forEach((reaction) => {
-						if (reaction["roleId"] === roleId)
-							reactionsFile[msgId].values.splice(reactionsFile[msgId].values.indexOf(reaction), 1);
-					});
+
 					break;
 				}
 				case "roles-list": {
@@ -131,7 +145,9 @@ export const roleReaction: Command = {
 						} else {
 							reactionsFile[msgId].values.forEach((role) =>
 								rolesList.push(
-									`${reactionsFile[msgId].values.indexOf(role) ? "\n" : ""}${role.emoji} - <@&${role.roleId}>`
+									`${reactionsFile[msgId].values.indexOf(role) ? "\n" : ""}${role.emoji} - ${role.roleId.map(
+										(id) => `<@&${id}>`
+									)}`
 								)
 							);
 						}
@@ -149,7 +165,7 @@ export const roleReaction: Command = {
 									)}`
 								);
 								reactionsFile[messageId].values.forEach((role) =>
-									rolesList.push(`\n${role.emoji} - <@&${role.roleId}>`)
+									rolesList.push(`\n${role.emoji} - ${role.roleId.map((id) => `<@&${id}>`)}`)
 								);
 							});
 						}
@@ -174,7 +190,7 @@ export const roleReaction: Command = {
 			);
 
 			await interaction.reply({
-				content: `Le role <@&${roleId}> a bien été ${subCommandName === "ajouter-role" ? "ajouté" : "supprimé"}.`,
+				content: `Le rôle <@&${roleId}> a bien été ${subCommandName === "ajouter-role" ? "ajouté" : "supprimé"}.`,
 				ephemeral: true,
 			});
 		} catch (error) {

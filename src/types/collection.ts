@@ -114,7 +114,7 @@ export interface Modals {
 
 interface ReactionType {
 	channel: string;
-	values: Array<{ emoji: string; roleId: string }>;
+	values: Array<{ emoji: string; roleId: string[] }>;
 }
 
 export type Reactions = Record<string, ReactionType>;
