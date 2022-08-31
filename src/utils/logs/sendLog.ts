@@ -23,12 +23,12 @@ type ReactionLog = {
 	reactionUser: User | PartialUser;
 };
 
-function createLogsMessage(args: Omit<Configurations, "channels">): string {
+function createLogsMessage(args: Configurations): string {
+	// eslint-disable-next-line @typescript-eslint/no-unused-vars
+	const { channels, ...newArgs } = args;
 	const logsMessage: string[] = [];
 
-	for (const [key, value] of Object.entries(args)) {
-		if (key === "channels") continue;
-
+	for (const [key, value] of Object.entries(newArgs as Omit<Configurations, "channels">)) {
 		logsMessage.push(`\n\n• **${key.toUpperCase()}**`);
 
 		if (value.channelId === "") {
