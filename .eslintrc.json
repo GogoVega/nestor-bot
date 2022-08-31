@@ -1,15 +1,16 @@
 {
-	"extends": ["eslint:recommended", "plugin:@typescript-eslint/recommended"],
-	"parser": "@typescript-eslint/parser",
-	"plugins": ["@typescript-eslint"],
-	"root": true,
 	"env": {
 		"node": true,
 		"es6": true
 	},
+	"extends": ["eslint:recommended", "plugin:@typescript-eslint/recommended"],
+	"ignorePatterns": ["build"],
+	"parser": "@typescript-eslint/parser",	
 	"parserOptions": {
 		"ecmaVersion": 2021
 	},
+	"plugins": ["@typescript-eslint"],
+	"root": true,
 	"rules": {
 		"constructor-super": 2,
 		"for-direction": 2,
