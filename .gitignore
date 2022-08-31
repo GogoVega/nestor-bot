@@ -3,6 +3,9 @@
 .DS_Store
 
 ### Node ###
+# Build folder
+build
+
 # Dependency directories
 node_modules
 
