@@ -12,6 +12,7 @@ Below is a table showing the usefulness of each command:
 | `create-embed-message` | This command allows you to create a customizable message in Embed format. |
 | `help` | This command sends a message containing all the commands and their usefulness. |
 | `manage-channel` | This command manages the permissions of the Bot to a channel in order to limit the use of commands to authorized channels. |
+| `logs-parameters` | This command allows you to manage logs such as interactions, members or messages. |
 | `role-reaction` | This command allows you to manage messages having a self-role by reacting with a specific emoji. |
 | `site-fablab` | This command sends a message with two buttons which are links to the sites to place an order. |
 
@@ -21,7 +22,9 @@ Note that some commands require a channel and message ID to work.
 
 Each file contains two elements:
 
+- **basePermission**: The basic permission a user must have to use this command.
 - **data**: Contains the command elements (name, description, subcommand...).
+- **managePermission**: Bypass channel check for command with it.
 - **execute()**: Is the function executed if this command is called.
 
 ## Server Integrations Page

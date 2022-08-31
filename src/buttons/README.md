@@ -28,4 +28,4 @@ A successful print gives a message like this:
 
 ![successful_embed](/docs/images/successful_embed.png)
 
-Note that other informations such as a description, an image and the printing time can be added with [slash commands](/commands/README.md).
+Note that other informations such as a description, an image and the printing time can be added with [slash commands](/src/commands/README.md).
