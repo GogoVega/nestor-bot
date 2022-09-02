@@ -1,7 +1,11 @@
 import { REST } from "@discordjs/rest";
 import { Routes, RESTPostAPIApplicationCommandsJSONBody } from "discord.js";
-import { clientId, token } from "../config.json";
 import logger from "./utils/logs/logger";
+import path from "path";
+import fs from "fs";
+
+const configPath = path.join(__dirname, "../config.json");
+const { clientId, token } = JSON.parse(fs.readFileSync(configPath, { encoding: "utf-8" }));
 
 import * as commandExports from "./commands";
 

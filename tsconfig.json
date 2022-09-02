@@ -11,19 +11,17 @@
     "noImplicitThis": true,
     "noUnusedLocals": true,
     "noUnusedParameters": true,
-    "outDir": "./build",
+    "outDir": "build",
     "resolveJsonModule": true,
+    "rootDir": "src",
+    "skipLibCheck": true,
     "strict": true,
     "strictBindCallApply": true,
     "strictFunctionTypes": true,
     "strictNullChecks": true,
     "strictPropertyInitialization": true,
   },
-  "include": [
-    "src"
-  ],
   "exclude": [
-    "build",
     "node_modules"
   ]
 }

@@ -3,13 +3,16 @@
 	"displayName": "Nestor Bot",
 	"version": "1.0.0-alpha.2",
 	"description": "A Discord Bot for tracking Fab Lab orders.",
-	"main": "index.ts",
+	"main": "build/index.js",
 	"scripts": {
+		"build": "tsc",
+		"deploy": "node build/deploy-commands.js",
 		"lint": "npx eslint .",
-		"prestart": "ts-node src/deploy-commands.ts",
+		"prestart": "npm run build && npm run deploy",
+		"pretest": "ts-node src/deploy-commands.ts",
 		"prettier": "prettier --write \"**/*.ts\"",
-		"start": "ts-node src/index.ts",
-		"test": "npm run start --ignore-scripts"
+		"start": "node build/index.js",
+		"test": "ts-node src/index.ts"
 	},
 	"repository": {
 		"type": "git",

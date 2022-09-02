@@ -1,6 +1,10 @@
 import { Client, GatewayIntentBits, Partials } from "discord.js";
-import { token } from "../config.json";
 import { MyClient } from "./types/client";
+import path from "path";
+import fs from "fs";
+
+const configPath = path.join(__dirname, "../config.json");
+const { token } = JSON.parse(fs.readFileSync(configPath, { encoding: "utf-8" }));
 
 const client = new Client({
 	intents: [
