@@ -1,15 +1,18 @@
 {
 	"name": "nestor-bot",
 	"displayName": "Nestor Bot",
-	"version": "1.0.0-alpha.1",
+	"version": "1.0.0-alpha.2",
 	"description": "A Discord Bot for tracking Fab Lab orders.",
-	"main": "index.js",
+	"main": "build/index.js",
 	"scripts": {
-		"lint": "eslint . --ext .js",
-		"prestart": "node deploy-commands.js",
-		"prettier": "prettier --write \"**/*.js\"",
-		"start": "node index.js",
-		"test": "npm run lint"
+		"build": "tsc",
+		"deploy": "node build/deploy-commands.js",
+		"lint": "npx eslint .",
+		"prestart": "npm run build && npm run deploy",
+		"pretest": "ts-node src/deploy-commands.ts",
+		"prettier": "prettier --write \"**/*.ts\"",
+		"start": "node build/index.js",
+		"test": "ts-node src/index.ts"
 	},
 	"repository": {
 		"type": "git",
@@ -30,12 +33,16 @@
 	},
 	"homepage": "https://github.com/GogoVega/nestor-bot#readme",
 	"dependencies": {
-		"@discordjs/rest": "^1.0.1",
-		"discord-api-types": "^0.37.1",
-		"discord.js": "^14.2.0"
+		"@discordjs/rest": "^1.1.0",
+		"discord-api-types": "^0.37.5",
+		"discord.js": "^14.3.0",
+		"winston": "^3.8.1"
 	},
 	"devDependencies": {
-		"eslint": "^8.20.0",
-		"prettier": "2.7.1"
+		"@typescript-eslint/eslint-plugin": "^5.36.1",
+		"@typescript-eslint/parser": "^5.36.1",
+		"eslint": "^8.23.0",
+		"prettier": "2.7.1",
+		"typescript": "^4.8.2"
 	}
 }

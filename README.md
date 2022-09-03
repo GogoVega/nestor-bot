@@ -1,6 +1,7 @@
 # Nestor Bot
 
 Our school has a FabLAB containing 3D printers and this Bot will allow students to place orders from our site and track orders from Discord.
+In addition, this Bot will allow you to create a role management by reaction to an emoji and to notify new member, removing member, edited message and deleted message.
 
 ## How to Install
 
@@ -12,11 +13,10 @@ Our school has a FabLAB containing 3D printers and this Bot will allow students 
   ```json
   {
     "clientId": "YOUR_CLIENT_ID",
-    "guildId": "YOUR_SERVER_ID",
     "token": "YOUR_TOKEN"
   }
   ```
-  - The `channels.json` and `reactions.json` files in `/data` folder. Follow the instructions [here](./data/README.md).
+  - The `configurations.json` and `reactions.json` files in `/data` folder. Follow the instructions [here](./data/README.md).
 
 4. `npm start` to launch your server.
 
@@ -47,7 +47,7 @@ This message contains five buttons of which here is a table showing the usefulne
 
 ### Add Info Using the Slash Command
 
-The Bot contains several commands to manage the command and permissions of the Bot:
+The Bot contains several commands to manage orders, permissions Bot and more:
 
 - `command-fablab`
   - `description`
@@ -76,18 +76,28 @@ This command sends a message containing all the commands and their usefulness.
   This command displays all possible reactions (emoji and role) of one or all saved messages.
 - `create-embed-message`
   This command allows you to create a customizable message in Embed format.
-- `parametres-logs`
-  - `modifier-parametres`
-  This command allows you to modify the configuration parameters of the logs (channel ID, button, command and reaction).
+- `logs-parametres`
+  - `modifier-parametres-interaction`
+  This command allows you to modify the interactions log (channel ID, button, command and reaction).
+  - `modifier-parametres-member`
+  This command allows you to modify the member log (channel ID, add and remove).
+  - `modifier-parametres-message`
+  This command allows you to modify the message log (channel ID, delete, update, add channel and remove channel).
   - `afficher-parametres`
   This command displays all the configuration parameters of the logs.
+
+## Logger
+
+The logger has two transports:
+- Console: Show all logs in the console.
+- File: A log file named `nestor-bot.log` will be created in the `/data` folder.
 
 ## Getting Started Link
 
 - [Change Log](./CHANGELOG.md): whats changed?
 - [Create data files](./data/README.md): How to create data files?
 - [Our order site](https://nestor-pages.herokuapp.com): Where is our order site?
-- [Server Integrations Page](./commands/README.md#server-integrations-page): How to manage Bot settings?
+- [Server Integrations Page](./src/commands/README.md#server-integrations-page): How to manage Bot settings?
 
 ## License
 

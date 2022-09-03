@@ -3,6 +3,9 @@
 .DS_Store
 
 ### Node ###
+# Build folder
+build
+
 # Dependency directories
 node_modules
 
@@ -13,7 +16,5 @@ node_modules
 # Folder config file
 config.json
 
-# Files containing IDs
-data/channels.json
-data/reactions.json
-data/logsConfiguration.json
+# DATA Files
+data/*

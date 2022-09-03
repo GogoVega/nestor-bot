@@ -1,18 +1,22 @@
 {
-	"extends": "eslint:recommended",
 	"env": {
 		"node": true,
 		"es6": true
 	},
+	"extends": ["eslint:recommended", "plugin:@typescript-eslint/recommended"],
+	"ignorePatterns": ["build"],
+	"parser": "@typescript-eslint/parser",	
 	"parserOptions": {
 		"ecmaVersion": 2021
 	},
+	"plugins": ["@typescript-eslint"],
+	"root": true,
 	"rules": {
-		"prefer-const":"error",
 		"constructor-super": 2,
 		"for-direction": 2,
 		"getter-return": 2,
 		"no-async-promise-executor": 2,
+		"no-case-declarations": 1,
 		"no-class-assign": 2,
 		"no-compare-neg-zero": 2,
 		"no-cond-assign": 2,
@@ -55,16 +59,16 @@
 		"no-undef": 2,
 		"no-unexpected-multiline": 2,
 		"no-unreachable": 2,
-		"no-unsafe-finally": 2,
+		"no-unsafe-finally": 0,
 		"no-unsafe-negation": 2,
 		"no-unused-labels": 2,
-		"no-unused-vars": 2,
+		"no-unused-vars": 0,
 		"no-useless-catch": 2,
 		"no-useless-escape": 2,
 		"no-with": 2,
+		"prefer-const": 2,
 		"require-yield": 2,
 		"use-isnan": 2,
-		"valid-typeof": 2,
-		"no-case-declarations": 1
+		"valid-typeof": 2
 	}
 }
