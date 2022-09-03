@@ -17,11 +17,11 @@ const rest = new REST({ version: "10" }).setToken(token);
 
 (async () => {
 	try {
-		console.log("Started refreshing application (/) commands.");
+		logger.info("Started refreshing application (/) commands.");
 
 		await rest.put(Routes.applicationCommands(clientId), { body: commands });
 
-		console.log("Successfully reloaded application (/) commands.");
+		logger.info("Successfully reloaded application (/) commands.");
 	} catch (error) {
 		logger.error(error);
 	}

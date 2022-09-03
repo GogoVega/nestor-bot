@@ -14,7 +14,6 @@ export const modalSubmit: InteractionEvent = {
 		try {
 			await modal.execute(interaction, client);
 		} catch (error) {
-			console.error(error);
 			logger.error("Error during Modal Submission!", error);
 			await interaction.reply({
 				content: ":x: | ID du message incorrect ou élément manquant!\nVeuillez réessayer SVP.",

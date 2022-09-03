@@ -31,7 +31,6 @@ export const messageUpdate: MessageUpdateEvent = {
 
 			await sendMessage(messageObject.channelId, templateEmbed, client);
 		} catch (error) {
-			console.error(error);
 			logger.error("An error occurred while editing a message:", error);
 		}
 	},
