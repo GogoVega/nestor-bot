@@ -84,14 +84,14 @@ export const commandFablab: Command = {
 			const exampleEmbed = EmbedBuilder.from(receivedEmbed).setTimestamp(new Date());
 			const fields = receivedEmbed.fields;
 
+			if (exampleEmbed.data.title !== "Statut de votre commande")
+				return await interaction.reply({
+					content: "Erreur: Vous ne pouvez pas modifier ce message !",
+					ephemeral: true,
+				});
+
 			switch (subcommandName) {
 				case "description": {
-					if (exampleEmbed.data.title !== "Statut de votre commande")
-						return await interaction.reply({
-							content: "Erreur: Vous ne pouvez pas modifier ce message !",
-							ephemeral: true,
-						});
-
 					const modal = client.modals.get("description");
 
 					if (!modal) return;
@@ -111,7 +111,7 @@ export const commandFablab: Command = {
 
 					if (fields.some((field) => field.name === "Fini"))
 						return await interaction.reply({
-							content: ":x: | L'impression est terminé !",
+							content: ":x: | L'impression est terminée !",
 							ephemeral: true,
 						});
 
@@ -135,6 +135,12 @@ export const commandFablab: Command = {
 					if (!fields.some((field) => field.name === "Impression" || field.name === "Réimpression"))
 						return await interaction.reply({
 							content: ":x: | Aucune impression en cours !",
+							ephemeral: true,
+						});
+
+					if (!fields.some((field) => field.name === "Fini"))
+						return await interaction.reply({
+							content: ":x: | L'impression n'est pas terminée !",
 							ephemeral: true,
 						});
 
