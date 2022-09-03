@@ -8,6 +8,7 @@ export const messageUpdate: MessageUpdateEvent = {
 	async execute(oldMessage, newMessage, client) {
 		try {
 			if (oldMessage.partial || oldMessage.author.bot) return;
+			if (oldMessage.embeds.length !== newMessage.embeds.length) return;
 
 			const guildId = newMessage.guildId ?? "";
 			const messageObject = client.configurations.get(guildId)?.message;
