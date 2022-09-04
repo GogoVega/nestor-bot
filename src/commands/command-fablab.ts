@@ -74,6 +74,7 @@ export const commandFablab: Command = {
 			const msgId = interaction.options.getString("message_id", true);
 			const timeHours = interaction.options.getInteger("heures") ?? 0;
 			const timeMins = interaction.options.getInteger("minutes") ?? 0;
+			const attachment = interaction.options.getAttachment("image");
 
 			const reply = async function reply(msg: string) {
 				await interaction.reply({
@@ -81,6 +82,9 @@ export const commandFablab: Command = {
 					ephemeral: true,
 				});
 			};
+
+			if (attachment && !attachment.contentType?.startsWith("image"))
+				return await reply(":x: | Le fichier reçu n'est pas une image !");
 
 			const channel = await client.channels.fetch(channelId);
 
@@ -158,7 +162,7 @@ export const commandFablab: Command = {
 					)
 						exampleEmbed.addFields([newField]);
 
-					exampleEmbed.setImage(interaction.options.getAttachment("image")?.url || null);
+					exampleEmbed.setImage(attachment?.url || null);
 
 					await message.edit({ embeds: [exampleEmbed] });
 					return await reply(
