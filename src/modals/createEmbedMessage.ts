@@ -90,7 +90,7 @@ export const createEmbedMessage: Modals = {
 			.setDescription(description)
 			.setColor(color)
 			.setTimestamp(this.timestamp ? new Date() : null)
-			.setFooter({ text: this.author ?? `${interaction.guild?.members.me?.nickname} • FabLAB`, iconURL: iconURL })
+			.setFooter({ text: this.author ?? `${interaction.guild?.members.me?.displayName} • FabLAB`, iconURL: iconURL })
 			.setImage(this.image ? this.image.url : null)
 			.setThumbnail(this.thumbnail ? this.thumbnail.url : null);
 
