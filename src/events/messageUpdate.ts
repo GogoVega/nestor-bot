@@ -8,6 +8,7 @@ export const messageUpdate: MessageUpdateEvent = {
 	async execute(oldMessage, newMessage, client) {
 		try {
 			if (oldMessage.partial || oldMessage.author.bot) return;
+			if (oldMessage.embeds.length !== newMessage.embeds.length) return;
 
 			const guildId = newMessage.guildId ?? "";
 			const messageObject = client.configurations.get(guildId)?.message;
@@ -19,11 +20,11 @@ export const messageUpdate: MessageUpdateEvent = {
 			const templateEmbed = new EmbedBuilder()
 				.setTitle("Un message vient d'être édité !")
 				.setDescription(
-					`• **Autheur du message**: <@${id}>\n• **Message édité dans le salon**: <#${
+					`• **Autheur du message** : <@${id}>\n• **Message édité dans le salon** : <#${
 						newMessage.channelId
-					}>\n• **Ancien Message**:\n\n> ${checkContentMessage(
+					}>\n• **Ancien Message** :\n\n> ${checkContentMessage(
 						oldMessage.content
-					)}\n\n• **Nouveau Message**:\n\n> ${checkContentMessage(newMessage.content)} `
+					)}\n\n• **Nouveau Message** :\n\n> ${checkContentMessage(newMessage.content)} `
 				)
 				.setColor(Colors.Yellow)
 				.setTimestamp(new Date())

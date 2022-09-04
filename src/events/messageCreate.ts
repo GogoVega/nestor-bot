@@ -23,7 +23,7 @@ export const messageCreate: MessageCreateEvent = {
 				.addFields([{ name: "Délivré", value: "Nous avons reçu votre demande\n\u200b" }])
 				.setTimestamp(new Date())
 				.setFooter({
-					text: `${message.guild?.members.me?.nickname} • FabLAB`,
+					text: `${message.guild?.members.me?.displayName} • FabLAB`,
 					iconURL: client.user?.avatarURL() ?? "",
 				});
 

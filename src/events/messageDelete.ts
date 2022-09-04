@@ -53,9 +53,9 @@ export const messageDelete: MessageDeleteEvent = {
 				const templateEmbed = new EmbedBuilder()
 					.setTitle("Un message vient d'être supprimé !")
 					.setDescription(
-						`• **Autheur du message**: <@${id}>\n• **Message supprimé par**: <@${executorId}>\n• **Message supprimé dans le salon**: <#${
+						`• **Autheur du message** : <@${id}>\n• **Message supprimé par** : <@${executorId}>\n• **Message supprimé dans le salon** : <#${
 							message.channelId
-						}>\n• **Contenu du message**:\n\n> ${checkContentMessage(message.content)} `
+						}>\n• **Contenu du message** :\n\n> ${checkContentMessage(message.content)} `
 					)
 					.setColor(Colors.Red)
 					.setTimestamp(new Date())

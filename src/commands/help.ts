@@ -12,7 +12,7 @@ export const helpCommand: Command = {
 			.addFields(client.commands.map((cmd) => ({ name: cmd.data.name, value: cmd.data.description })))
 			.setTimestamp()
 			.setFooter({
-				text: `${interaction.guild?.members.me?.nickname} • FabLAB`,
+				text: `${interaction.guild?.members.me?.displayName} • FabLAB`,
 				iconURL: client.user?.avatarURL() ?? "",
 			});
 
