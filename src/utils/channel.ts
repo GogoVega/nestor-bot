@@ -21,4 +21,10 @@ async function sendMessage(channelId: string, message: EmbedBuilder, client: MyC
 	await channel?.send({ embeds: [message] });
 }
 
-export { checkContentMessage, isCategory, sendMessage };
+function toTimestamp(date?: number | null) {
+	if (!date) date = Date.now();
+
+	return date.toString().substring(0, 10);
+}
+
+export { checkContentMessage, isCategory, sendMessage, toTimestamp };
