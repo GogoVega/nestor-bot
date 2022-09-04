@@ -97,6 +97,7 @@ export const commandFablab: Command = {
 
 			if (exampleEmbed.data.title !== "Statut de votre commande")
 				return await reply("Erreur: Vous ne pouvez pas modifier ce message !");
+			if (fields.length >= 25) return await reply("Erreur: Vous avez atteint la limite de 25 fields par Embed !");
 
 			switch (subcommandName) {
 				case "description": {
