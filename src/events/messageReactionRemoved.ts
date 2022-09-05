@@ -27,13 +27,21 @@ export const messageReactionRemoved: ReactionEvent = {
 			const { emoji, roleId } = reactionObject;
 			const guild = await client.guilds.fetch(guildId);
 			const member = await guild?.members.fetch(user.id);
+			const roleList: string[] = [];
 
-			reactionObject.roleId.forEach(async (roleId) => await member?.roles.remove(roleId, "Role remove by autorole"));
+			roleId.forEach(async (id) => {
+				if (!member?.roles.resolve(id)) return;
+				roleList.push(id);
+				await member?.roles.remove(roleId, "Role remove by autorole");
+			});
 
 			await sendLog(
-				{ emoji: emoji, guildId: guildId, roleId: roleId, isAdded: false, reactionUser: user },
+				{ emoji: emoji, guildId: guildId, roleId: roleList, isAdded: false, reactionUser: user },
 				null,
 				client
+			);
+			logger.debug(
+				`Server "${member.guild.name}": ${user.username} unreacted ${emoji} to remove ${roleId || "nothing"}`
 			);
 		} catch (error) {
 			logger.error("Error when removing a reaction to a message:", error);
