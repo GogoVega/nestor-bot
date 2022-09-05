@@ -13,7 +13,7 @@ export const helpCommand: Command = {
 			.setTimestamp()
 			.setFooter({
 				text: `${interaction.guild?.members.me?.displayName} • FabLAB`,
-				iconURL: client.user?.avatarURL() ?? "",
+				iconURL: client.user?.displayAvatarURL(),
 			});
 
 		return await interaction.reply({ embeds: [templateEmbed], ephemeral: true });

@@ -24,7 +24,7 @@ export const messageCreate: MessageCreateEvent = {
 				.setTimestamp(new Date())
 				.setFooter({
 					text: `${message.guild?.members.me?.displayName} • FabLAB`,
-					iconURL: client.user?.avatarURL() ?? "",
+					iconURL: client.user?.displayAvatarURL(),
 				});
 
 			const msgActionRow = client.messageAction.get("messageActionButton");

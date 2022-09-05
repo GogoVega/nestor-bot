@@ -16,7 +16,7 @@ export const messageUpdate: MessageUpdateEvent = {
 			if (!messageObject?.update || !newMessage.author) return;
 			if (!messageObject.channelsId.includes(newMessage.channelId)) return;
 
-			const { defaultAvatarURL, id, tag } = newMessage.author;
+			const { id, tag } = newMessage.author;
 			const templateEmbed = new EmbedBuilder()
 				.setTitle("Un message vient d'être édité !")
 				.setDescription(
@@ -28,7 +28,7 @@ export const messageUpdate: MessageUpdateEvent = {
 				)
 				.setColor(Colors.Yellow)
 				.setTimestamp(new Date())
-				.setFooter({ text: tag, iconURL: newMessage.author.avatarURL() ?? defaultAvatarURL });
+				.setFooter({ text: tag, iconURL: newMessage.author.displayAvatarURL() });
 
 			await sendMessage(messageObject.channelId, templateEmbed, client);
 		} catch (error) {

@@ -64,7 +64,7 @@ async function sendLog(reaction: ReactionLog | null, interaction: Interaction | 
 	const user = interaction?.user || reaction?.reactionUser;
 	const templateEmbed = new EmbedBuilder()
 		.setTimestamp(new Date())
-		.setFooter({ text: user?.tag ?? "", iconURL: user?.avatarURL() ?? "" });
+		.setFooter({ text: user?.tag ?? "", iconURL: user?.displayAvatarURL() });
 
 	if (reaction) {
 		if (!logParameters.reaction) return;
