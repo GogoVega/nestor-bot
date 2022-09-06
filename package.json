@@ -1,8 +1,8 @@
 {
 	"name": "nestor-bot",
 	"displayName": "Nestor Bot",
-	"version": "1.0.0-beta.1",
-	"description": "A Discord Bot for tracking Fab Lab orders.",
+	"version": "1.0.0-beta.2",
+	"description": "A Discord Bot for tracking Fab Lab orders and manage your Servers.",
 	"main": "build/index.js",
 	"scripts": {
 		"build": "tsc",
