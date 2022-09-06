@@ -34,6 +34,7 @@
 	"homepage": "https://github.com/GogoVega/nestor-bot#readme",
 	"dependencies": {
 		"@discordjs/rest": "^1.1.0",
+		"cpu-percentage": "^1.0.3",
 		"discord-api-types": "^0.37.5",
 		"discord.js": "^14.3.0",
 		"winston": "^3.8.1"
