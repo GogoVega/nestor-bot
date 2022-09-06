@@ -1,11 +1,8 @@
-import { REST } from "@discordjs/rest";
-import { Routes, RESTPostAPIApplicationCommandsJSONBody } from "discord.js";
+import { REST, RESTPostAPIApplicationCommandsJSONBody, Routes } from "discord.js";
 import logger from "./utils/logs/logger";
-import path from "path";
-import fs from "fs";
 
-const configPath = path.join(__dirname, "../config.json");
-const { clientId, token } = JSON.parse(fs.readFileSync(configPath, { encoding: "utf-8" }));
+// eslint-disable-next-line @typescript-eslint/no-var-requires
+const { clientId, token } = require("../config.json");
 
 import * as commandExports from "./commands";
 
