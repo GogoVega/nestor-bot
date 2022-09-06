@@ -4,7 +4,8 @@
 
 ### Added
 
-- (role-reaction) Check if the member has already this role.
+- (GuildMemberAdd) Check if the member has already this role.
+- (GuildMemberRemove) Check if the member still has this role.
 - (process-infos) Add `process-infos` command.
 
 ### Changed
