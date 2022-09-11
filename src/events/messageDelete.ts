@@ -49,7 +49,7 @@ export const messageDelete: MessageDeleteEvent = {
 						return message.author?.id;
 					});
 
-				const { defaultAvatarURL, id, tag } = message.author;
+				const { id, tag } = message.author;
 				const templateEmbed = new EmbedBuilder()
 					.setTitle("Un message vient d'être supprimé !")
 					.setDescription(
@@ -59,7 +59,7 @@ export const messageDelete: MessageDeleteEvent = {
 					)
 					.setColor(Colors.Red)
 					.setTimestamp(new Date())
-					.setFooter({ text: tag, iconURL: message.author.avatarURL() ?? defaultAvatarURL });
+					.setFooter({ text: tag, iconURL: message.author.displayAvatarURL() });
 
 				await sendMessage(messageObject.channelId, templateEmbed, client);
 			}

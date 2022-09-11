@@ -77,7 +77,7 @@ export const createEmbedMessage: Modals = {
 		// https://github.com/discordjs/discord.js/issues/8035
 		// const color = this.color ?? Colors[interaction.getSelectMenuValues("color") ?? "White"];
 		const color = this.color ?? Colors["White"];
-		const iconURL = this.iconURL ?? this.iconImage?.url ?? client.user?.avatarURL() ?? "";
+		const iconURL = this.iconURL ?? this.iconImage?.url ?? client.user?.displayAvatarURL();
 
 		if (!this.channelId || !description || !title) throw new Error("Missing channel ID, description or title!");
 

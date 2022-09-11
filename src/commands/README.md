@@ -11,8 +11,9 @@ Below is a table showing the usefulness of each command:
 | `command-fablab` | This command allows you to add a description, the estimated printing time or the final printing time. |
 | `create-embed-message` | This command allows you to create a customizable message in Embed format. |
 | `help` | This command sends a message containing all the commands and their usefulness. |
-| `manage-channel` | This command manages the permissions of the Bot to a channel in order to limit the use of commands to authorized channels. |
 | `logs-parameters` | This command allows you to manage logs such as interactions, members or messages. |
+| `manage-channel` | This command manages the permissions of the Bot to a channel in order to limit the use of commands to authorized channels. |
+| `process-infos` | This command displays the status of the server (guilds number, ping, CPU and GPU). |
 | `role-reaction` | This command allows you to manage messages having a self-role by reacting with a specific emoji. |
 | `site-fablab` | This command sends a message with two buttons which are links to the sites to place an order. |
 

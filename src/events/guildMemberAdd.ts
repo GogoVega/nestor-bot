@@ -24,7 +24,7 @@ export const guildMemberAdd: MemberAddEvent = {
 				)
 				.setColor(color)
 				.setTimestamp(new Date())
-				.setFooter({ text: member.displayName, iconURL: member.avatarURL() ?? member.displayAvatarURL() });
+				.setFooter({ text: member.displayName, iconURL: member.displayAvatarURL() });
 
 			await sendMessage(memberObject.channelId, templateEmbed, client);
 			logger.debug(`Server "${member.guild.name}": ${member.displayName} just joined the server!`);

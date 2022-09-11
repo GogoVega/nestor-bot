@@ -74,6 +74,17 @@ export const commandFablab: Command = {
 			const msgId = interaction.options.getString("message_id", true);
 			const timeHours = interaction.options.getInteger("heures") ?? 0;
 			const timeMins = interaction.options.getInteger("minutes") ?? 0;
+			const attachment = interaction.options.getAttachment("image");
+
+			const reply = async function reply(msg: string) {
+				await interaction.reply({
+					content: msg,
+					ephemeral: true,
+				});
+			};
+
+			if (attachment && !attachment.contentType?.startsWith("image"))
+				return await reply(":x: | Le fichier reçu n'est pas une image !");
 
 			const channel = await client.channels.fetch(channelId);
 
@@ -85,10 +96,8 @@ export const commandFablab: Command = {
 			const fields = receivedEmbed.fields;
 
 			if (exampleEmbed.data.title !== "Statut de votre commande")
-				return await interaction.reply({
-					content: "Erreur: Vous ne pouvez pas modifier ce message !",
-					ephemeral: true,
-				});
+				return await reply("Erreur: Vous ne pouvez pas modifier ce message !");
+			if (fields.length >= 25) return await reply("Erreur: Vous avez atteint la limite de 25 fields par Embed !");
 
 			switch (subcommandName) {
 				case "description": {
@@ -104,60 +113,62 @@ export const commandFablab: Command = {
 				}
 				case "temps_impression": {
 					if (!fields.some((field) => field.name === "Impression" || field.name === "Réimpression"))
-						return await interaction.reply({
-							content: ":x: | Aucune impression en cours !",
-							ephemeral: true,
-						});
+						return await reply(":x: | Aucune impression en cours !");
 
-					if (fields.some((field) => field.name === "Fini"))
-						return await interaction.reply({
-							content: ":x: | L'impression est terminée !",
-							ephemeral: true,
-						});
+					if (fields.some((field) => field.name === "Fini")) return await reply(":x: | L'impression est terminée !");
 
 					const date_finish = new Date();
 					date_finish.setHours(date_finish.getHours() + timeHours);
 					date_finish.setMinutes(date_finish.getMinutes() + timeMins);
 
-					exampleEmbed.addFields([
-						{
-							name: "Temps restant d'impression",
-							value: `Le temps d'impression estimé est de ${timeHours}h ${timeMins}min.\nCe qui vous donne RDV pour ${date_finish.getHours()}h ${date_finish.getMinutes()}.\n\u200b`,
-						},
-					]);
+					const newField = {
+						name: "Temps restant d'impression",
+						value: `Le temps d'impression estimé est de ${timeHours}h ${timeMins}min.\nCe qui vous donne RDV pour ${date_finish.getHours()}h ${date_finish.getMinutes()}.\n\u200b`,
+					};
+
+					if (
+						!fields.some((field) => {
+							if (field.name === "Temps restant d'impression") {
+								fields[fields.indexOf(field)] = newField;
+								exampleEmbed.setFields(fields);
+								return true;
+							}
+						})
+					)
+						exampleEmbed.addFields([newField]);
+
 					await message.edit({ embeds: [exampleEmbed] });
-					return await interaction.reply({
-						content: `:white_check_mark: | Temps restant \`${timeHours}h ${timeMins}min\` ajoutée !`,
-						ephemeral: true,
-					});
+					return await reply(`:white_check_mark: | Temps restant \`${timeHours}h ${timeMins}min\` ajouté !`);
 				}
 				case "fin_impression": {
 					if (!fields.some((field) => field.name === "Impression" || field.name === "Réimpression"))
-						return await interaction.reply({
-							content: ":x: | Aucune impression en cours !",
-							ephemeral: true,
-						});
+						return await reply(":x: | Aucune impression en cours !");
 
 					if (!fields.some((field) => field.name === "Fini"))
-						return await interaction.reply({
-							content: ":x: | L'impression n'est pas terminée !",
-							ephemeral: true,
-						});
+						return await reply(":x: | L'impression n'est pas terminée !");
 
-					exampleEmbed
-						.addFields([
-							{
-								name: "Temps d'impression",
-								value: `L'impression a été effectuée en ${timeHours}h ${timeMins}min.\n\u200b`,
-							},
-						])
-						.setImage(interaction.options.getAttachment("image")?.url || null);
+					const newField = {
+						name: "Temps d'impression",
+						value: `L'impression a été effectuée en ${timeHours}h ${timeMins}min.\n\u200b`,
+					};
+
+					if (
+						!fields.some((field) => {
+							if (field.name === "Temps d'impression") {
+								fields[fields.indexOf(field)] = newField;
+								exampleEmbed.setFields(fields);
+								return true;
+							}
+						})
+					)
+						exampleEmbed.addFields([newField]);
+
+					exampleEmbed.setImage(attachment?.url || null);
 
 					await message.edit({ embeds: [exampleEmbed] });
-					return await interaction.reply({
-						content: ":white_check_mark: | Message de fin d'impression ajoutée !",
-						ephemeral: true,
-					});
+					return await reply(
+						`:white_check_mark: | Temps de fin d'impression \`${timeHours}h ${timeMins}min\` ajouté !`
+					);
 				}
 			}
 			logger.warning("Message edited unsuccessfully!");

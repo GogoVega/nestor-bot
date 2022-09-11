@@ -47,7 +47,8 @@ export const roleReaction: Command = {
 		try {
 			const channelId = interaction.options.getChannel("salon_id")?.id ?? "";
 			const msgId = interaction.options.getString("message_id") ?? "";
-			const roleId = interaction.options.getRole("role")?.id ?? "";
+			const role = interaction.options.getRole("role");
+			const roleId = role?.id ?? "";
 			const subCommandName = interaction.options.getSubcommand();
 
 			const reactionsPath = "../../data/reactions.json";
@@ -67,7 +68,16 @@ export const roleReaction: Command = {
 							content: "Erreur: Vous ne pouvez pas utiliser un rôle supérieur au Bot !",
 							ephemeral: true,
 						});
-
+					if (role?.managed)
+						return await interaction.reply({
+							content: "Erreur: Vous ne pouvez pas utiliser un rôle géré par une intégration !",
+							ephemeral: true,
+						});
+					if (role?.name === "@everyone")
+						return await interaction.reply({
+							content: "Erreur: Vous ne pouvez pas utiliser le rôle **@everyone** !",
+							ephemeral: true,
+						});
 					const channel = await client.channels.fetch(channelId);
 
 					if (!channel?.isTextBased()) return;

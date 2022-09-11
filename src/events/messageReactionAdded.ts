@@ -27,13 +27,21 @@ export const messageReactionAdded: ReactionEvent = {
 			const { emoji, roleId } = reactionObject;
 			const guild = await client.guilds.fetch(guildId);
 			const member = await guild?.members.fetch(user.id);
+			const roleList: string[] = [];
 
-			reactionObject.roleId.forEach(async (roleId) => await member?.roles.add(roleId, "Role add by autorole"));
+			roleId.forEach(async (id) => {
+				if (member?.roles.resolve(id)) return;
+				roleList.push(id);
+				await member?.roles.add(id, "Role add by autorole");
+			});
 
 			await sendLog(
-				{ emoji: emoji, guildId: guildId, roleId: roleId, isAdded: true, reactionUser: user },
+				{ emoji: emoji, guildId: guildId, roleId: roleList, isAdded: true, reactionUser: user },
 				null,
 				client
+			);
+			logger.debug(
+				`Server "${member.guild.name}": ${user.username} reacted with ${emoji} to get ${roleId || "nothing"}`
 			);
 		} catch (error) {
 			logger.error("Error when adding a reaction to a message:", error);

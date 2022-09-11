@@ -1,10 +1,8 @@
 import { Client, GatewayIntentBits, Partials } from "discord.js";
 import { MyClient } from "./types/client";
-import path from "path";
-import fs from "fs";
 
-const configPath = path.join(__dirname, "../config.json");
-const { token } = JSON.parse(fs.readFileSync(configPath, { encoding: "utf-8" }));
+// eslint-disable-next-line @typescript-eslint/no-var-requires
+const { token } = require("../config.json");
 
 const client = new Client({
 	intents: [

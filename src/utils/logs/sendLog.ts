@@ -64,19 +64,25 @@ async function sendLog(reaction: ReactionLog | null, interaction: Interaction | 
 	const user = interaction?.user || reaction?.reactionUser;
 	const templateEmbed = new EmbedBuilder()
 		.setTimestamp(new Date())
-		.setFooter({ text: user?.tag ?? "", iconURL: user?.avatarURL() ?? "" });
+		.setFooter({ text: user?.tag ?? "", iconURL: user?.displayAvatarURL() });
 
 	if (reaction) {
 		if (!logParameters.reaction) return;
 
 		const { emoji, roleId, isAdded } = reaction;
+		const title =
+			roleId.length > 1
+				? `Plusieurs rôles viennent d'être ${isAdded ? "attribués" : "retirés"} !`
+				: `Un rôle vient d'être ${isAdded ? "attribué" : "retiré"} !`;
+
+		if (roleId.length === 0) return;
 
 		templateEmbed
-			.setTitle(`Un rôle vient d'être ${isAdded ? "attribué" : "retiré"} !`)
+			.setTitle(title)
 			.setDescription(
-				`<@${user?.id}> vient de réagir avec l'émoji ${emoji} pour ${
-					isAdded ? "obtenir" : "quitter"
-				} le rôle ${roleId.map((id) => `<@&${id}>`)}.\n`
+				`<@${user?.id}> vient de réagir avec l'émoji ${emoji} pour ${isAdded ? "obtenir" : "quitter"} ${
+					roleId.length > 1 ? "les rôles" : "le rôle"
+				}${roleId.map((id) => ` <@&${id}>`)}.\n`
 			)
 			.setColor(isAdded ? Colors.Orange : Colors.Purple);
 	} else if (interaction) {

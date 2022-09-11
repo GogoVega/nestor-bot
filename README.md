@@ -85,6 +85,8 @@ This command sends a message containing all the commands and their usefulness.
   This command allows you to modify the message log (channel ID, delete, update, add channel and remove channel).
   - `afficher-parametres`
   This command displays all the configuration parameters of the logs.
+- `process-infos`
+This command displays the status of the server (guilds number, ping, CPU and GPU).
 
 ## Logger
 
