@@ -1,6 +1,6 @@
 import { Colors, EmbedBuilder } from "discord.js";
 import { MessageUpdateEvent } from "../types/collection";
-import { checkContentMessage, sendMessage } from "../utils/channel";
+import { generateQuotedMessage, sendMessage } from "../utils/channel";
 import logger from "../utils/logs/logger";
 
 export const messageUpdate: MessageUpdateEvent = {
@@ -22,15 +22,15 @@ export const messageUpdate: MessageUpdateEvent = {
 				.setDescription(
 					`• **Autheur du message** : <@${id}>\n• **Message édité dans le salon** : <#${
 						newMessage.channelId
-					}>\n• **Ancien Message** :\n\n> ${checkContentMessage(
+					}>\n• **Ancien Message** :\n\n> ${generateQuotedMessage(
 						oldMessage.content
-					)}\n\n• **Nouveau Message** :\n\n> ${checkContentMessage(newMessage.content)} `
+					)}\n\n• **Nouveau Message** :\n\n> ${generateQuotedMessage(newMessage.content)} `
 				)
 				.setColor(Colors.Yellow)
 				.setTimestamp(new Date())
 				.setFooter({ text: tag, iconURL: newMessage.author.displayAvatarURL() });
 
-			await sendMessage(messageObject.channelId, templateEmbed, client);
+			await sendMessage(messageObject.channelId, { embeds: [templateEmbed] }, client);
 		} catch (error) {
 			logger.error("An error occurred while editing a message:", error);
 		}

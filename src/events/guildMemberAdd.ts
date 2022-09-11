@@ -26,7 +26,7 @@ export const guildMemberAdd: MemberAddEvent = {
 				.setTimestamp(new Date())
 				.setFooter({ text: member.displayName, iconURL: member.displayAvatarURL() });
 
-			await sendMessage(memberObject.channelId, templateEmbed, client);
+			await sendMessage(memberObject.channelId, { embeds: [templateEmbed] }, client);
 			logger.debug(`Server "${member.guild.name}": ${member.displayName} just joined the server!`);
 		} catch (error) {
 			logger.error("An error occurred while adding a new member:", error);

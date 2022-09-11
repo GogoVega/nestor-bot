@@ -109,7 +109,7 @@ async function sendLog(reaction: ReactionLog | null, interaction: Interaction | 
 			.setColor(isCommand ? Colors.Yellow : Colors.Blue);
 	}
 
-	await sendMessage(logParameters.channelId, templateEmbed, client);
+	await sendMessage(logParameters.channelId, { embeds: [templateEmbed] }, client);
 }
 
 export { createLogsMessage, getLogState, sendLog };
