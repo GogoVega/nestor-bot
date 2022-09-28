@@ -1,4 +1,4 @@
-import { Channel, ChannelType, MessageOptions } from "discord.js";
+import { Channel, ChannelType, BaseMessageOptions } from "discord.js";
 import { MyClient } from "../types/client";
 
 function generateQuotedMessage(content: string | null) {
@@ -15,7 +15,7 @@ function isCategory(channel: Channel | null) {
 	return false;
 }
 
-async function sendMessage(channelId: string, message: MessageOptions | string, client: MyClient): Promise<void> {
+async function sendMessage(channelId: string, message: BaseMessageOptions | string, client: MyClient): Promise<void> {
 	const channel = await client.channels.fetch(channelId);
 
 	if (!channel || !channel.isTextBased()) return;
