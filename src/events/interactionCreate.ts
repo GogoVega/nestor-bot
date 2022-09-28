@@ -7,12 +7,12 @@ export const interactionCreate: InteractionEvent = {
 	async execute(interaction, client) {
 		const interactionName: string[] = [];
 
-		if (!interaction.isButton() && !interaction.isCommand() && !interaction.isModalSubmit()) return;
-
 		if (interaction.isChatInputCommand()) {
 			const subCommandName = interaction.options?.getSubcommand(false);
-			interactionName.push(`${interaction.commandName.concat(subCommandName ? " ".concat(subCommandName) : "")}`);
-		} else if (interaction.isButton()) {
+			interactionName.push(interaction.commandName.concat(subCommandName ? " ".concat(subCommandName) : ""));
+		} else if (interaction.isContextMenuCommand() || interaction.isAutocomplete()) {
+			interactionName.push(interaction.commandName);
+		} else {
 			interactionName.push(interaction.customId);
 		}
 
