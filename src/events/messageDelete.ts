@@ -49,8 +49,6 @@ export const messageDelete: MessageDeleteEvent = {
 						return message.author?.id;
 					});
 
-				if (executorId === client.user?.id) return;
-
 				const { id, tag } = message.author;
 				const templateEmbed = new EmbedBuilder()
 					.setTitle("Un message vient d'être supprimé !")
