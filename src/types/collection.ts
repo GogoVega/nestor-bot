@@ -28,7 +28,7 @@ export const dataPaths: Record<string, string> = {
 	reactions: "reactions.json",
 };
 
-export const defaultConfigurations: Configurations = {
+export const defaultConfigurations: Configuration = {
 	channels: [],
 	interaction: {
 		channelId: "",
@@ -85,17 +85,17 @@ type MessageConfiguration = {
 	update: boolean;
 };
 
-export type Configurations = {
+export type Configuration = {
 	channels: string[];
 	interaction: InteractionConfiguration;
 	member: MemberConfiguration;
 	message: MessageConfiguration;
 };
 
-export type ConfigurationsFile = Record<string, Configurations>;
+export type ConfigurationsFile = Record<string, Configuration>;
 export type ConfigurationsProperty = InteractionConfiguration & MemberConfiguration & MessageConfiguration;
 
-export interface Modals {
+export interface Modal {
 	channelId?: string;
 	messageId?: string;
 	author?: string | null;
@@ -106,10 +106,10 @@ export interface Modals {
 	iconImage?: Attachment | null;
 	thumbnail?: Attachment | null;
 	data: ModalBuilder;
-	execute: (
+	execute(
 		interaction: ModalSubmitInteraction,
 		client: MyClient
-	) => Promise<void | InteractionResponse<boolean> | undefined>;
+	): Promise<void | InteractionResponse<boolean> | undefined>;
 }
 
 interface ReactionType {
@@ -117,9 +117,9 @@ interface ReactionType {
 	values: Array<{ emoji: string; roleId: string[] }>;
 }
 
-export type Reactions = Record<string, ReactionType>;
+export type Reaction = Record<string, ReactionType>;
 
-export type ReactionsFile = Record<string, Reactions>;
+export type ReactionsFile = Record<string, Reaction>;
 
 export type Data = ReactionsFile | ConfigurationsFile;
 

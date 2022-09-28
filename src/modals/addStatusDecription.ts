@@ -1,8 +1,8 @@
 import { ActionRowBuilder, EmbedBuilder, ModalBuilder, TextInputBuilder, TextInputStyle } from "discord.js";
-import { Modals } from "../types/collection";
+import { Modal } from "../types/collection";
 
 // Modal Submission for command-fablab description command
-export const description: Modals = {
+export const description: Modal = {
 	data: new ModalBuilder()
 		.setCustomId("description")
 		.setTitle("Ajout d'une description")

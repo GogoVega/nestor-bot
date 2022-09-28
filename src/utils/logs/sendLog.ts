@@ -1,7 +1,7 @@
 import { Interaction, Colors, EmbedBuilder, User, PartialUser } from "discord.js";
 import { sendMessage } from "../channel";
 import { MyClient } from "../../types/client";
-import { Configurations } from "../../types/collection";
+import { Configuration } from "../../types/collection";
 
 enum logMessageContent {
 	add = "**Log des nouveaux membres** :",
@@ -23,12 +23,12 @@ type ReactionLog = {
 	reactionUser: User | PartialUser;
 };
 
-function createLogsMessage(args: Configurations): string {
+function createLogsMessage(args: Configuration): string {
 	// eslint-disable-next-line @typescript-eslint/no-unused-vars
 	const { channels, ...newArgs } = args;
 	const logsMessage: string[] = [];
 
-	for (const [key, value] of Object.entries(newArgs as Omit<Configurations, "channels">)) {
+	for (const [key, value] of Object.entries(newArgs as Omit<Configuration, "channels">)) {
 		logsMessage.push(`\n\n• **${key.toUpperCase()}**`);
 
 		if (value.channelId === "") {

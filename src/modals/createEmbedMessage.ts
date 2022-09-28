@@ -1,7 +1,7 @@
 import { ActionRowBuilder, Colors, EmbedBuilder, ModalBuilder, TextInputBuilder, TextInputStyle } from "discord.js";
-import { Modals } from "../types/collection";
+import { Modal } from "../types/collection";
 
-export const createEmbedMessage: Modals = {
+export const createEmbedMessage: Modal = {
 	data: new ModalBuilder()
 		.setCustomId("createEmbedMessage")
 		.setTitle("Creation d'un message au format Embed")
