@@ -36,6 +36,6 @@ export const processCommand: Command = {
 				iconURL: client.user?.displayAvatarURL(),
 			});
 
-		return await interaction.reply({ embeds: [templateEmbed], ephemeral: true });
+		await interaction.reply({ embeds: [templateEmbed], ephemeral: true });
 	},
 };
