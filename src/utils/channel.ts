@@ -20,11 +20,6 @@ async function sendMessage(channelId: string, message: MessageOptions | string, 
 
 	if (!channel || !channel.isTextBased()) return;
 
-	if (typeof message === "string") {
-		await channel?.send({ content: message });
-		return;
-	}
-
 	await channel?.send(message);
 }
 
