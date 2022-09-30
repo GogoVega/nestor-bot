@@ -25,10 +25,10 @@ type ReactionLog = {
 
 function createLogsMessage(args: Configuration): string {
 	// eslint-disable-next-line @typescript-eslint/no-unused-vars
-	const { channels, ...newArgs } = args;
+	const { webhooks, ...newArgs } = args;
 	const logsMessage: string[] = [];
 
-	for (const [key, value] of Object.entries(newArgs as Omit<Configuration, "channels">)) {
+	for (const [key, value] of Object.entries(newArgs as Omit<Configuration, "webhooks">)) {
 		logsMessage.push(`\n\n• **${key.toUpperCase()}**`);
 
 		if (value.channelId === "") {

@@ -19,15 +19,6 @@ export const commandInteraction: InteractionEvent = {
 
 		if (!command) return;
 
-		// Bypass channel check for command with "managePermission"
-		if (!command.managePermission) {
-			if (!client.configurations.get(interaction.guildId)?.channels?.some((id) => id === interaction.channelId))
-				return await interaction.reply({
-					content: "Le Bot n'a pas accès à ce salon!",
-					ephemeral: true,
-				});
-		}
-
 		if (command.basePermission) {
 			if (!interaction.channel?.permissionsFor(interaction.user)?.has(command.basePermission))
 				return await interaction.reply({

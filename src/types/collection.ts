@@ -29,7 +29,7 @@ export const dataPaths: Record<string, string> = {
 };
 
 export const defaultConfigurations: Configuration = {
-	channels: [],
+	webhooks: [],
 	interaction: {
 		channelId: "",
 		button: false,
@@ -58,7 +58,6 @@ export interface Button {
 export interface Command {
 	basePermission?: PermissionResolvable;
 	data: SlashCommandSubcommandsOnlyBuilder | Omit<SlashCommandBuilder, "addSubcommand" | "addSubcommandGroup">;
-	managePermission?: boolean;
 	execute(
 		interaction: ChatInputCommandInteraction,
 		client: MyClient
@@ -86,7 +85,7 @@ type MessageConfiguration = {
 };
 
 export type Configuration = {
-	channels: string[];
+	webhooks: string[];
 	interaction: InteractionConfiguration;
 	member: MemberConfiguration;
 	message: MessageConfiguration;

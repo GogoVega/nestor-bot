@@ -25,7 +25,6 @@ Each file contains two elements:
 
 - **basePermission**: The basic permission a user must have to use this command.
 - **data**: Contains the command elements (name, description, subcommand...).
-- **managePermission**: Bypass channel check for command with it.
 - **execute()**: Is the function executed if this command is called.
 
 ## Server Integrations Page
