@@ -22,9 +22,9 @@ export const messageUpdate: MessageUpdateEvent = {
 				.setDescription(
 					`• **Autheur du message** : <@${id}>\n• **Message édité dans le salon** : <#${
 						newMessage.channelId
-					}>\n• **Ancien Message** :\n\n> ${generateQuotedMessage(
+					}>\n• **Ancien Message** :\n\n${generateQuotedMessage(
 						oldMessage.content
-					)}\n\n• **Nouveau Message** :\n\n> ${generateQuotedMessage(newMessage.content)} `
+					)}\n\n• **Nouveau Message** :\n\n${generateQuotedMessage(newMessage.content)} `
 				)
 				.setColor(Colors.Yellow)
 				.setTimestamp(new Date())

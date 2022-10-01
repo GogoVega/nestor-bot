@@ -55,7 +55,7 @@ export const messageDelete: MessageDeleteEvent = {
 					.setDescription(
 						`• **Autheur du message** : <@${id}>\n• **Message supprimé par** : <@${executorId}>\n• **Message supprimé dans le salon** : <#${
 							message.channelId
-						}>\n• **Contenu du message** :\n\n> ${generateQuotedMessage(message.content)} `
+						}>\n• **Contenu du message** :\n\n${generateQuotedMessage(message.content)} `
 					)
 					.setColor(Colors.Red)
 					.setTimestamp(new Date())
