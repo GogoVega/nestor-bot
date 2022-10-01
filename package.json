@@ -35,9 +35,12 @@
 	"dependencies": {
 		"cpu-percentage": "^1.0.3",
 		"discord.js": "^14.5.0",
+		"i18next": "^21.9.2",
+		"i18next-fs-backend": "^1.1.5",
 		"winston": "^3.8.1"
 	},
 	"devDependencies": {
+		"@types/i18next-fs-backend": "^1.1.2",
 		"@typescript-eslint/eslint-plugin": "^5.38.1",
 		"@typescript-eslint/parser": "^5.38.1",
 		"eslint": "^8.23.0",

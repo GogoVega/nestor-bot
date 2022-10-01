@@ -1,0 +1,192 @@
+{
+  "command": {
+    "common": {
+      "build": {
+        "name": {
+          "channelId": "salon_id",
+          "messageId": "message_id"
+        },
+        "description": {
+          "channelId": "Choisissez le salon contenant le message.",
+          "messageId": "ID du message."
+        }
+      },
+      "messageId": "ID du message",
+      "selectChannel": "Selection du salon",
+      "selectThisChannel": "Selection de ce salon",
+      "selectThread": "Selection d'un fil",
+      "movedBy": "<@{{authorId}}>, votre message a été déplacé du salon <#{{channelId}}> par <@{{executorId}}>.\n\n{{- content}}",
+      "movedSuccessfully": "Message déplacé avec succès !",
+      "nextPage": "Page Suivante",
+      "previousPage": "Page Précédente"
+    },
+    "error": {
+      "channelCategory": "Erreur: Le salon <#{{channelId}}> reçu est une catégorie !",
+      "creatingThread": "Une erreur s'est produite lors de la création du fil !",
+      "failed": "Une erreur s'est produite lors de l'exécution de cette commande !",
+      "roleSuperior": "Erreur: Vous ne pouvez pas utiliser un rôle supérieur au Bot !",
+      "roleBot": "Erreur: Vous ne pouvez pas utiliser un rôle géré par une intégration !",
+      "roleEveryone": "Erreur: Vous ne pouvez pas utiliser le rôle **@everyone** !",
+      "roleMaxReaction": "Erreur: Vous avez atteint la limite de 5 rôles par réaction !",
+      "roleAlreadyUsed": "Erreur: Rôle déjà utilisé pour cet émoji !",
+      "noneEmoji": "Erreur: Aucun emoji utilisé pour ce message !",
+      "roleNotFound": "Erreur: Aucun rôle ne correspond à votre requête !",
+      "checkMessageId": "Erreur: Vérifiez l'ID du message ou du salon contenant le message !",
+      "channelAlreadySaved": "Erreur: Ce salon a déjà été enregistré !",
+      "channelNeverSaved": "Erreur: Ce salon n'a jamais été enregistré !"
+    },
+    "help": {
+      "available": "Commandes disponibles",
+      "build": {
+        "name": "aide",
+        "description": "Répond avec toutes les commandes disponibles et leur usage."
+      }
+    },
+    "moveToChannel": {
+      "build": {
+        "name": "Déplacer vers le salon"
+      },
+      "selectChannel": "Veuillez sélectionner le salon dans lequel déplacer le message."
+    },
+    "moveToThread": {
+      "build": {
+        "name": "Déplacer vers le fil"
+      },
+      "create": "Créer un fil",
+      "createDescription": "Voulez-vous créer un fil de discussion public ?",
+      "createPublic": "Créer un fil public",
+      "modalSubmitted": "Modal soumis avec succès !",
+      "selectChannel": "Veuillez d'abord choisir le salon du fil.",
+      "useThisChannel": "Voulez-vous utiliser le salon dans lequel vous vous trouvez ?",
+      "selectThread": "Veuillez choisir le fil dans lequel déplacer le message.",
+      "threadName": "Nom du fil"
+    },
+    "parameters": {
+      "build": {
+        "description": {
+          "add": "Voulez-vous activer les logs des membres arrivant.",
+          "add-channelId": "ID du salon à rajouter aux logs.",
+          "channelId": "ID du salon pour les logs des messages.",
+          "command": "Voulez-vous activer les logs des commandes.",
+          "delete": "Voulez-vous activer les logs des messages supprimés.",
+          "edit-interactions": "Modifier les paramètres des intéractions (commande/réaction).",
+          "edit-members": "Modifier les paramètres des membres (arrivé/parti).",
+          "edit-messages": "Modifier les paramètres des messages (édité/supprimé).",
+          "logs": "Configuration des logs.",
+          "reaction": "Voulez-vous activer les logs des réactions.",
+          "remove": "Voulez-vous activer les logs des membres partant.",
+          "remove-channelId": "ID du salon à enlever des logs.",
+          "show-parameters": "Affiche les paramètres de tous les logs.",
+          "update": "Voulez-vous activer les logs des messages édités."
+        },
+        "name": {
+          "add": "arrive",
+          "add-channelId": "ajouter_salon_id",
+          "channelId": "salon_id",
+          "command": "commande",
+          "delete": "supprime",
+          "edit-interactions": "modifier-parametres-interactions",
+          "edit-members": "modifier-parametres-membres",
+          "edit-messages": "modifier-parametres-messages",
+          "logs": "logs-parametres",
+          "reaction": "reaction",
+          "remove": "parti",
+          "remove-channelId": "supprimer_salon_id",
+          "show-parameters": "afficher-parametres",
+          "update": "edite"
+        }
+      },
+      "active": "Activé",
+      "add": "**Log des nouveaux membres** :",
+      "channelId": "**Salon utilisé** :",
+      "channelsId": "**Salons autorisés** :",
+      "command": "**Log des commandes** :",
+      "delete": "**Log des messages supprimés** :",
+      "disable": "Désactivé",
+      "reaction": "**Log des réactions** :",
+      "remove": "**Log des membres sortants** :",
+      "update": "**Log des messages édités** :",
+      "noneChannel": "Aucun salon enregistré",
+      "noneParameter": "Aucun paramètre enregistré!",
+      "list": "Ci-dessous la liste des paramètres enregistrés :{{- msg}}",
+      "updated": "Les paramètres de configuration des logs ont bien été mis à jour !"
+    },
+    "process": {
+      "build": {
+        "description": "Répond avec des informations sur le processus.",
+        "name": "processus-infos"
+      }
+    },
+    "reaction": {
+      "build": {
+        "description": {
+          "add-role": "Ajouter un rôle à un message.",
+          "emoji": "Emoji pour ce rôle.",
+          "remove-role": "Supprimer un rôle à un message.",
+          "role": "Choisissez le rôle à rajouter/supprimer.",
+          "roles-list": "Afficher la liste complète des rôles par message ou pour un message.",
+          "role-reaction": "Ajouter ou supprimer un rôle à un message."
+        },
+        "name": {
+          "add-role": "ajouter-role",
+          "emoji": "emoji",
+          "remove-role": "supprimer-role",
+          "role": "role",
+          "roles-list": "roles-list",
+          "role-reaction": "role-reaction"
+        }
+      },
+      "noneRole": "Aucun rôle enregistré !",
+      "list_one": "Ci-dessous la liste des rôles enregistrés pour ce message",
+      "list_other": "Ci-dessous la liste des rôles enregistrés pour tous les messages",
+      "roleAdded": "Le rôle <@&{{roleId}}> a bien été ajouté.",
+      "roleRemoved": "Le rôle <@&{{roleId}}> a bien été enlevé."
+    }
+  },
+  "common": {
+    "error": {
+      "authorizationRequired": "Erreur: Vous ne disposez pas des autorisations requises!"
+    }
+  },
+  "event": {
+    "error": {
+      "addRoleFailed": "Une erreur s'est produite en tentant de vous ajouter le rôle !",
+      "moveFailed": "Erreur lors du déplacement du message !\nVeuillez réessayer.",
+      "removeRoleFailed": "Une erreur s'est produite en tentant de vous retirer le rôle !"
+    },
+    "member": {
+      "add": {
+        "title": "Un nouveau membre vient de débarquer !",
+        "description": "• **Nom d'utilisateur** : <@{{member.id}}> - {{member.displayName}} ({{member.id}})\n• **Compte créé le** : <t:{{createdTimestamp}}:f> (<t:{{createdTimestamp}}:R>)\n• **Nous a rejoint le** : <t:{{joinedTimestamp}}:f> (<t:{{joinedTimestamp}}:R>)"
+      },
+      "remove": {
+        "title": "Un membre vient de nous quitter !",
+        "description": "• **Nom d'utilisateur** : <@{{member.id}}> - {{member.displayName}} ({{member.id}})\n• **Compte créé le** : <t:{{createdTimestamp}}:f> (<t:{{createdTimestamp}}:R>)\n• **Nous a rejoint le** : <t:{{joinedTimestamp}}:f> (<t:{{joinedTimestamp}}:R>)\n• **Nous a quitté le** : <t:{{leftTimestamp}}:f> (<t:{{leftTimestamp}}:R>)"
+      }
+    },
+    "log": {
+      "buttonUsed": "Un bouton vient d'être appuyé !",
+      "commandUsed": "Une commande vient d'être utilisée !",
+      "buttonLogMessage": "• **Type d'interaction** : Bouton\n• **Nom de l'intéraction** : `{{interactionName}}`\n• **Utilisateur concerné** : <@{{userId}}>\n• **Salon utilisé** : <#{{channelId}}>\n",
+      "commandLogMessage": "• **Type d'interaction** : Commande\n• **Nom de l'intéraction** : `{{interactionName}}`\n• **Utilisateur concerné** : <@{{userId}}>\n• **Salon utilisé** : <#{{channelId}}>\n",
+      "roleAdded_one": "Un rôle vient d'être attribué !",
+      "roleAdded_other": "Plusieurs rôles viennent d'être attribués !",
+      "roleRemoved_one": "Un rôle vient d'être retiré !",
+      "roleRemoved_other": "Plusieurs rôles viennent d'être retirés !",
+      "reactionAdded_one": "<@{{userId}}> vient de réagir avec l'émoji {{emoji}} pour obtenir le rôle {{- roleId}}.\n",
+      "reactionAdded_other": "<@{{userId}}> vient de réagir avec l'émoji {{emoji}} pour obtenir les rôles {{- roleId}}.\n",
+      "reactionRemoved_one": "<@{{userId}}> vient de réagir avec l'émoji {{emoji}} pour quitter le rôle {{- roleId}}.\n",
+      "reactionRemoved_other": "<@{{userId}}> vient de réagir avec l'émoji {{emoji}} pour quitter les rôles {{- roleId}}.\n"
+    },
+    "message": {
+      "delete": {
+        "title": "Un message vient d'être supprimé !",
+        "description": "• **Autheur du message** : <@{{authorId}}>\n• **Message supprimé par** : <@{{executorId}}>\n• **Message supprimé dans le salon** : <#{{channelId}}>\n• **Contenu du message** :\n\n{{- content}} "
+      },
+      "update": {
+        "title": "Un message vient d'être édité !",
+        "description": "• **Autheur du message** : <@{{authorId}}>\n• **Message édité dans le salon** : <#{{channelId}}>\n• **Ancien Message** :\n\n{{- oldContent}}\n\n• **Nouveau Message** :\n\n{{- newContent}} "
+      }
+    }
+  }
+}

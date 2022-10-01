@@ -1,19 +1,8 @@
-import { Interaction, Colors, EmbedBuilder, User, PartialUser } from "discord.js";
+import { Interaction, Colors, EmbedBuilder, User, PartialUser, Locale } from "discord.js";
+import i18next from "i18next";
 import { sendMessage } from "../channel";
 import { MyClient } from "../../types/client";
 import { Configuration } from "../../types/collection";
-
-enum logMessageContent {
-	add = "**Log des nouveaux membres** :",
-	button = "**Log des boutons** :",
-	channelId = "**Salon utilisé** :",
-	channelsId = "**Salons autorisés** :",
-	command = "**Log des commandes** :",
-	delete = "**Log des messages supprimés** :",
-	reaction = "**Log des réactions** :",
-	remove = "**Log des membres sortants** :",
-	update = "**Log des messages édités** :",
-}
 
 type ReactionLog = {
 	emoji: string;
@@ -23,7 +12,7 @@ type ReactionLog = {
 	reactionUser: User | PartialUser;
 };
 
-function createLogsMessage(args: Configuration): string {
+function createLogsMessage(args: Configuration, locale: Locale): string {
 	// eslint-disable-next-line @typescript-eslint/no-unused-vars
 	const { webhooks, ...newArgs } = args;
 	const logsMessage: string[] = [];
@@ -32,27 +21,27 @@ function createLogsMessage(args: Configuration): string {
 		logsMessage.push(`\n\n• **${key.toUpperCase()}**`);
 
 		if (value.channelId === "") {
-			logsMessage.push("\n```diff\n- Aucun paramètre enregistré!```");
+			logsMessage.push(`\n\`\`\`diff\n- ${i18next.t("command.parameters.noneParameter", { lng: locale })}\`\`\``);
 			continue;
 		}
 
 		for (const [name, log] of Object.entries(value)) {
-			logsMessage.push(`\n  • ${logMessageContent[name as keyof typeof logMessageContent]} ${getLogState(log)}`);
+			logsMessage.push(`\n  • ${i18next.t(`command.parameters.${name}`, { lng: locale })} ${getLogState(log, locale)}`);
 		}
 	}
 
 	return logsMessage.toString().replace(/,/gm, "");
 }
 
-function getLogState(parameter: boolean | string | string[]) {
+function getLogState(parameter: boolean | string | string[], locale: Locale) {
 	if (typeof parameter === "string") {
 		return `<#${parameter}>`;
 	} else if (typeof parameter === "object") {
-		if (parameter.length === 0) return "Aucun salon enregistré";
+		if (parameter.length === 0) return i18next.t("command.parameters.noneChannel", { lng: locale });
 		return parameter.map((channelId) => `<#${channelId}> `);
 	}
 
-	return parameter ? "Activé" : "Désactivé";
+	return i18next.t(`command.parameters.${parameter ? "active" : "disable"}`, { lng: locale });
 }
 
 // Send logs message
@@ -70,41 +59,50 @@ async function sendLog(reaction: ReactionLog | null, interaction: Interaction | 
 		if (!logParameters.reaction) return;
 
 		const { emoji, roleId, isAdded } = reaction;
-		const title =
-			roleId.length > 1
-				? `Plusieurs rôles viennent d'être ${isAdded ? "attribués" : "retirés"} !`
-				: `Un rôle vient d'être ${isAdded ? "attribué" : "retiré"} !`;
+		const title = i18next.t(`event.log.role${isAdded ? "Added" : "Removed"}`, {
+			lng: interaction?.guild?.preferredLocale,
+			count: roleId.length,
+		});
+		const description = i18next.t(`event.log.reaction${isAdded ? "Added" : "Removed"}`, {
+			lng: interaction?.guild?.preferredLocale,
+			count: roleId.length,
+			userId: user?.id,
+			emoji: emoji,
+			roleId: roleId.map((id) => ` <@&${id}>`),
+		});
 
 		if (roleId.length === 0) return;
 
 		templateEmbed
 			.setTitle(title)
-			.setDescription(
-				`<@${user?.id}> vient de réagir avec l'émoji ${emoji} pour ${isAdded ? "obtenir" : "quitter"} ${
-					roleId.length > 1 ? "les rôles" : "le rôle"
-				}${roleId.map((id) => ` <@&${id}>`)}.\n`
-			)
+			.setDescription(description)
 			.setColor(isAdded ? Colors.Orange : Colors.Purple);
 	} else if (interaction) {
-		if (!interaction.isCommand() && !interaction.isButton()) return;
-		if (!logParameters[interaction.isCommand() ? "command" : "button"]) return;
+		if (!logParameters["command"]) return;
 
 		const isCommand = interaction.isCommand();
-		// eslint-disable-next-line @typescript-eslint/ban-ts-comment
-		// @ts-ignore
-		const interactionName = interaction.commandName ?? interaction.customId;
-		// eslint-disable-next-line @typescript-eslint/ban-ts-comment
-		// @ts-ignore
-		const subCommandName = interaction.options?.getSubcommand(false);
+		const interactionName: string[] = [];
+
+		if (interaction.isChatInputCommand()) {
+			const subCommandName = interaction.options?.getSubcommand(false);
+			interactionName.push(`${interaction.commandName.concat(" ", subCommandName || "")}`);
+		} else if (interaction.isContextMenuCommand() || interaction.isAutocomplete()) {
+			interactionName.push(interaction.commandName);
+		} else {
+			interactionName.push(interaction.customId);
+		}
 
 		templateEmbed
-			.setTitle(isCommand ? "Une commande vient d'être utilisée !" : "Un bouton vient d'être appuyé !")
+			.setTitle(
+				i18next.t(`event.log.${isCommand ? "command" : "button"}Used`, { lng: interaction?.guild?.preferredLocale })
+			)
 			.setDescription(
-				`• **Type d'interaction** : ${
-					isCommand ? "Commande" : "Bouton"
-				}\n• **Nom de l'intéraction** : \`${interactionName}${
-					subCommandName ? " ".concat(subCommandName) : ""
-				}\`\n• **Utilisateur concerné** : <@${user?.id}>\n• **Salon utilisé** : <#${interaction.channel?.id}>\n`
+				i18next.t(`event.log.${isCommand ? "command" : "button"}LogMessage`, {
+					lng: interaction?.guild?.preferredLocale,
+					interactionName: interactionName,
+					userId: user?.id,
+					channelId: interaction.channel?.id,
+				})
 			)
 			.setColor(isCommand ? Colors.Yellow : Colors.Blue);
 	}

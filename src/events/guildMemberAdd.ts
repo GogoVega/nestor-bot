@@ -1,4 +1,5 @@
 import { Colors, EmbedBuilder } from "discord.js";
+import i18next from "i18next";
 import { MemberAddEvent } from "../types/collection";
 import { sendMessage, toTimestamp } from "../utils/channel";
 import logger from "../utils/logs/logger";
@@ -18,9 +19,14 @@ export const guildMemberAdd: MemberAddEvent = {
 			const joinedTimestamp = toTimestamp(member.joinedTimestamp);
 
 			const templateEmbed = new EmbedBuilder()
-				.setTitle("Un nouveau membre vient de débarquer !")
+				.setTitle(i18next.t("event.member.add.title", { lng: member.guild.preferredLocale }))
 				.setDescription(
-					`• **Nom d'utilisateur** : <@${member.id}> - ${member.displayName} (${member.id})\n• **Compte créé le** : <t:${createdTimestamp}:f> (<t:${createdTimestamp}:R>)\n• **Nous a rejoint le** : <t:${joinedTimestamp}:f> (<t:${joinedTimestamp}:R>)`
+					i18next.t("event.member.add.description", {
+						lng: member.guild.preferredLocale,
+						member,
+						createdTimestamp: createdTimestamp,
+						joinedTimestamp: joinedTimestamp,
+					})
 				)
 				.setColor(color)
 				.setTimestamp(new Date())

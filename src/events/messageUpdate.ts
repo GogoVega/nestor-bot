@@ -1,4 +1,5 @@
 import { Colors, EmbedBuilder } from "discord.js";
+import i18next from "i18next";
 import { MessageUpdateEvent } from "../types/collection";
 import { generateQuotedMessage, sendMessage } from "../utils/channel";
 import logger from "../utils/logs/logger";
@@ -18,13 +19,15 @@ export const messageUpdate: MessageUpdateEvent = {
 
 			const { id, tag } = newMessage.author;
 			const templateEmbed = new EmbedBuilder()
-				.setTitle("Un message vient d'être édité !")
+				.setTitle(i18next.t("event.message.update.title", { lng: newMessage.guild?.preferredLocale }))
 				.setDescription(
-					`• **Autheur du message** : <@${id}>\n• **Message édité dans le salon** : <#${
-						newMessage.channelId
-					}>\n• **Ancien Message** :\n\n${generateQuotedMessage(
-						oldMessage.content
-					)}\n\n• **Nouveau Message** :\n\n${generateQuotedMessage(newMessage.content)} `
+					i18next.t("event.message.update.description", {
+						lng: newMessage.guild?.preferredLocale,
+						authorId: id,
+						channelId: newMessage.channelId,
+						oldContent: generateQuotedMessage(oldMessage.content),
+						newContent: generateQuotedMessage(newMessage.content),
+					})
 				)
 				.setColor(Colors.Yellow)
 				.setTimestamp(new Date())

@@ -1,50 +1,51 @@
 import { hyperlink, PermissionsBitField, SlashCommandBuilder } from "discord.js";
+import i18next from "i18next";
 import { Command, ReactionsFile } from "../types/collection";
 import logger from "../utils/logs/logger";
 import { readFile, writeFile } from "../utils/readWriteFile";
+import { loadTranslations, translationBuilder } from "../utils/translation";
 
 export const roleReaction: Command = {
 	basePermission: PermissionsBitField.Flags.ManageRoles,
 	data: new SlashCommandBuilder()
-		.setName("role-reaction")
-		.setDescription("Ajouter ou supprimer un rôle à un message.")
+		.setName(i18next.t("command.reaction.build.name.role-reaction"))
+		.setNameLocalizations(loadTranslations("command.reaction.build.name.role-reaction"))
+		.setDescription(i18next.t("command.reaction.build.description.role-reaction"))
+		.setDescriptionLocalizations(loadTranslations("command.reaction.build.description.role-reaction"))
 		.addSubcommand((subcommand) =>
-			subcommand
-				.setName("ajouter-role")
-				.setDescription("Ajouter un rôle à un message.")
+			translationBuilder(subcommand, "command.reaction.build.name.add-role")
 				.addChannelOption((option) =>
-					option.setName("salon_id").setDescription("Choisissez le salon contenant le message.").setRequired(true)
+					translationBuilder(option, "command.common.build.name.channelId").setRequired(true)
 				)
-				.addStringOption((option) => option.setName("message_id").setDescription("ID du message.").setRequired(true))
-				.addRoleOption((option) =>
-					option.setName("role").setDescription("Choisissez le rôle à rajouter.").setRequired(true)
+				.addStringOption((option) =>
+					translationBuilder(option, "command.common.build.name.messageId").setRequired(true)
 				)
-				.addStringOption((option) => option.setName("emoji").setDescription("Emoji pour ce rôle.").setRequired(true))
+				.addRoleOption((option) => translationBuilder(option, "command.reaction.build.name.role").setRequired(true))
+				.addStringOption((option) => translationBuilder(option, "command.reaction.build.name.emoji").setRequired(true))
 		)
 		.addSubcommand((subcommand) =>
-			subcommand
-				.setName("supprimer-role")
-				.setDescription("Supprimer un rôle à un message.")
+			translationBuilder(subcommand, "command.reaction.build.name.remove-role")
 				.addChannelOption((option) =>
-					option.setName("salon_id").setDescription("Choisissez le salon contenant le message.").setRequired(true)
+					translationBuilder(option, "command.common.build.name.channelId").setRequired(true)
 				)
-				.addStringOption((option) => option.setName("message_id").setDescription("ID du message.").setRequired(true))
-				.addRoleOption((option) =>
-					option.setName("role").setDescription("Choisissez le rôle à à supprimer.").setRequired(true)
+				.addStringOption((option) =>
+					translationBuilder(option, "command.common.build.name.messageId").setRequired(true)
 				)
-				.addStringOption((option) => option.setName("emoji").setDescription("Emoji pour ce rôle.").setRequired(true))
+				.addRoleOption((option) => translationBuilder(option, "command.reaction.build.name.role").setRequired(true))
+				.addStringOption((option) => translationBuilder(option, "command.reaction.build.name.emoji").setRequired(true))
 		)
 		.addSubcommand((subcommand) =>
-			subcommand
-				.setName("roles-list")
-				.setDescription("Afficher la liste complète des rôles par message ou pour un message.")
-				.addStringOption((option) => option.setName("message_id").setDescription("ID du message."))
+			translationBuilder(subcommand, "command.reaction.build.name.roles-list").addStringOption((option) =>
+				translationBuilder(option, "command.common.build.name.messageId")
+			)
 		),
 	async execute(interaction, client) {
 		if (!interaction.inGuild()) return;
 
+		const { locale } = interaction;
+
 		try {
-			const channelId = interaction.options.getChannel("salon_id")?.id ?? "";
+			const channelId = interaction.options.getChannel("channel_id")?.id ?? "";
 			const msgId = interaction.options.getString("message_id") ?? "";
 			const role = interaction.options.getRole("role");
 			const roleId = role?.id ?? "";
@@ -58,23 +59,23 @@ export const roleReaction: Command = {
 			const reactionsFile = reactionsObjectFile[interaction.guildId];
 
 			switch (subCommandName) {
-				case "ajouter-role": {
+				case "add-role": {
 					const bot = await interaction.guild?.members.fetch(client.user?.id ?? "");
 
 					if (!bot) return;
 					if (bot?.roles.highest.comparePositionTo(roleId) < 0)
 						return await interaction.reply({
-							content: "Erreur: Vous ne pouvez pas utiliser un rôle supérieur au Bot !",
+							content: i18next.t("command.error.roleSuperior", { lng: locale }),
 							ephemeral: true,
 						});
 					if (role?.managed)
 						return await interaction.reply({
-							content: "Erreur: Vous ne pouvez pas utiliser un rôle géré par une intégration !",
+							content: i18next.t("command.error.roleBot", { lng: locale }),
 							ephemeral: true,
 						});
 					if (role?.name === "@everyone")
 						return await interaction.reply({
-							content: "Erreur: Vous ne pouvez pas utiliser le rôle **@everyone** !",
+							content: i18next.t("command.error.roleEveryone", { lng: locale }),
 							ephemeral: true,
 						});
 					const channel = await client.channels.fetch(channelId);
@@ -90,12 +91,12 @@ export const roleReaction: Command = {
 						if (reaction["emoji"] !== emoji) continue;
 						if (reaction["roleId"].length >= 5)
 							return await interaction.reply({
-								content: "Erreur: Vous avez atteint la limite de 5 rôles par réaction !",
+								content: i18next.t("command.error.roleMaxReactionr", { lng: locale }),
 								ephemeral: true,
 							});
 						if (reaction["roleId"].includes(roleId))
 							return await interaction.reply({
-								content: "Erreur: Rôle déjà utilisé pour cet émoji !",
+								content: i18next.t("command.error.roleAlreadyUsed", { lng: locale }),
 								ephemeral: true,
 							});
 
@@ -109,14 +110,14 @@ export const roleReaction: Command = {
 					await message.react(emoji);
 					break;
 				}
-				case "supprimer-role": {
+				case "remove-role": {
 					const channel = await client.channels.fetch(channelId);
 
 					if (!channel?.isTextBased()) return;
 
 					if (!reactionsFile[msgId])
 						return await interaction.reply({
-							content: "Erreur: Aucun emoji utilisé pour ce message !\nVérifiez l'ID du message !",
+							content: i18next.t("command.error.noneEmoji", { lng: locale }),
 							ephemeral: true,
 						});
 
@@ -127,7 +128,7 @@ export const roleReaction: Command = {
 						if (reaction["emoji"] !== emoji) continue;
 						if (!reaction["roleId"].includes(roleId))
 							return await interaction.reply({
-								content: "Erreur: Aucun rôle ne correspond à votre requête !",
+								content: i18next.t("command.error.roleNotFound", { lng: locale }),
 								ephemeral: true,
 							});
 
@@ -150,7 +151,7 @@ export const roleReaction: Command = {
 
 					if (msgId) {
 						if (!reactionsFile[msgId] || !reactionsFile[msgId]?.values.length) {
-							rolesList.push("```diff\n- Aucun rôle enregistré !```");
+							rolesList.push(`\`\`\`diff\n- ${i18next.t("command.reaction.noneRole", { lng: locale })}\n\`\`\``);
 						} else {
 							reactionsFile[msgId].values.forEach((role) =>
 								rolesList.push(
@@ -164,11 +165,11 @@ export const roleReaction: Command = {
 						const messageIdList = Object.keys(reactionsFile);
 
 						if (!messageIdList.length) {
-							rolesList.push("```diff\n- Aucun rôle enregistré !```");
+							rolesList.push(`\`\`\`diff\n- ${i18next.t("command.reaction.noneRole", { lng: locale })}\n\`\`\``);
 						} else {
 							messageIdList.forEach((messageId) => {
 								rolesList.push(
-									`\n**ID du message** : ${hyperlink(
+									`\n**${i18next.t("command.common.messageId", { lng: locale })}** : ${hyperlink(
 										messageId,
 										`<https://discord.com/channels/${interaction.guildId}/${reactionsFile[messageId].channel}/${messageId}>`
 									)}`
@@ -181,9 +182,10 @@ export const roleReaction: Command = {
 					}
 
 					return await interaction.reply({
-						content: `Ci-dessous la liste des rôles enregistrés pour ${
-							msgId ? "ce" : "chaque"
-						} message :\n${rolesList}`,
+						content: `${i18next.t("command.reaction.list", {
+							lng: locale,
+							this: msgId ? "ce" : "chaque",
+						})} :\n${rolesList}`,
 						ephemeral: true,
 					});
 				}
@@ -194,18 +196,22 @@ export const roleReaction: Command = {
 
 			logger.info(
 				`Server "${interaction.guild?.name}": Role "${roleId}" ${
-					subCommandName === "ajouter-role" ? "added" : "removed"
+					subCommandName === "add-role" ? "added" : "removed"
 				} successfully.`
 			);
 
 			await interaction.reply({
-				content: `Le rôle <@&${roleId}> a bien été ${subCommandName === "ajouter-role" ? "ajouté" : "supprimé"}.`,
+				content: i18next.t("command.reaction.roleAddedRemoved", {
+					lng: locale,
+					added: subCommandName === "add-role" ? "ajouté" : "supprimé",
+					roleId: roleId,
+				}),
 				ephemeral: true,
 			});
 		} catch (error) {
 			logger.error("Error during role-reaction command:", error);
 			return await interaction.reply({
-				content: "Erreur: Vérifiez l'ID du message ou du salon contenant le message !",
+				content: i18next.t("command.error.checkMessageId", { lng: locale }),
 				ephemeral: true,
 			});
 		}

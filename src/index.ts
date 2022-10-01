@@ -1,5 +1,6 @@
 import { Client, GatewayIntentBits, Partials } from "discord.js";
 import { MyClient } from "./types/client";
+import { initTranslation } from "./utils/translation";
 
 // eslint-disable-next-line @typescript-eslint/no-var-requires
 const { token } = require("../config.json");
@@ -14,6 +15,9 @@ const client = new Client({
 	],
 	partials: [Partials.Channel, Partials.Message, Partials.Reaction],
 }) as MyClient;
+
+//
+initTranslation();
 
 // Create Collections for Buttons, Commands and Modals.
 import { createInteractionCollections } from "./utils/createCollections";

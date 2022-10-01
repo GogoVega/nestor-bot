@@ -1,3 +1,4 @@
+import i18next from "i18next";
 import { ReactionEvent } from "../types/collection";
 import logger from "../utils/logs/logger";
 import { sendLog } from "../utils/logs/sendLog";
@@ -45,7 +46,7 @@ export const messageReactionRemoved: ReactionEvent = {
 			);
 		} catch (error) {
 			logger.error("Error when removing a reaction to a message:", error);
-			await user.send({ content: "Une erreur s'est produite en tentant de vous retirer le rôle !" });
+			await user.send({ content: i18next.t("event.error.removeRoleFailed") });
 		}
 	},
 };

@@ -1,5 +1,5 @@
-import { PermissionsBitField } from "discord.js";
-import { InteractionEvent } from "../types/collection";
+import i18next from "i18next";
+import { Command, InteractionEvent } from "../types/collection";
 import { isCategory } from "../utils/channel";
 import logger from "../utils/logs/logger";
 
@@ -9,32 +9,26 @@ export const commandInteraction: InteractionEvent = {
 	async execute(interaction, client) {
 		if (!interaction.isChatInputCommand() || !interaction.inGuild()) return;
 
-		if (!interaction.channel?.permissionsFor(interaction.user)?.has(PermissionsBitField.Flags.UseApplicationCommands))
-			return await interaction.reply({
-				content: "Vous ne disposez pas des autorisations requises!",
-				ephemeral: true,
-			});
-
-		const command = client.commands.get(interaction.commandName);
+		const command = client.commands.get(interaction.commandName) as Command | undefined;
 
 		if (!command) return;
 
 		if (command.basePermission) {
 			if (!interaction.channel?.permissionsFor(interaction.user)?.has(command.basePermission))
 				return await interaction.reply({
-					content: "Erreur: Vous ne disposez pas des autorisations requises!",
+					content: i18next.t("common.error.authorizationRequired", { lng: interaction.locale }),
 					ephemeral: true,
 				});
 		}
 
-		const channelId = interaction.options.getChannel("salon_id", false)?.id;
+		const channelId = interaction.options.getChannel("channel_id", false)?.id;
 
 		if (channelId) {
 			const channel = await client.channels.fetch(channelId);
 
 			if (isCategory(channel)) {
 				return await interaction.reply({
-					content: `Erreur: Le salon <#${channelId}> reçu est une catégorie !`,
+					content: i18next.t("command.error.channelCategory", { lng: interaction.locale }),
 					ephemeral: true,
 				});
 			}
@@ -45,7 +39,7 @@ export const commandInteraction: InteractionEvent = {
 		} catch (error) {
 			logger.error("Error during command interaction created!", error);
 			await interaction.reply({
-				content: "Une erreur s'est produite lors de l'exécution de cette commande !",
+				content: i18next.t("command.error.failed", { lng: interaction.locale }),
 				ephemeral: true,
 			});
 		}

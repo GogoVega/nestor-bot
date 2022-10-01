@@ -1,75 +1,59 @@
 import { PermissionsBitField, SlashCommandBuilder } from "discord.js";
+import i18next from "i18next";
 import { Command, ConfigurationsProperty, Entry } from "../types/collection";
 import { isCategory } from "../utils/channel";
 import logger from "../utils/logs/logger";
 import { createLogsMessage } from "../utils/logs/sendLog";
 import { readConfigurationsFile, writeConfigurationsFile } from "../utils/readWriteFile";
+import { loadTranslations, translationBuilder } from "../utils/translation";
 
 enum logName {
-	"modifier-parametres-interactions" = "interaction",
-	"modifier-parametres-messages" = "message",
-	"modifier-parametres-membres" = "member",
+	"edit-settings-interactions" = "interaction",
+	"edit-settings-messages" = "message",
+	"edit-settings-members" = "member",
 }
 
 export const logParameters: Command = {
 	basePermission: PermissionsBitField.Flags.ViewAuditLog,
 	data: new SlashCommandBuilder()
-		.setName("logs-parametres")
-		.setDescription("Configuration des logs.")
+		.setName(i18next.t("command.parameters.build.name.logs"))
+		.setNameLocalizations(loadTranslations("command.parameters.build.name.logs"))
+		.setDescription(i18next.t("command.parameters.build.description.logs"))
+		.setDescriptionLocalizations(loadTranslations("command.parameters.build.description.logs"))
 		.addSubcommand((subcommand) =>
-			subcommand
-				.setName("modifier-parametres-interactions")
-				.setDescription("Modifier les paramètres des intéractions (bouton/commande/réaction).")
-				.addChannelOption((option) => option.setName("salon_id").setDescription("ID du salon.").setRequired(true))
-				.addBooleanOption((option) =>
-					option.setName("button").setDescription("Voulez-vous activer les logs des boutons.")
-				)
-				.addBooleanOption((option) =>
-					option.setName("command").setDescription("Voulez-vous activer les logs des commandes.")
-				)
-				.addBooleanOption((option) =>
-					option.setName("reaction").setDescription("Voulez-vous activer les logs des réactions.")
-				)
-		)
-		.addSubcommand((subcommand) =>
-			subcommand
-				.setName("modifier-parametres-messages")
-				.setDescription("Modifier les paramètres des messages (édité/supprimé).")
+			translationBuilder(subcommand, "command.parameters.build.name.edit-interactions")
 				.addChannelOption((option) =>
-					option.setName("salon_id").setDescription("ID du salon pour les logs des messages.").setRequired(true)
+					translationBuilder(option, "command.parameters.build.name.channelId").setRequired(true)
 				)
-				.addChannelOption((option) => option.setName("salon_id_add").setDescription("ID du salon à rajouter aux logs."))
+				.addBooleanOption((option) => translationBuilder(option, "command.parameters.build.name.command"))
+				.addBooleanOption((option) => translationBuilder(option, "command.parameters.build.name.reaction"))
+		)
+		.addSubcommand((subcommand) =>
+			translationBuilder(subcommand, "command.parameters.build.name.edit-messages")
 				.addChannelOption((option) =>
-					option.setName("salon_id_remove").setDescription("ID du salon à enlever des logs.")
+					translationBuilder(option, "command.parameters.build.name.channelId").setRequired(true)
 				)
-				.addBooleanOption((option) =>
-					option.setName("update").setDescription("Voulez-vous activer les logs des messages édités.")
-				)
-				.addBooleanOption((option) =>
-					option.setName("delete").setDescription("Voulez-vous activer les logs des messages supprimés.")
-				)
+				.addChannelOption((option) => translationBuilder(option, "command.parameters.build.name.add-channelId"))
+				.addChannelOption((option) => translationBuilder(option, "command.parameters.build.name.remove-channelId"))
+				.addBooleanOption((option) => translationBuilder(option, "command.parameters.build.name.update"))
+				.addBooleanOption((option) => translationBuilder(option, "command.parameters.build.name.delete"))
 		)
 		.addSubcommand((subcommand) =>
-			subcommand
-				.setName("modifier-parametres-membres")
-				.setDescription("Modifier les paramètres des membres (arrivé/parti).")
-				.addChannelOption((option) => option.setName("salon_id").setDescription("ID du salon.").setRequired(true))
-				.addBooleanOption((option) =>
-					option.setName("add").setDescription("Voulez-vous activer les logs des membres arrivant.")
+			translationBuilder(subcommand, "command.parameters.build.name.edit-members")
+				.addChannelOption((option) =>
+					translationBuilder(option, "command.parameters.build.name.channelId").setRequired(true)
 				)
-				.addBooleanOption((option) =>
-					option.setName("remove").setDescription("Voulez-vous activer les logs des membres partant.")
-				)
+				.addBooleanOption((option) => translationBuilder(option, "command.parameters.build.name.add"))
+				.addBooleanOption((option) => translationBuilder(option, "command.parameters.build.name.remove"))
 		)
-		.addSubcommand((subcommand) =>
-			subcommand.setName("afficher-parametres").setDescription("Affiche les paramètres de tous les logs.")
-		),
+		.addSubcommand((subcommand) => translationBuilder(subcommand, "command.parameters.build.name.show-parameters")),
 	async execute(interaction, client) {
-		const channelId = interaction.options.getChannel("salon_id")?.id;
-		const channelAdded = interaction.options.getChannel("salon_id_add")?.id;
-		const channelRemoved = interaction.options.getChannel("salon_id_remove")?.id;
+		const channelId = interaction.options.getChannel("channel_id")?.id;
+		const channelAdded = interaction.options.getChannel("add_channel_id")?.id;
+		const channelRemoved = interaction.options.getChannel("remove_channel_id")?.id;
 		const subCommandName = interaction.options.getSubcommand();
 		const guildId = interaction.guildId ?? "";
+		const { locale } = interaction;
 
 		for (const id of [channelId, channelAdded, channelRemoved]) {
 			if (!id) continue;
@@ -78,7 +62,7 @@ export const logParameters: Command = {
 
 			if (isCategory(channel)) {
 				return await interaction.reply({
-					content: `Erreur: Le salon <#${id}> reçu est une catégorie !`,
+					content: i18next.t("command.error.channelCategory", { lng: locale }),
 					ephemeral: true,
 				});
 			}
@@ -93,11 +77,11 @@ export const logParameters: Command = {
 			for (const [key, value] of log) {
 				if (key === "channelsId") {
 					if (channelAdded) {
-						if (value.includes(channelAdded)) return "Erreur: Ce salon a déjà été enregistré !";
+						if (value.includes(channelAdded)) return i18next.t("command.error.channelAlreadySaved", { lng: locale });
 
 						value.push(channelAdded);
 					} else if (channelRemoved) {
-						if (!value.includes(channelRemoved)) return "Erreur: Ce salon n'a jamais été enregistré !";
+						if (!value.includes(channelRemoved)) return i18next.t("command.error.channelNeverSaved", { lng: locale });
 
 						value.splice(value.indexOf(channelRemoved), 1);
 					}
@@ -117,9 +101,9 @@ export const logParameters: Command = {
 		}
 
 		switch (subCommandName) {
-			case "modifier-parametres-interactions":
-			case "modifier-parametres-messages":
-			case "modifier-parametres-membres": {
+			case "edit-settings-interactions":
+			case "edit-settings-messages":
+			case "edit-settings-members": {
 				if (!channelId) throw new Error("Error: channelId missing for logs registration!");
 
 				const logKey = logName[subCommandName as keyof typeof logName];
@@ -135,9 +119,12 @@ export const logParameters: Command = {
 
 				break;
 			}
-			case "afficher-parametres": {
+			case "show-parameters": {
 				return await interaction.reply({
-					content: `Ci-dessous la liste des paramètres enregistrés:${createLogsMessage(configurationsObject)}`,
+					content: i18next.t("command.parameters.list", {
+						lng: locale,
+						msg: createLogsMessage(configurationsObject, locale),
+					}),
 					ephemeral: true,
 				});
 			}
@@ -149,7 +136,7 @@ export const logParameters: Command = {
 		logger.info(`Server "${interaction.guild?.name}": The configuration parameters of the logs have been updated!`);
 
 		await interaction.reply({
-			content: "Les paramètres de configuration des logs ont bien été mis à jour !",
+			content: i18next.t("command.parameters.updated", { lng: locale }),
 			ephemeral: true,
 		});
 	},

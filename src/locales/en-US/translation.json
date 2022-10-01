@@ -1,0 +1,190 @@
+{
+  "command": {
+    "common": {
+      "build": {
+        "name": {
+          "channelId": "salon_id",
+          "messageId": "message_id"
+        },
+        "description": {
+          "channelId": "Choisissez le salon contenant le message.",
+          "messageId": "ID du message."
+        }
+      },
+      "messageId": "Message ID",
+      "selectChannel": "Select Channel",
+      "selectThisChannel": "Select this Channel",
+      "selectThread": "Select Thread",
+      "movedBy": "<@{{authorId}}>, your message was moved from <#{{channelId}}> by <@{{executorId}}>.\n\n{{- content}}",
+      "movedSuccessfully": "Message moved successfully!",
+      "nextPage": "Next Page",
+      "previousPage": "Previous Page"
+    },
+    "error": {
+      "channelCategory": "Error: Channel <#{{channelId}}> received is a category!",
+      "creatingThread": "Error creating thread!",
+      "failed": "An error occurred while executing this command!",
+      "roleSuperior": "Error: You cannot use a role higher than the Bot!",
+      "roleBot": "Error: You cannot use an integration-managed role!",
+      "roleEveryone": "Error: You cannot use the role **@everyone**!",
+      "roleMaxReaction": "Error: You have reached the limit of 5 roles per reaction!",
+      "roleAlreadyUsed": "Error: Role already used for this emoji!",
+      "noneEmoji": "Error: No emoji used for this message!",
+      "roleNotFound": "Error: No roles match your query!",
+      "checkMessageId": "Error: Check the message or channel ID containing the message!",
+      "channelAlreadySaved": "Error: This channel has already been saved!",
+      "channelNeverSaved": "Error: This channel has never been saved!"
+    },
+    "help": {
+      "available": "Available Commands",
+      "build": {
+        "name": "help",
+        "description": "Responds with all available commands and their usage."
+      }
+    },
+    "moveToChannel": {
+      "build": {
+        "name": "Move to Channel"
+      },
+      "selectChannel": "Please select the channel to move the message to."
+    },
+    "moveToThread": {
+      "build": {
+        "name": "Move to Thread"
+      },
+      "create": "Create Thread",
+      "createDescription": "Do you want to create a public thread?",
+      "createPublic": "Create a Public Thread",
+      "modalSubmitted": "Modal successfuly submitted!",
+      "selectChannel": "Please choose first the channel of the thread.",
+      "useThisChannel": "Do you want to use the channel you are in?",
+      "selectThread": "Please choose the thread to move the message.",
+      "threadName": "Name of the Thread"
+    },
+    "parameters": {
+      "build": {
+        "description": {
+          "add": "Do you want to activate the logs of arriving members.",
+          "add-channelId": "Channel ID to add to the logs.",
+          "channelId": "Channel ID for message logs.",
+          "command": "Do you want to enable order logging.",
+          "delete": "Do you want to enable logs of deleted messages.",
+          "edit-interactions": "Edit interaction settings (command/reaction).",
+          "edit-members": "Modify member settings (in/out).",
+          "edit-messages": "Edit message settings (edited/deleted).",
+          "logs": "Configuring Logs.",
+          "reaction": "Do you want to enable reaction logs.",
+          "remove": "Do you want to enable leaving member logs.",
+          "remove-channelId": "Channel ID to remove from logs.",
+          "show-parameters": "Show settings for all logs.",
+          "update": "Do you want to enable logging of edited messages."
+        },
+        "name": {
+          "add": "join",
+          "add-channelId": "add_channel_id",
+          "channelId": "channel_id",
+          "command": "command",
+          "delete": "delete",
+          "edit-interactions": "edit-settings-interactions",
+          "edit-members": "edit-settings-members",
+          "edit-messages": "edit-settings-messages",
+          "logs": "logs-parameters",
+          "reaction": "reaction",
+          "remove": "left",
+          "remove-channelId": "remove_channel_id",
+          "show-parameters": "show-parameters",
+          "update": "update"
+        }
+      },
+      "active": "Enabled",
+      "add": "**Log of new members** :",
+      "channelId": "**Channel used** :",
+      "channelsId": "**Authorized channels** :",
+      "command": "**Commands log** :",
+      "delete": "**Log of deleted messages** :",
+      "disable": "Disable",
+      "reaction": "**Log of reactions** :",
+      "remove": "**Log of outgoing members** :",
+      "update": "**Log of edited messages** :",
+      "noneChannel": "No channel registered",
+      "noneParameter": "No settings saved!",
+      "list": "Below is the list of saved settings :{{- msg}}",
+      "updated": "The log configuration parameters have been updated!"
+    },
+    "process": {
+      "build": {
+        "description": "Replies with process infos.",
+        "name": "process-infos"
+      }
+    },
+    "reaction": {
+      "build": {
+        "description": {
+          "add-role": "Add a role to a message.",
+          "emoji": "Emoji pour ce rôle.",
+          "remove-role": "Remove a role from a message.",
+          "role": "Choisissez le rôle à à supprimer.",
+          "roles-list": "Show full list of roles per message or for a message.",
+          "role-reaction": "Add or remove a role to a message."
+        },
+        "name": {
+          "add-role": "add-role",
+          "emoji": "emoji",
+          "remove-role": "remove-role",
+          "role": "role",
+          "roles-list": "roles-list",
+          "role-reaction": "role-reaction"
+        }
+      },
+      "noneRole": "No roles registered!",
+      "list": "Below is the list of registered roles for {{this}} message",
+      "roleAddedRemoved": "Role <@&{{roleId}}> has been {{added}}."
+    }
+  },
+  "common": {
+    "error": {
+      "authorizationRequired": "Error: You do not have the required permissions!"
+    }
+  },
+  "event": {
+    "error": {
+      "addRoleFailed": "An error occurred while trying to add the role for you!",
+      "moveFailed": "Error while moving message!\nPlease try again.",
+      "removeRoleFailed": "An error occurred while trying to remove you from the role!"
+    },
+    "member": {
+      "add": {
+        "title": "A new member has just landed!",
+        "description": "• **Username** : <@{{member.id}}> - {{member.displayName}} ({{member.id}})\n• **Account created on** : <t:{{createdTimestamp}}:f> (<t:{{createdTimestamp}}:R>)\n• **Joined us on** : <t:{{joinedTimestamp}}:f> (<t:{{joinedTimestamp}}:R>)"
+      },
+      "remove": {
+        "title": "A member has just left us!",
+        "description": "• **Username** : <@{{member.id}}> - {{member.displayName}} ({{member.id}})\n• **Account created on** : <t:{{createdTimestamp}}:f> (<t:{{createdTimestamp}}:R>)\n• **Joined us on** : <t:{{joinedTimestamp}}:f> (<t:{{joinedTimestamp}}:R>)\n• **Left us on** : <t:{{leftTimestamp}}:f> (<t:{{leftTimestamp}}:R>)"
+      }
+    },
+    "log": {
+      "buttonUsed": "A button has just been pressed!",
+      "commandUsed": "A command has just been used!",
+      "buttonLogMessage": "• **Interaction Type**: Button\n• **Interaction Name**: `{{interactionName}}`\n• **Affected User**: <@{{userId}}>\n• **Channel used**: <#{{channelId}}>\n",
+      "commandLogMessage": "• **Interaction Type**: Command\n• **Interaction Name**: `{{interactionName}}`\n• **Affected User**: <@{{userId}}>\n• **Channel used**: <#{{channelId}}>\n",
+      "roleAdded_one": "A role has just been assigned!",
+      "roleAdded_other": "Several roles have just been assigned!",
+      "roleRemoved_one": "A role has just been removed!",
+      "roleRemoved_other": "Several roles have just been removed!",
+      "reactionAdded_one": "<@{{userId}}> just reacted with the emoji {{emoji}} to get the role {{- roleId}}.\n",
+      "reactionAdded_other": "<@{{userId}}> just reacted with the emoji {{emoji}} to get the roles {{- roleId}}.\n",
+      "reactionRemoved_one": "<@{{userId}}> just unreacted with the emoji {{emoji}} to quit the role {{- roleId}}.\n",
+      "reactionRemoved_other": "<@{{userId}}> just unreacted with the emoji {{emoji}} to quit the roles {{- roleId}}.\n"
+    },
+    "message": {
+      "delete": {
+        "title": "A message has just been deleted!",
+        "description": "• **Message author** : <@{{authorId}}>\n• **Message deleted by** : <@{{executorId}}>\n• **Message deleted in the channel** : <#{{channelId}}>\n• **Message content** :\n\n{{- content}} "
+      },
+      "update": {
+        "title": "A message has just been edited!",
+        "description": "• **Message author** : <@{{authorId}}>\n• **Message edited in the channel** : <#{{channelId}}>\n• **Old Message** :\n\n{{- oldContent}}\n\n• **New Message** :\n\n{{- newContent}} "
+      }
+    }
+  }
+}

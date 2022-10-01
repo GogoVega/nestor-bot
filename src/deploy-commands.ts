@@ -1,8 +1,11 @@
 import { REST, RESTPostAPIApplicationCommandsJSONBody, Routes } from "discord.js";
 import logger from "./utils/logs/logger";
+import { initTranslation } from "./utils/translation";
 
 // eslint-disable-next-line @typescript-eslint/no-var-requires
 const { clientId, token } = require("../config.json");
+
+initTranslation();
 
 import * as commandExports from "./commands";
 

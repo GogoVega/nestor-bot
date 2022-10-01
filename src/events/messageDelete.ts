@@ -1,4 +1,5 @@
 import { AuditLogEvent, Colors, EmbedBuilder } from "discord.js";
+import i18next from "i18next";
 import { MessageDeleteEvent, ReactionsFile } from "../types/collection";
 import { generateQuotedMessage, sendMessage } from "../utils/channel";
 import logger from "../utils/logs/logger";
@@ -51,11 +52,15 @@ export const messageDelete: MessageDeleteEvent = {
 
 				const { id, tag } = message.author;
 				const templateEmbed = new EmbedBuilder()
-					.setTitle("Un message vient d'être supprimé !")
+					.setTitle(i18next.t("event.message.delete.title", { lng: message.guild.preferredLocale }))
 					.setDescription(
-						`• **Autheur du message** : <@${id}>\n• **Message supprimé par** : <@${executorId}>\n• **Message supprimé dans le salon** : <#${
-							message.channelId
-						}>\n• **Contenu du message** :\n\n${generateQuotedMessage(message.content)} `
+						i18next.t("event.message.delete.description", {
+							lng: message.guild.preferredLocale,
+							authorId: id,
+							executorId: executorId,
+							channelId: message.channelId,
+							content: generateQuotedMessage(message.content),
+						})
 					)
 					.setColor(Colors.Red)
 					.setTimestamp(new Date())

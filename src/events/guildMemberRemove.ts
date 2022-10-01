@@ -1,4 +1,5 @@
 import { Colors, EmbedBuilder } from "discord.js";
+import i18next from "i18next";
 import { MemberRemoveEvent } from "../types/collection";
 import { sendMessage, toTimestamp } from "../utils/channel";
 import logger from "../utils/logs/logger";
@@ -17,11 +18,15 @@ export const guildMemberRemove: MemberRemoveEvent = {
 			const joinedTimestamp = toTimestamp(member.joinedTimestamp);
 
 			const templateEmbed = new EmbedBuilder()
-				.setTitle("Un membre vient de nous quitter !")
+				.setTitle(i18next.t("event.member.remove.title", { lng: member.guild.preferredLocale }))
 				.setDescription(
-					`• **Nom d'utilisateur** : <@${member.id}> - ${member.displayName} (${
-						member.id
-					})\n• **Compte créé le** : <t:${createdTimestamp}:f> (<t:${createdTimestamp}:R>)\n• **Nous a rejoint le** : <t:${joinedTimestamp}:f> (<t:${joinedTimestamp}:R>)\n• **Nous a quitté le** : <t:${toTimestamp()}:f> (<t:${toTimestamp()}:R>)`
+					i18next.t("event.member.add.description", {
+						lng: member.guild.preferredLocale,
+						member,
+						createdTimestamp: createdTimestamp,
+						joinedTimestamp: joinedTimestamp,
+						leftTimestamp: toTimestamp(),
+					})
 				)
 				.setColor(Colors.Orange)
 				.setTimestamp(new Date())
