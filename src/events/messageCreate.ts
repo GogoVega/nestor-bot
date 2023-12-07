@@ -9,13 +9,9 @@ export const messageCreate: MessageCreateEvent = {
 		try {
 			if (!message.webhookId) return;
 
-			if (message.channel.isDMBased() || message.channel.isThread()) return;
+			if (message.channel.isDMBased() || message.channel.isThread() || !message.inGuild()) return;
 
-			const webhooks = await message.channel.fetchWebhooks();
-
-			if (webhooks.every((webhook) => webhook.id !== message.author.id)) return;
-
-			if (!client.configurations.get(message.guildId ?? "")?.channels?.some((id) => id === message.channelId)) return;
+			if (!client.configurations.get(message.guildId)?.webhooks?.some((id) => id === message.webhookId)) return;
 
 			const templateEmbed = new EmbedBuilder()
 				.setColor(Colors.DarkGrey)

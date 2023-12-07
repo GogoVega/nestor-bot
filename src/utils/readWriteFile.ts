@@ -1,7 +1,7 @@
 import { mergeDefault } from "discord.js";
 import fs from "fs/promises";
 import path from "path";
-import { Configurations, ConfigurationsFile, Data, defaultConfigurations } from "../types/collection";
+import { Configuration, ConfigurationsFile, Data, defaultConfigurations } from "../types/collection";
 
 const configurationsPath = "../../data/configurations.json";
 
@@ -23,7 +23,7 @@ function writeFile(filePath: string, fileContent: Data): Promise<void> {
 async function readConfigurationsFile(guildId: string): Promise<ConfigurationsFile> {
 	const configurationsFile = (await readFile(configurationsPath)) as ConfigurationsFile;
 
-	configurationsFile[guildId] = mergeDefault(defaultConfigurations, configurationsFile[guildId]) as Configurations;
+	configurationsFile[guildId] = mergeDefault(defaultConfigurations, configurationsFile[guildId]) as Configuration;
 
 	return configurationsFile;
 }

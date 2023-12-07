@@ -1,6 +1,6 @@
 import { AuditLogEvent, Colors, EmbedBuilder } from "discord.js";
 import { MessageDeleteEvent, ReactionsFile } from "../types/collection";
-import { checkContentMessage, sendMessage } from "../utils/channel";
+import { generateQuotedMessage, sendMessage } from "../utils/channel";
 import logger from "../utils/logs/logger";
 import { readFile, writeFile } from "../utils/readWriteFile";
 
@@ -55,13 +55,13 @@ export const messageDelete: MessageDeleteEvent = {
 					.setDescription(
 						`• **Autheur du message** : <@${id}>\n• **Message supprimé par** : <@${executorId}>\n• **Message supprimé dans le salon** : <#${
 							message.channelId
-						}>\n• **Contenu du message** :\n\n> ${checkContentMessage(message.content)} `
+						}>\n• **Contenu du message** :\n\n${generateQuotedMessage(message.content)} `
 					)
 					.setColor(Colors.Red)
 					.setTimestamp(new Date())
 					.setFooter({ text: tag, iconURL: message.author.displayAvatarURL() });
 
-				await sendMessage(messageObject.channelId, templateEmbed, client);
+				await sendMessage(messageObject.channelId, { embeds: [templateEmbed] }, client);
 			}
 		} catch (error) {
 			logger.error("An error occurred while deleting a message:", error);

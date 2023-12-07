@@ -28,8 +28,8 @@ export const dataPaths: Record<string, string> = {
 	reactions: "reactions.json",
 };
 
-export const defaultConfigurations: Configurations = {
-	channels: [],
+export const defaultConfigurations: Configuration = {
+	webhooks: [],
 	interaction: {
 		channelId: "",
 		button: false,
@@ -58,7 +58,6 @@ export interface Button {
 export interface Command {
 	basePermission?: PermissionResolvable;
 	data: SlashCommandSubcommandsOnlyBuilder | Omit<SlashCommandBuilder, "addSubcommand" | "addSubcommandGroup">;
-	managePermission?: boolean;
 	execute(
 		interaction: ChatInputCommandInteraction,
 		client: MyClient
@@ -85,17 +84,17 @@ type MessageConfiguration = {
 	update: boolean;
 };
 
-export type Configurations = {
-	channels: string[];
+export type Configuration = {
+	webhooks: string[];
 	interaction: InteractionConfiguration;
 	member: MemberConfiguration;
 	message: MessageConfiguration;
 };
 
-export type ConfigurationsFile = Record<string, Configurations>;
+export type ConfigurationsFile = Record<string, Configuration>;
 export type ConfigurationsProperty = InteractionConfiguration & MemberConfiguration & MessageConfiguration;
 
-export interface Modals {
+export interface Modal {
 	channelId?: string;
 	messageId?: string;
 	author?: string | null;
@@ -106,10 +105,10 @@ export interface Modals {
 	iconImage?: Attachment | null;
 	thumbnail?: Attachment | null;
 	data: ModalBuilder;
-	execute: (
+	execute(
 		interaction: ModalSubmitInteraction,
 		client: MyClient
-	) => Promise<void | InteractionResponse<boolean> | undefined>;
+	): Promise<void | InteractionResponse<boolean> | undefined>;
 }
 
 interface ReactionType {
@@ -117,9 +116,9 @@ interface ReactionType {
 	values: Array<{ emoji: string; roleId: string[] }>;
 }
 
-export type Reactions = Record<string, ReactionType>;
+export type Reaction = Record<string, ReactionType>;
 
-export type ReactionsFile = Record<string, Reactions>;
+export type ReactionsFile = Record<string, Reaction>;
 
 export type Data = ReactionsFile | ConfigurationsFile;
 

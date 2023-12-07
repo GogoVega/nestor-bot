@@ -5,7 +5,6 @@ import { readFile, writeFile } from "../utils/readWriteFile";
 
 export const roleReaction: Command = {
 	basePermission: PermissionsBitField.Flags.ManageRoles,
-	managePermission: true,
 	data: new SlashCommandBuilder()
 		.setName("role-reaction")
 		.setDescription("Ajouter ou supprimer un rôle à un message.")

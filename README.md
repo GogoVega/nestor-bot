@@ -60,13 +60,13 @@ The Bot contains several commands to manage orders, permissions Bot and more:
 This command sends a message with two buttons which are links to the sites to place an order.
 - `help`
 This command sends a message containing all the commands and their usefulness.
-- `gestion-salon`
-  - `ajouter-salon`
-  This command adds Bot permissions to a channel. This is to limit the use of orders to authorized salons.
-  - `supprimer-salon`
-  This command removes the Bot's permissions to a channel.
-  - `salons-list`
-  This command displays all authorized channels.
+- `gestion-webhook`
+  - `ajouter-webhook`
+  This command adds a Webhook. The Bot will respond only to registered Webhooks.
+  - `supprimer-webhook`
+  This command removes a Webhook.
+  - `webhooks-list`
+  This command displays all registered Webhooks.
 - `gestion-role`
   - `ajouter-role`
   This command allows you to add a role to an emoji so that the person reacting with this specific emoji is assigned this role. It is a self-role by reaction of an emoji. To use it, you must give the ID of a message on which the Bot will react.

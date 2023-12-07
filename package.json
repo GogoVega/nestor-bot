@@ -1,7 +1,7 @@
 {
 	"name": "nestor-bot",
 	"displayName": "Nestor Bot",
-	"version": "1.0.0-beta.2",
+	"version": "1.0.0-beta.3",
 	"description": "A Discord Bot for tracking Fab Lab orders and manage your Servers.",
 	"main": "build/index.js",
 	"scripts": {
@@ -34,14 +34,14 @@
 	"homepage": "https://github.com/GogoVega/nestor-bot#readme",
 	"dependencies": {
 		"cpu-percentage": "^1.0.3",
-		"discord.js": "^14.3.0",
+		"discord.js": "^14.5.0",
 		"winston": "^3.8.1"
 	},
 	"devDependencies": {
-		"@typescript-eslint/eslint-plugin": "^5.36.1",
-		"@typescript-eslint/parser": "^5.36.1",
+		"@typescript-eslint/eslint-plugin": "^5.38.1",
+		"@typescript-eslint/parser": "^5.38.1",
 		"eslint": "^8.23.0",
 		"prettier": "2.7.1",
-		"typescript": "^4.8.2"
+		"typescript": "^4.8.4"
 	}
 }

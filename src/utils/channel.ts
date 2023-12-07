@@ -1,8 +1,10 @@
-import { Channel, ChannelType, EmbedBuilder } from "discord.js";
+import { Channel, ChannelType, BaseMessageOptions } from "discord.js";
 import { MyClient } from "../types/client";
 
-function checkContentMessage(content: string | null) {
-	return content?.replace(/\n/gm, "\n> ");
+function generateQuotedMessage(content: string | null) {
+	if (content && !content?.startsWith("> ")) content = "> ".concat(content ?? "");
+
+	return content?.replace(/\n/gm, "\n> ") ?? null;
 }
 
 function isCategory(channel: Channel | null) {
@@ -13,12 +15,12 @@ function isCategory(channel: Channel | null) {
 	return false;
 }
 
-async function sendMessage(channelId: string, message: EmbedBuilder, client: MyClient): Promise<void> {
+async function sendMessage(channelId: string, message: BaseMessageOptions | string, client: MyClient): Promise<void> {
 	const channel = await client.channels.fetch(channelId);
 
 	if (!channel || !channel.isTextBased()) return;
 
-	await channel?.send({ embeds: [message] });
+	await channel?.send(message);
 }
 
 function toTimestamp(date?: number | null) {
@@ -27,4 +29,4 @@ function toTimestamp(date?: number | null) {
 	return date.toString().substring(0, 10);
 }
 
-export { checkContentMessage, isCategory, sendMessage, toTimestamp };
+export { generateQuotedMessage, isCategory, sendMessage, toTimestamp };

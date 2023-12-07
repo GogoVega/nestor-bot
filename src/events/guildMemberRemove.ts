@@ -27,7 +27,7 @@ export const guildMemberRemove: MemberRemoveEvent = {
 				.setTimestamp(new Date())
 				.setFooter({ text: member.displayName, iconURL: member.displayAvatarURL() });
 
-			await sendMessage(memberObject.channelId, templateEmbed, client);
+			await sendMessage(memberObject.channelId, { embeds: [templateEmbed] }, client);
 			logger.debug(`Server "${member.guild.name}": ${member.displayName} just left the server!`);
 		} catch (error) {
 			logger.error("An error occurred while removing a member:", error);

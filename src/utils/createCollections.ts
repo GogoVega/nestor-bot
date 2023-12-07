@@ -1,6 +1,6 @@
 import { Collection, mergeDefault } from "discord.js";
 import { MyClient } from "../types/client";
-import { Configurations, Data, dataPaths, defaultConfigurations, Entry, Reactions } from "../types/collection";
+import { Configuration, Data, dataPaths, defaultConfigurations, Entry, Reaction } from "../types/collection";
 import path from "path";
 import fs from "fs";
 
@@ -15,12 +15,12 @@ function createDataCollections(client: MyClient) {
 		const contentPath = path.join(__dirname, "..", "..", `/data/${dataPath}`);
 		const contentFile: Data = JSON.parse(fs.readFileSync(contentPath, { encoding: "utf-8" }));
 
-		const content = Object.entries(contentFile) as Entry<Configurations | Reactions>[];
+		const content = Object.entries(contentFile) as Entry<Configuration | Reaction>[];
 
 		content.forEach(([guilId, guildContent]) => {
 			contentFile[guilId] = mergeDefault(defaultData[collectionName as keyof typeof defaultData], guildContent) as
-				| Configurations
-				| Reactions;
+				| Configuration
+				| Reaction;
 		});
 
 		client[collectionName] = new Collection();

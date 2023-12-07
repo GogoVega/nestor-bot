@@ -1,5 +1,20 @@
 # Change log
 
+## 1.0.0 Beta 3
+
+### Changed
+
+- (channel) Rename `checkContentMessage` function to `generateQuotedMessage`.
+- (channel) Add `BaseMessageOptions` to `sendMessage` function.
+- Bump `eslint` and `typescript` to latest.
+- (collection) Using the singular noun for types.
+- Bump `discord.js` from 14.3.0 to 14.5.0.
+- (manage-webhook) Replaced `manage-channel` command with `manage-webhook`.
+
+## Fixed
+
+- (interactionCreate) Some command types were ignored.
+
 ## 1.0.0 Beta 2
 
 ### Added
